@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "78905451649",
+    "project_id": "naai-5d31f",
+    "storage_bucket": "naai-5d31f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78905451649:android:0ed2ef1e12e2dcefdbd980",
+        "android_client_info": {
+          "package_name": "com.example.naai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78905451649-h8bjjqqh42pkrp3kf2shiv4gmpbc3jn5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.naai",
+            "certificate_hash": "f312e8bc605610f6f39a02a3dfce2ded7d5e4479"
+          }
+        },
+        {
+          "client_id": "78905451649-4jdpk2is1qu4id713mrhq9vv9l2b52q0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1tie2jR4wzshLrIbKVmK0qNaKREXJE7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78905451649-4jdpk2is1qu4id713mrhq9vv9l2b52q0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
