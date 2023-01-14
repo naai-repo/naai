@@ -1,5 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:naai/view/utils/routing/named_routes.dart';
+import 'package:naai/view/utils/routing/routing_functions.dart';
+import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,13 +15,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Naai',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Scaffold(),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Naai',
+          theme: ThemeData(fontFamily: 'Poppins'),
+          onGenerateRoute: RoutingFunctions.generateRoutes,
+          routes: RoutingFunctions.routesMap,
+          initialRoute: NamedRoutes.splashRoute,
+        );
+      }
     );
   }
 }
