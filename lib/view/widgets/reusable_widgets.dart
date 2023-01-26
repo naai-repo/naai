@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:naai/view/utils/colors_constant.dart';
 import 'package:naai/view/utils/image_path_constant.dart';
 import 'package:naai/view/utils/string_constant.dart';
@@ -35,7 +36,7 @@ class ReusableWidgets {
           buttonText,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 11.5.sp,
+            fontSize: 11.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -51,7 +52,7 @@ class ReusableWidgets {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
         decoration: BoxDecoration(
           border: Border.all(
             color: ColorsConstant.greyBorderColor,
@@ -71,7 +72,7 @@ class ReusableWidgets {
                   ? StringConstant.signInWithApple
                   : StringConstant.signInWithGoogle,
               style: TextStyle(
-                fontSize: 12.5.sp,
+                fontSize: 11.5.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -81,31 +82,26 @@ class ReusableWidgets {
     );
   }
 
-  static Widget otpTextBox() {
-    return Container(
-      height: 7.h,
-      width: 7.5.h,
-      child: TextFormField(
-        textInputAction: TextInputAction.next,
-        textAlign: TextAlign.center,
-        showCursor: false,
-        cursorColor: ColorsConstant.appColor,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: ColorsConstant.appColorAccent,
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: ColorsConstant.appColor,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
+  static showFlutterToast(
+    BuildContext context,
+    String text,
+  ) {
+    FToast fToast = FToast();
+    fToast.init(context);
+    fToast.showToast(
+      toastDuration: const Duration(seconds: 5),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: ColorsConstant.appColor,
+        ),
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.white),
         ),
       ),
+      gravity: ToastGravity.TOP,
     );
   }
 }

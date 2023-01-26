@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:naai/view/utils/routing/named_routes.dart';
 import 'package:naai/view/utils/routing/routing_functions.dart';
+import 'package:naai/view_model/pre_auth/authentication_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 void main() async {
@@ -15,17 +17,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(
-      builder: (context, orientation, deviceType) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Naai',
-          theme: ThemeData(fontFamily: 'Poppins'),
-          onGenerateRoute: RoutingFunctions.generateRoutes,
-          routes: RoutingFunctions.routesMap,
-          initialRoute: NamedRoutes.splashRoute,
-        );
-      }
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => AuthenticationProvider(),
+          ),
+        ],
+        builder: (context, snapshot) {
+          return Sizer(builder: (context, orientation, deviceType) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Naai',
+              theme: ThemeData(fontFamily: 'Poppins'),
+              onGenerateRoute: RoutingFunctions.generateRoutes,
+              routes: RoutingFunctions.routesMap,
+              initialRoute: NamedRoutes.splashRoute,
+            );
+          });
+        });
   }
 }
