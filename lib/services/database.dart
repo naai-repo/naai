@@ -25,10 +25,4 @@ class DatabaseService {
   Future<void> updateUserData({required Map<String, dynamic> data}) async {
     return await userCollection.doc(uid).update(data);
   }
-
-  Future<void> readUserData({String? documentId}) async {
-    return await userCollection.doc(uid).get().then((document) {
-      print(document['name']);
-    });
-  }
 }

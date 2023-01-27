@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/view/utils/colors_constant.dart';
@@ -16,18 +17,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
+    checkIfUserExists();
+  }
 
-    Timer(
-      const Duration(seconds: 2),
-      () => Navigator.pushReplacementNamed(
+  void checkIfUserExists() {
+    Timer(const Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(
         context,
-        NamedRoutes.authenticationRoute,
-      ),
-    );
+        FirebaseAuth.instance.currentUser != null
+            ? NamedRoutes.navigationBar
+            : NamedRoutes.authenticationRoute,
+      );
+    });
   }
 
   @override

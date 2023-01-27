@@ -1,4 +1,3 @@
-import 'package:naai/view/utils/string_constant.dart';
 import 'package:naai/view/utils/utility_functions.dart';
 
 class ImagePathConstant {

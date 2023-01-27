@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/pre_auth/authentication_screen.dart';
+import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
 import 'package:naai/view/pre_auth/username_screen.dart';
 import 'package:naai/view/pre_auth/verify_otp_screen.dart';
 import 'package:naai/view/splash_screen.dart';
@@ -14,6 +15,7 @@ class RoutingFunctions {
     NamedRoutes.authenticationRoute: (context) => AuthenticationScreen(),
     NamedRoutes.verifyOtpRoute: (context) => VerifyOtpScreen(),
     NamedRoutes.addUserNameRoute: (context) => UsernameScreen(),
+    NamedRoutes.navigationBar: (context) => BottomNavigationScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -35,6 +37,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.addUserNameRoute:
         target = UsernameScreen();
+        break;
+      case NamedRoutes.navigationBar:
+        target = BottomNavigationScreen();
         break;
     }
 

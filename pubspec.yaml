@@ -33,6 +33,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  cloud_firestore: 4.3.1
   cupertino_icons: 1.0.2
   firebase_auth: 4.2.5
   firebase_core: 2.4.1
@@ -49,7 +50,6 @@ dependencies:
     git:
       url: https://github.com/Davenchy/flutter_launcher_icons.git
       ref: fixMinSdkParseFlutter2.8
-  cloud_firestore: ^4.3.1
 
 
 
@@ -101,7 +101,9 @@ flutter:
         - asset: assets/fonts/Poppins-Light.ttf
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
 
   #   - family: Trajan Pro
   #     fonts:

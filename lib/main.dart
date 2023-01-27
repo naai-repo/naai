@@ -18,22 +18,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => AuthenticationProvider(),
-          ),
-        ],
-        builder: (context, snapshot) {
-          return Sizer(builder: (context, orientation, deviceType) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Naai',
-              theme: ThemeData(fontFamily: 'Poppins'),
-              onGenerateRoute: RoutingFunctions.generateRoutes,
-              routes: RoutingFunctions.routesMap,
-              initialRoute: NamedRoutes.splashRoute,
-            );
-          });
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthenticationProvider(),
+        ),
+      ],
+      builder: (context, snapshot) {
+        return Sizer(builder: (context, orientation, deviceType) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Naai',
+            theme: ThemeData(fontFamily: 'Poppins'),
+            onGenerateRoute: RoutingFunctions.generateRoutes,
+            routes: RoutingFunctions.routesMap,
+            initialRoute: NamedRoutes.splashRoute,
+          );
         });
+      },
+    );
   }
 }

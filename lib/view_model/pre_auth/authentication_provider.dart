@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:naai/services/database.dart';
-import 'package:naai/view/pre_auth/home.dart';
 import 'package:naai/view/utils/loading_indicator.dart';
 import 'package:naai/view/utils/routing/named_routes.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -19,7 +18,6 @@ class AuthenticationProvider with ChangeNotifier {
   String _verificationId = "";
   String _enteredOtp = "000000";
   String? _phoneNumber;
-  String? _userId = "";
 
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _mobileNumberController = TextEditingController();
@@ -57,8 +55,7 @@ class AuthenticationProvider with ChangeNotifier {
       isGoogle ? await googleLogIn(context) : await appleLogin(context);
       Loader.hideLoader(context);
       if (FirebaseAuth.instance.currentUser != null) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+        Navigator.pushNamed(context, NamedRoutes.navigationBar);
       }
     } catch (e) {
       Loader.hideLoader(context);
@@ -107,7 +104,6 @@ class AuthenticationProvider with ChangeNotifier {
     });
     await DatabaseService(uid: user!.uid)
         .setUserData(name: user.displayName, gmailId: user.email);
-    _userId = user.uid;
 
     print("Id token ===> $_token");
     notifyListeners();
@@ -179,6 +175,7 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
+  /// Verify the OTP entered by user.
   void verifyOtp(BuildContext context) async {
     Loader.showLoader(context);
     try {
@@ -197,13 +194,11 @@ class AuthenticationProvider with ChangeNotifier {
       resetOtpControllers();
 
       User? user = FirebaseAuth.instance.currentUser;
-      _userId = user?.uid;
-      
+
       await DatabaseService(uid: user!.uid)
           .setUserData(phoneNumber: _phoneNumber);
 
       Loader.hideLoader(context);
-      hasRegisteredUsername();
       if (FirebaseAuth.instance.currentUser != null) {
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
       }
@@ -217,11 +212,6 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  /// Check if the user has already registered their username
-  void hasRegisteredUsername() async {
-    await DatabaseService(uid: _userId ?? "").readUserData();
-  }
-
   /// Update user name of the user in the Firebase collection
   void updateUserNameInCollection(BuildContext context) async {
     Loader.showLoader(context);
@@ -232,12 +222,7 @@ class AuthenticationProvider with ChangeNotifier {
       });
       _userNameController.clear();
       Loader.hideLoader(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Home(),
-        ),
-      );
+      Navigator.pushReplacementNamed(context, NamedRoutes.navigationBar);
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(
