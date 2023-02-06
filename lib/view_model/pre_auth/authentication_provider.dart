@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:naai/models/user.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/view/utils/loading_indicator.dart';
+import 'package:naai/view/utils/routing/exception/exception_handling.dart';
 import 'package:naai/view/utils/routing/named_routes.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -55,7 +57,7 @@ class AuthenticationProvider with ChangeNotifier {
       isGoogle ? await googleLogIn(context) : await appleLogin(context);
       Loader.hideLoader(context);
       if (FirebaseAuth.instance.currentUser != null) {
-        Navigator.pushNamed(context, NamedRoutes.navigationBar);
+        Navigator.pushNamed(context, NamedRoutes.navigationScreenRoute);
       }
     } catch (e) {
       Loader.hideLoader(context);
@@ -96,16 +98,15 @@ class AuthenticationProvider with ChangeNotifier {
     }))
         .user;
 
-    final currentUser = FirebaseAuth.instance.currentUser;
-
-    final _token =
-        await currentUser?.getIdToken(true).onError((error, stackTrace) {
-      throw Exception('Something went wrong!');
-    });
-    await DatabaseService(uid: user!.uid)
-        .setUserData(name: user.displayName, gmailId: user.email);
-
-    print("Id token ===> $_token");
+    if ((await DatabaseService(uid: user!.uid).checkUserExists()) == false) {
+      storeUserDataInCollection(
+        context: context,
+        userData: UserModel(
+          name: user.displayName,
+          gmailId: user.email,
+        ),
+      );
+    }
     notifyListeners();
   }
 
@@ -127,31 +128,26 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  /// Method to verify phone number authentication
+  /// Method to verify the entered phone number and send an OTP to the user if the
+  /// entered phone number is valid.
   void phoneNumberLogin(BuildContext context) async {
     _isOtpLoaderActive = true;
     notifyListeners();
     try {
       _phoneNumber = "+91${_mobileNumberController.text}";
 
-      await FirebaseAuth.instance
-          .verifyPhoneNumber(
+      await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: _phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseException e) {
           _isOtpLoaderActive = false;
           notifyListeners();
-          if (e.message!.contains('too-many-requests')) {
-            ReusableWidgets.showFlutterToast(
-              context,
-              'OTP generated too many times. Please wait before trying again!',
-            );
-          } else {
-            ReusableWidgets.showFlutterToast(
-              context,
-              '${e.message}',
-            );
+          print("ERROR \t ${e.message}");
+          if (e.message!
+              .contains('format of the phone number provided is incorrect')) {
+            ReusableWidgets.showFlutterToast(context, 'Invalid phone number!');
           }
+          throw ExceptionHandling(message: e.message ?? "");
         },
         codeSent: (String verificationId, int? resendCode) {
           setVerificationId(value: verificationId);
@@ -161,10 +157,7 @@ class AuthenticationProvider with ChangeNotifier {
           Navigator.pushNamed(context, NamedRoutes.verifyOtpRoute);
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
-      )
-          .onError((error, stackTrace) {
-        throw Exception('$error');
-      });
+      );
     } catch (e) {
       _isOtpLoaderActive = false;
       notifyListeners();
@@ -185,9 +178,8 @@ class AuthenticationProvider with ChangeNotifier {
       );
       await FirebaseAuth.instance
           .signInWithCredential(credential)
-          .onError((error, stackTrace) {
-        print('$error');
-        throw Exception('$error');
+          .onError((FirebaseException error, stackTrace) {
+        throw ExceptionHandling(message: error.message ?? "");
       });
 
       resetMobielNumberController();
@@ -195,12 +187,12 @@ class AuthenticationProvider with ChangeNotifier {
 
       User? user = FirebaseAuth.instance.currentUser;
 
-      await DatabaseService(uid: user!.uid)
-          .setUserData(phoneNumber: _phoneNumber);
-
       Loader.hideLoader(context);
-      if (FirebaseAuth.instance.currentUser != null) {
+      if (await DatabaseService(uid: user!.uid).checkUserExists() == false) {
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
+      } else {
+        Navigator.pushReplacementNamed(
+            context, NamedRoutes.navigationScreenRoute);
       }
     } catch (e) {
       Loader.hideLoader(context);
@@ -212,17 +204,32 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  /// Update user name of the user in the Firebase collection
-  void updateUserNameInCollection(BuildContext context) async {
+  /// Trigger [storeUserDataInCollection] method.
+  /// Specifically for phone authentication
+  void storePhoneAuthDataInDb(BuildContext context) {
+    storeUserDataInCollection(
+      context: context,
+      userData: UserModel(
+        name: _userNameController.text,
+        phoneNumber: _phoneNumber,
+      ),
+    );
+    // Navigator.pushReplacementNamed(context, NamedRoutes.navigationScreenRoute);
+  }
+
+  /// Store user data in the [FirebaseFirestore]
+  void storeUserDataInCollection({
+    required BuildContext context,
+    required UserModel userData,
+  }) async {
     Loader.showLoader(context);
     try {
       User? user = FirebaseAuth.instance.currentUser;
-      await DatabaseService(uid: user!.uid).updateUserData(data: {
-        'name': _userNameController.text.trim(),
-      });
-      _userNameController.clear();
+      await DatabaseService(uid: user!.uid)
+          .setUserData(userData: userData.toJson())
+          .onError((FirebaseException error, stackTrace) =>
+              throw ExceptionHandling(message: error.message ?? ""));
       Loader.hideLoader(context);
-      Navigator.pushReplacementNamed(context, NamedRoutes.navigationBar);
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(

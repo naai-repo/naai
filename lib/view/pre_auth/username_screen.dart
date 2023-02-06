@@ -55,7 +55,7 @@ class UsernameScreen extends StatelessWidget {
                 Spacer(),
                 ReusableWidgets.redFullWidthButon(
                   buttonText: StringConstant.continueText,
-                  onTap: () => provider.updateUserNameInCollection(context),
+                  onTap: () => provider.storePhoneAuthDataInDb(context),
                   isActive: provider.isUsernameButtonActive,
                 ),
               ],

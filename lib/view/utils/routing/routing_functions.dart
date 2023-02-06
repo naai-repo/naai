@@ -15,7 +15,7 @@ class RoutingFunctions {
     NamedRoutes.authenticationRoute: (context) => AuthenticationScreen(),
     NamedRoutes.verifyOtpRoute: (context) => VerifyOtpScreen(),
     NamedRoutes.addUserNameRoute: (context) => UsernameScreen(),
-    NamedRoutes.navigationBar: (context) => BottomNavigationScreen(),
+    NamedRoutes.navigationScreenRoute: (context) => BottomNavigationScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -38,7 +38,7 @@ class RoutingFunctions {
       case NamedRoutes.addUserNameRoute:
         target = UsernameScreen();
         break;
-      case NamedRoutes.navigationBar:
+      case NamedRoutes.navigationScreenRoute:
         target = BottomNavigationScreen();
         break;
     }

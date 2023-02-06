@@ -7,5 +7,5 @@ class NamedRoutes {
   static const String addUserNameRoute = '/add-user-name';
 
   /// Post-authetication routes
-  static const String navigationBar = '/navigation-bar';
+  static const String navigationScreenRoute = '/navigation-bar';
 }
