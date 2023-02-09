@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,7 +9,9 @@ import 'package:naai/services/database.dart';
 import 'package:naai/view/utils/loading_indicator.dart';
 import 'package:naai/view/utils/routing/exception/exception_handling.dart';
 import 'package:naai/view/utils/routing/named_routes.dart';
+import 'package:naai/view/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthenticationProvider with ChangeNotifier {
@@ -20,6 +23,7 @@ class AuthenticationProvider with ChangeNotifier {
   String _verificationId = "";
   String _enteredOtp = "000000";
   String? _phoneNumber;
+  String? _userId;
 
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _mobileNumberController = TextEditingController();
@@ -37,6 +41,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   String get verificationId => _verificationId;
   String get enteredOtp => _enteredOtp;
+  String? get userId => _userId;
 
   TextEditingController get userNameController => _userNameController;
   TextEditingController get mobileNumberController => _mobileNumberController;
@@ -97,8 +102,8 @@ class AuthenticationProvider with ChangeNotifier {
       throw Exception('Something went wrong!');
     }))
         .user;
-
-    if ((await DatabaseService(uid: user!.uid).checkUserExists()) == false) {
+    setUserId(userId: _userId);
+    if ((await DatabaseService().checkUserExists(uid: user!.uid)) == false) {
       storeUserDataInCollection(
         context: context,
         userData: UserModel(
@@ -188,7 +193,8 @@ class AuthenticationProvider with ChangeNotifier {
       User? user = FirebaseAuth.instance.currentUser;
 
       Loader.hideLoader(context);
-      if (await DatabaseService(uid: user!.uid).checkUserExists() == false) {
+      setUserId(userId: _userId);
+      if (await DatabaseService().checkUserExists(uid: user!.uid) == false) {
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
       } else {
         Navigator.pushReplacementNamed(
@@ -225,7 +231,7 @@ class AuthenticationProvider with ChangeNotifier {
     Loader.showLoader(context);
     try {
       User? user = FirebaseAuth.instance.currentUser;
-      await DatabaseService(uid: user!.uid)
+      await DatabaseService()
           .setUserData(userData: userData.toJson())
           .onError((FirebaseException error, stackTrace) =>
               throw ExceptionHandling(message: error.message ?? ""));
@@ -286,6 +292,18 @@ class AuthenticationProvider with ChangeNotifier {
         otpDigitFiveController.text.isNotEmpty &&
         otpDigitSixController.text.isNotEmpty);
     notifyListeners();
+  }
+
+  /// Save the [_userId] after authentication in [SharedPreferences]
+  /// and in [AuthenticationProvider]
+  void setUserId({required String? userId}) async {
+    _userId = userId;
+    await SharedPreferenceHelper.setUserId(userId ?? '');
+  }
+
+  /// Get the [_userId] from [SharedPreferences]
+  Future<String?> getUserId() async {
+    return await SharedPreferenceHelper.getUserId();
   }
 
   /// Reset the value of [_mobileNumberController] and [_isGetOtpButtonActive]

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:naai/view/utils/routing/named_routes.dart';
 import 'package:naai/view/utils/routing/routing_functions.dart';
+import 'package:naai/view_model/post_auth/explore_provider.dart';
 import 'package:naai/view_model/pre_auth/authentication_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthenticationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ExploreProvider(),
         ),
       ],
       builder: (context, snapshot) {

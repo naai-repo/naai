@@ -1,6 +1,6 @@
 class StringConstant {
   //General strings
-  static const String baseImageDirectory = 'assets/images/';
+  static const String imageBaseDirectory = 'assets/images/';
   static const String splashScreenText = 'redefining your salon experience';
 
   //Auth screen strings
@@ -16,4 +16,9 @@ class StringConstant {
   static const String addName = 'Add Name';
   static const String enterYourName = 'Enter your name';
   static const String continueText = 'CONTINUE';
+
+  //Explore screen strings
+  static const String exploreSalons = 'Explore Salons';
+  static const String search = 'Search';
+  static const String changeLocation = 'change location';
 }

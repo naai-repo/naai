@@ -64,7 +64,7 @@ class VerifyOtpScreen extends StatelessWidget {
                     Text(
                       '+91-${provider.mobileNumberController.text}',
                       style: TextStyle(
-                        color: ColorsConstant.darkGreyText,
+                        color: ColorsConstant.textDark,
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w500,
                       ),
