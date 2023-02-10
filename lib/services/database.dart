@@ -12,13 +12,17 @@ class DatabaseService {
   /// Set the user data to the [FirebaseFirestore] as a new entry
   Future<void> setUserData({required Map<String, dynamic> userData}) async {
     String uid = await SharedPreferenceHelper.getUserId();
-    return await userCollection.doc(uid).set(userData);
+    return await userCollection.doc(uid).set(userData).onError(
+          (error, stackTrace) => throw Exception(error),
+        );
   }
 
   /// Updates an existing entry on [FirebaseFirestore] for a given [uid]
   Future<void> updateUserData({required Map<String, dynamic> data}) async {
     String uid = await SharedPreferenceHelper.getUserId();
-    return await userCollection.doc(uid).update(data);
+    return await userCollection.doc(uid).update(data).onError(
+          (error, stackTrace) => throw Exception(error),
+        );
   }
 
   /// Check if a document with this userId exists or not.
@@ -27,13 +31,18 @@ class DatabaseService {
     return userCollection
         .doc(uid)
         .get()
-        .then((value) => value.exists ? true : false);
+        .then((value) => value.exists ? true : false)
+        .onError(
+          (error, stackTrace) => throw Exception(error),
+        );
   }
 
+  /// Fetch the salon list from [FirebaseFirestore]
   Future<List<SalonData>> getSalonData() async {
-    QuerySnapshot querySnapshot = await salonCollection.get();
+    QuerySnapshot querySnapshot = await salonCollection.get().onError(
+          (error, stackTrace) => throw Exception(error),
+        );
 
-    // Get data from docs and convert map to List
     final List<SalonData> allData = querySnapshot.docs.map((docData) {
       return SalonData(
         address: docData['address'],
@@ -42,8 +51,6 @@ class DatabaseService {
         imagePath: 'assets/images/salon_dummy_image.png',
       );
     }).toList();
-    print(allData);
     return allData;
-    // return await salonCollection
   }
 }

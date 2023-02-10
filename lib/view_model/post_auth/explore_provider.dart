@@ -1,26 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/services/database.dart';
+import 'package:naai/view/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 
 class ExploreProvider with ChangeNotifier {
-  bool _isLoadingSalonList = false;
+  TextEditingController _salonSearchController = TextEditingController();
 
   List<SalonData> _salonData = [];
+  List<SalonData> _filteredSalonData = [];
+
+  TextEditingController get salonSearchController => _salonSearchController;
 
   List<SalonData> get salonData => _salonData;
-  bool get isLoadingSalonList => _isLoadingSalonList;
+  List<SalonData> get filteredSalonData => _filteredSalonData;
 
   void getSalonList(BuildContext context) async {
-    _isLoadingSalonList = true;
-
+    Loader.showLoader(context);
     try {
       _salonData = await DatabaseService().getSalonData();
-      _isLoadingSalonList = false;
+      _filteredSalonData.clear();
+      _filteredSalonData.addAll(_salonData);
+      Loader.hideLoader(context);
     } catch (e) {
-      _isLoadingSalonList = false;
+      Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');
     }
+    notifyListeners();
+  }
+
+  void filterSalonList(String searchText) {
+    _filteredSalonData.clear();
+    _salonData.forEach((salon) {
+      if (salon.name!.toLowerCase().contains(searchText.toLowerCase())) {
+        _filteredSalonData.add(salon);
+      }
+    });
     notifyListeners();
   }
 }

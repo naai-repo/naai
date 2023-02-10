@@ -21,4 +21,12 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'splash_icon.svg');
   static final String starIcon =
       UtilityFunctions.getImagePath(imageTitle: 'star_icon.svg');
+  static final String exploreIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'explore_icon.svg');
+  static final String profileIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'profile_icon.svg');
+  static final String homeIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'home_icon.svg');
+  static final String locationIconAlt =
+      UtilityFunctions.getImagePath(imageTitle: 'location_icon_alt.svg');
 }

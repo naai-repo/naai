@@ -10,4 +10,6 @@ class ColorsConstant {
   static const Color graphicFillDark = Color(0xFFF2F2F2);
   static const Color graphicFill = Color(0xFFFAFAFA);
   static const Color textLight = Color(0xFF868686);
+  static const Color bottomNavIconsDisabled = Color(0xFFC9C9C9);
+  static const Color divider = Color(0xFFC8C8C8);
 }

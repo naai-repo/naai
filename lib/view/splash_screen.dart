@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacementNamed(
         context,
         FirebaseAuth.instance.currentUser != null
-            ? NamedRoutes.navigationScreenRoute
+            ? NamedRoutes.bottomNavigationRoute
             : NamedRoutes.authenticationRoute,
       );
     });

@@ -62,7 +62,7 @@ class AuthenticationProvider with ChangeNotifier {
       isGoogle ? await googleLogIn(context) : await appleLogin(context);
       Loader.hideLoader(context);
       if (FirebaseAuth.instance.currentUser != null) {
-        Navigator.pushNamed(context, NamedRoutes.navigationScreenRoute);
+        Navigator.pushNamed(context, NamedRoutes.bottomNavigationRoute);
       }
     } catch (e) {
       Loader.hideLoader(context);
@@ -198,7 +198,7 @@ class AuthenticationProvider with ChangeNotifier {
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
       } else {
         Navigator.pushReplacementNamed(
-            context, NamedRoutes.navigationScreenRoute);
+            context, NamedRoutes.bottomNavigationRoute);
       }
     } catch (e) {
       Loader.hideLoader(context);
