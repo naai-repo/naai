@@ -1,15 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/view/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
+import 'package:provider/provider.dart';
 
 class ExploreProvider with ChangeNotifier {
   TextEditingController _salonSearchController = TextEditingController();
 
   List<SalonData> _salonData = [];
   List<SalonData> _filteredSalonData = [];
-
   TextEditingController get salonSearchController => _salonSearchController;
 
   List<SalonData> get salonData => _salonData;
@@ -37,5 +40,9 @@ class ExploreProvider with ChangeNotifier {
       }
     });
     notifyListeners();
+  }
+
+  void setSelectedSalonIndex(BuildContext context, {int index = 0}) {
+    context.read<SalonDetailsProvider>().setSelectedSalonIndex(index);
   }
 }

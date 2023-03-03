@@ -21,4 +21,13 @@ class StringConstant {
   static const String exploreSalons = 'Explore Salons';
   static const String search = 'Search';
   static const String changeLocation = 'change location';
+
+  //Salon detail screen strings
+  static const String availableStaff = 'AVAILABLE STAFF';
+  static const String services = "SERVICES";
+  static const String reviews = "REVIEWS";
+  static const String addYourReview = "Add your review";
+  static const String summarizeYourReview = "Summarize your review";
+  static const String submitReview = "Submit Review";
+  static const String userReviews = "User Reviews";
 }

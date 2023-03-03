@@ -53,11 +53,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
           child: Scaffold(
             body: _screens[provider.currentScreenIndex],
             bottomNavigationBar: Container(
-              padding: EdgeInsets.only(bottom: 1.h),
+              padding: EdgeInsets.only(bottom: 1.5.h, top: 0.7.h),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.shade400,
+                    color: ColorsConstant.dropShadowColor,
                     offset: Offset(0, -5),
                     blurRadius: 20,
                     spreadRadius: 0.1,
@@ -121,7 +121,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
               color: provider.currentScreenIndex == index
                   ? ColorsConstant.appColor
                   : ColorsConstant.bottomNavIconsDisabled,
-              height: 2.5.h,
+              height: 3.h,
             ),
           ],
         ),

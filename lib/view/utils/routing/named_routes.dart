@@ -9,4 +9,5 @@ class NamedRoutes {
   /// Post-authetication routes
   static const String bottomNavigationRoute = '/bottom-navigation';
   static const String exploreRoute = '/explore';
+  static const String salonDetailsRoute = '/salon-details';
 }
