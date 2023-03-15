@@ -87,15 +87,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                 children: <Widget>[
                   Stack(
                     children: <Widget>[
-                      Hero(
-                        tag: 'Salon$index',
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.asset(
-                              provider.filteredSalonData[index].imagePath ??
-                                  ''),
-                        ),
-                      )
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.asset(
+                            provider.filteredSalonData[index].imagePath ?? ''),
+                      ),
                     ],
                   ),
                   SizedBox(height: 2.h),

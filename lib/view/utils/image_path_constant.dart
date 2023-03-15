@@ -47,6 +47,8 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'add_your_review_icon.svg');
   static final String reviewStarIcon =
       UtilityFunctions.getImagePath(imageTitle: 'review_star_icon.svg');
-      static final String hairstyleWomenIcon =
+  static final String hairstyleWomenIcon =
       UtilityFunctions.getImagePath(imageTitle: 'hairstyle_women_icon.svg');
+  static final String tickBox =
+      UtilityFunctions.getImagePath(imageTitle: 'tick_box.svg');
 }

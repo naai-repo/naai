@@ -30,4 +30,7 @@ class StringConstant {
   static const String summarizeYourReview = "Summarize your review";
   static const String submitReview = "Submit Review";
   static const String userReviews = "User Reviews";
+  static const String men = "Men";
+  static const String women = "Women";
+  static const String selectCategory = 'SELECT CATEGORY';
 }

@@ -1,7 +1,7 @@
 import 'package:naai/view/utils/enums.dart';
 
 class ServiceDetail {
-  String? category;
+  ServiceEnum? category;
   String? serviceTitle;
   double? price;
   Gender? targetGender;

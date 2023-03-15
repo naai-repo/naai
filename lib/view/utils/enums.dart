@@ -1,1 +1,13 @@
-enum Gender {MALE, FEMALE, OTHERS}
+enum Gender {
+  MEN,
+  WOMEN,
+  OTHERS,
+}
+
+enum ServiceEnum {
+  HAIR,
+  SPA,
+  BEAUTY,
+  MAKEUP,
+  NAIL,
+}

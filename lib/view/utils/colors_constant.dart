@@ -20,4 +20,9 @@ class ColorsConstant {
   static const Color yellowStar = Color(0xFFFFD700);
   static const Color dropShadowColor = Color(0xFFBDBDBD);
   static const Color reviewBoxBorderColor = Color(0xFFDADADA);
+  static const Color selectedGenderFilterBoxColor = Color(0xFFFDEEF2);
+  static const Color selectedGenderAbbrColor = Color(0xFF2260BD);
+  static const Color unselectedGenderAbbrColor = Color(0xFFBD227F);
+  static const Color lightAppColor = Color(0xFFFCF3F3);
+  static const Color reviewStarGreyColor = Color(0xFFD9D9D9);
 }
