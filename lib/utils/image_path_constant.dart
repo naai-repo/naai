@@ -1,4 +1,4 @@
-import 'package:naai/view/utils/utility_functions.dart';
+import 'package:naai/utils/utility_functions.dart';
 
 class ImagePathConstant {
   static final String inAppLogo =
@@ -29,4 +29,8 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'home_icon.svg');
   static final String locationIconAlt =
       UtilityFunctions.getImagePath(imageTitle: 'location_icon_alt.svg');
+  static final String currentLocationPointer =
+      UtilityFunctions.getImagePath(imageTitle: 'current_location_pointer.png');
+  static final String mapIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'map_icon.svg');
 }

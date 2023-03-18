@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/view/post_auth/explore/explore_screen.dart';
-import 'package:naai/view/utils/colors_constant.dart';
-import 'package:naai/view/utils/image_path_constant.dart';
+import 'package:naai/view/post_auth/home/home_screen.dart';
+import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/view_model/post_auth/bottom_navigation_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -17,11 +18,7 @@ class BottomNavigationScreen extends StatefulWidget {
 class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     with WidgetsBindingObserver {
   late List<Widget> _screens = [
-    Scaffold(
-      body: Center(
-        child: Text('Home'),
-      ),
-    ),
+    HomeScreen(),
     ExploreScreen(),
     Scaffold(
       body: Center(

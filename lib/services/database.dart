@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naai/models/salon.dart';
-import 'package:naai/view/utils/shared_preferences/shared_preferences_helper.dart';
+import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 
 class DatabaseService {
   final CollectionReference userCollection =

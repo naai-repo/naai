@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naai/view/utils/colors_constant.dart';
-import 'package:naai/view/utils/image_path_constant.dart';
-import 'package:naai/view/utils/routing/named_routes.dart';
-import 'package:naai/view/utils/string_constant.dart';
+import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/routing/named_routes.dart';
+import 'package:naai/utils/string_constant.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:naai/view/utils/colors_constant.dart';
+import 'package:naai/utils/colors_constant.dart';
 
 class Loader {
   static showLoader(BuildContext context) {

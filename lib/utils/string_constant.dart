@@ -3,7 +3,7 @@ class StringConstant {
   static const String imageBaseDirectory = 'assets/images/';
   static const String splashScreenText = 'redefining your salon experience';
 
-  //Auth screen strings
+  // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';
   static const String getOtp = 'Get OTP';
   static const String or = 'OR';
@@ -17,8 +17,12 @@ class StringConstant {
   static const String enterYourName = 'Enter your name';
   static const String continueText = 'CONTINUE';
 
-  //Explore screen strings
+  // Explore screen strings
   static const String exploreSalons = 'Explore Salons';
   static const String search = 'Search';
   static const String changeLocation = 'change location';
+
+  // Home screen strings
+  static const String setLocation = 'Set Location';
+  static const String setLocationSubtext = 'SET YOUR HOME LOCATION TO  SEE SALONS NEAR TO YOUR PLACE';
 }

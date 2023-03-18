@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
+import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/pre_auth/authentication_screen.dart';
 import 'package:naai/view/post_auth/explore/explore_screen.dart';
 import 'package:naai/view/pre_auth/username_screen.dart';
 import 'package:naai/view/pre_auth/verify_otp_screen.dart';
 import 'package:naai/view/splash_screen.dart';
-import 'package:naai/view/utils/routing/named_routes.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 
 /// Class that contains string constants for all routes used in the app
 class RoutingFunctions {
@@ -18,6 +19,7 @@ class RoutingFunctions {
     NamedRoutes.addUserNameRoute: (context) => UsernameScreen(),
     NamedRoutes.bottomNavigationRoute: (context) => BottomNavigationScreen(),
     NamedRoutes.exploreRoute: (context) => ExploreScreen(),
+    NamedRoutes.homeRoute: (context) => HomeScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -45,6 +47,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.exploreRoute:
         target = ExploreScreen();
+        break;
+      case NamedRoutes.homeRoute:
+        target = HomeScreen();
         break;
     }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naai/view/utils/colors_constant.dart';
-import 'package:naai/view/utils/image_path_constant.dart';
-import 'package:naai/view/utils/string_constant.dart';
+import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/string_constant.dart';
+import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -44,11 +46,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 padding: EdgeInsets.only(top: 3.h),
                 child: Text(
                   StringConstant.exploreSalons,
-                  style: TextStyle(
-                    color: ColorsConstant.textDark,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18.sp,
-                  ),
+                  style: StyleConstant.headingTextStyle,
                 ),
               ),
               centerTitle: false,
@@ -149,10 +147,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                     SizedBox(height: 1.2.h),
                     Text(
                       '${provider.filteredSalonData[index].address}',
-                      style: TextStyle(
-                        color: Color(0xFFA4A4A4),
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: StyleConstant.greySemiBoldTextStyle,
                     ),
                     SizedBox(height: 1.h),
                   ],
@@ -190,36 +185,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                     child: TextFormField(
                       controller: provider.salonSearchController,
                       cursorColor: ColorsConstant.appColor,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: StyleConstant.searchTextStyle,
                       textInputAction: TextInputAction.done,
                       onChanged: (searchText) =>
                           provider.filterSalonList(searchText),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: ColorsConstant.graphicFillDark,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(left: 3.5.w),
-                          child: SvgPicture.asset(
-                            ImagePathConstant.searchIcon,
-                            fit: BoxFit.scaleDown,
-                          ),
-                        ),
-                        prefixIconConstraints: BoxConstraints(minWidth: 11.w),
-                        hintText: StringConstant.search,
-                        hintStyle: TextStyle(
-                          color: ColorsConstant.textLight,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.h),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
+                      decoration: StyleConstant.searchBoxInputDecoration,
                     ),
                   ),
                   SizedBox(width: 3.w),
@@ -228,29 +198,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Flexible(
-                          flex: 0,
-                          child: Container(
-                            padding: EdgeInsets.all(1.2.h),
-                            margin: EdgeInsets.only(right: 1.w),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(2, 2),
-                                  color: Colors.grey.shade300,
-                                  spreadRadius: 0.5,
-                                  blurRadius: 15,
-                                ),
-                              ],
-                            ),
-                            child: SvgPicture.asset(
-                              ImagePathConstant.locationIcon,
-                              color: ColorsConstant.appColor,
-                            ),
-                          ),
-                        ),
+                        ReusableWidgets.circularLocationWidget(),
                         Flexible(
                           flex: 1,
                           child: Column(

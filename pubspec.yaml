@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cloud_firestore: 4.3.1
@@ -38,11 +37,12 @@ dependencies:
   firebase_auth: 4.2.5
   firebase_core: 2.4.1
   flutter_svg: 1.1.6
+  flutter_typeahead: 4.3.1
   fluttertoast: 8.1.2
   google_sign_in: 5.4.3
   http: 0.13.5
   provider: 6.0.5
-  shared_preferences: ^2.0.17
+  shared_preferences: 2.0.17
   sign_in_with_apple: 4.3.0
   sizer: 2.0.15
 
@@ -51,8 +51,12 @@ dependencies:
     git:
       url: https://github.com/Davenchy/flutter_launcher_icons.git
       ref: fixMinSdkParseFlutter2.8
-
-
+  mapbox_gl:
+    git:
+      url: https://github.com/Sipioteo/maps_3_0_0
+      ref: 8c9f47b
+  location: ^4.4.0
+  permission_handler: ^10.2.0
 
 flutter_icons:
   android: true
@@ -112,11 +116,5 @@ flutter:
         - asset: assets/fonts/Poppins-ExtraBold.ttf
           weight: 900
 
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

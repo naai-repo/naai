@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/string_constant.dart';
+import 'package:sizer/sizer.dart';
+
+class StyleConstant {
+  static TextStyle headingTextStyle = TextStyle(
+    color: ColorsConstant.textDark,
+    fontWeight: FontWeight.w600,
+    fontSize: 18.sp,
+  );
+
+  static TextStyle greySemiBoldTextStyle = TextStyle(
+    color: Color(0xFFA4A4A4),
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle searchTextStyle = TextStyle(
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w500,
+  );
+
+  static InputDecoration searchBoxInputDecoration = InputDecoration(
+    filled: true,
+    fillColor: ColorsConstant.graphicFillDark,
+    contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
+    prefixIcon: Padding(
+      padding: EdgeInsets.only(left: 3.5.w),
+      child: SvgPicture.asset(
+        ImagePathConstant.searchIcon,
+        fit: BoxFit.scaleDown,
+      ),
+    ),
+    prefixIconConstraints: BoxConstraints(minWidth: 11.w),
+    hintText: StringConstant.search,
+    hintStyle: TextStyle(
+      color: ColorsConstant.textLight,
+      fontSize: 13.sp,
+      fontWeight: FontWeight.w500,
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(5.h),
+      borderSide: BorderSide.none,
+    ),
+  );
+}

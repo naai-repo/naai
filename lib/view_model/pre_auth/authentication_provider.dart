@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/services/database.dart';
-import 'package:naai/view/utils/loading_indicator.dart';
-import 'package:naai/view/utils/routing/exception/exception_handling.dart';
-import 'package:naai/view/utils/routing/named_routes.dart';
-import 'package:naai/view/utils/shared_preferences/shared_preferences_helper.dart';
+import 'package:naai/utils/loading_indicator.dart';
+import 'package:naai/utils/exception/exception_handling.dart';
+import 'package:naai/utils/routing/named_routes.dart';
+import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -231,9 +231,8 @@ class AuthenticationProvider with ChangeNotifier {
     Loader.showLoader(context);
     try {
       User? user = FirebaseAuth.instance.currentUser;
-      await DatabaseService()
-          .setUserData(userData: userData.toJson())
-          .onError((FirebaseException error, stackTrace) =>
+      await DatabaseService().setUserData(userData: userData.toJson()).onError(
+          (FirebaseException error, stackTrace) =>
               throw ExceptionHandling(message: error.message ?? ""));
       Loader.hideLoader(context);
     } catch (e) {

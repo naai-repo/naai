@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:naai/view/utils/colors_constant.dart';
-import 'package:naai/view/utils/image_path_constant.dart';
-import 'package:naai/view/utils/string_constant.dart';
+import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/string_constant.dart';
 import 'package:sizer/sizer.dart';
 
 class ReusableWidgets {
@@ -102,6 +102,32 @@ class ReusableWidgets {
         ),
       ),
       gravity: ToastGravity.TOP,
+    );
+  }
+
+  static Widget circularLocationWidget() {
+    return Flexible(
+      flex: 0,
+      child: Container(
+        padding: EdgeInsets.all(1.3.h),
+        margin: EdgeInsets.only(right: 1.w),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(2, 2),
+              color: Colors.grey.shade300,
+              spreadRadius: 0.5,
+              blurRadius: 15,
+            ),
+          ],
+        ),
+        child: SvgPicture.asset(
+          ImagePathConstant.locationIcon,
+          color: ColorsConstant.appColor,
+        ),
+      ),
     );
   }
 }

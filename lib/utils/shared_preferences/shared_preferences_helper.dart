@@ -1,4 +1,4 @@
-import 'package:naai/view/utils/shared_preferences/shared_keys.dart';
+import 'package:naai/utils/shared_preferences/shared_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceHelper {
