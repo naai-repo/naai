@@ -22,6 +22,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     ExploreScreen(),
     Scaffold(
       body: Center(
+        child: Text('Maps'),
+      ),
+    ),
+    Scaffold(
+      body: Center(
         child: Text('Profile'),
       ),
     ),
@@ -50,16 +55,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
           child: Scaffold(
             body: _screens[provider.currentScreenIndex],
             bottomNavigationBar: Container(
-              padding: EdgeInsets.only(bottom: 1.h),
+              padding: EdgeInsets.only(bottom: 2.h),
               decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade400,
-                    offset: Offset(0, -5),
-                    blurRadius: 20,
-                    spreadRadius: 0.1,
-                  )
-                ],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(3.h),
                   topRight: Radius.circular(3.h),
@@ -74,7 +71,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                         EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
+                      children: <Widget>[
                         _bottomWidget(
                             image: ImagePathConstant.homeIcon,
                             index: 0,
@@ -85,9 +82,14 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                           onTap: () => provider.setCurrentScreenIndex(1),
                         ),
                         _bottomWidget(
-                          image: ImagePathConstant.profileIcon,
+                          image: ImagePathConstant.mapIcon,
                           index: 2,
                           onTap: () => provider.setCurrentScreenIndex(2),
+                        ),
+                        _bottomWidget(
+                          image: ImagePathConstant.profileIcon,
+                          index: 3,
+                          onTap: () => provider.setCurrentScreenIndex(3),
                         ),
                       ],
                     ),
