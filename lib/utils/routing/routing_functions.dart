@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
+import 'package:naai/view/post_auth/salon_details/salon_details_screen.dart';
 import 'package:naai/view/pre_auth/authentication_screen.dart';
 import 'package:naai/view/post_auth/explore/explore_screen.dart';
 import 'package:naai/view/pre_auth/username_screen.dart';
@@ -20,6 +21,7 @@ class RoutingFunctions {
     NamedRoutes.bottomNavigationRoute: (context) => BottomNavigationScreen(),
     NamedRoutes.exploreRoute: (context) => ExploreScreen(),
     NamedRoutes.homeRoute: (context) => HomeScreen(),
+    NamedRoutes.salonDetailsRoute: (context) => SalonDetailsScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -50,6 +52,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.homeRoute:
         target = HomeScreen();
+        break;
+      case NamedRoutes.salonDetailsRoute:
+        target = SalonDetailsScreen();
         break;
     }
 

@@ -10,4 +10,5 @@ class NamedRoutes {
   static const String bottomNavigationRoute = '/bottom-navigation';
   static const String exploreRoute = '/explore';
   static const String homeRoute = '/home';
+  static const String salonDetailsRoute = '/salon-details';
 }

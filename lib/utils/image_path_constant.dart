@@ -33,4 +33,26 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'current_location_pointer.png');
   static final String mapIcon =
       UtilityFunctions.getImagePath(imageTitle: 'map_icon.svg');
+  static final String leftArrowIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'left_arrow_icon.svg');
+  static final String burgerIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'burger_icon.svg');
+  static final String goToLocationIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'go_to_location_icon.svg');
+  static final String phoneIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'phone_icon.svg');
+  static final String shareIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'share_icon.svg');
+  static final String saveIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'save_icon.svg');
+  static final String instagramIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'instagram_icon.svg');
+  static final String addYourReviewIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'add_your_review_icon.svg');
+  static final String reviewStarIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'review_star_icon.svg');
+  static final String hairstyleWomenIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'hairstyle_women_icon.svg');
+  static final String tickBox =
+      UtilityFunctions.getImagePath(imageTitle: 'tick_box.svg');
 }

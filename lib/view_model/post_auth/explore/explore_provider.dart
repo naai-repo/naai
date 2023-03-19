@@ -1,5 +1,7 @@
 import 'package:location/location.dart' as location;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/salon.dart';
@@ -7,11 +9,13 @@ import 'package:naai/services/database.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
+import 'package:provider/provider.dart';
 
 class ExploreProvider with ChangeNotifier {
-  late Symbol symbol;
+  late Symbol _symbol;
 
-  late MapboxMapController controller;
+  late MapboxMapController _controller;
 
   TextEditingController _salonSearchController = TextEditingController();
 
@@ -51,12 +55,18 @@ class ExploreProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Save the index of the selected salon from the list of salons
+  void setSelectedSalonIndex(BuildContext context, {int index = 0}) {
+    context.read<SalonDetailsProvider>().setSelectedSalonIndex(index);
+  }
+
+  /// Initialising map related values as soon as the map  is rendered on screen.
   Future<void> onMapCreated(
       MapboxMapController mapController, BuildContext context) async {
-    this.controller = mapController;
+    this._controller = mapController;
 
     var _serviceEnabled = await _mapLocation.serviceEnabled();
-    
+
     if (!_serviceEnabled) {
       _serviceEnabled = await _mapLocation.requestService();
     }
@@ -79,18 +89,27 @@ class ExploreProvider with ChangeNotifier {
       ),
     );
 
-    symbol = await this.controller.addSymbol(
-      SymbolOptions(
-        geometry: currentLatLng,
-        iconImage: ImagePathConstant.currentLocationPointer,
-        iconSize: 0.2,
-      ),
-    );
+    _symbol = await this._controller.addSymbol(
+          SymbolOptions(
+            geometry: currentLatLng,
+            iconImage: ImagePathConstant.currentLocationPointer,
+            iconSize: 0.2,
+          ),
+        );
 
     Loader.hideLoader(context);
   }
 
+  /// Dispose [_controller] when the map is unmounted
+  void disposeMapController() {
+    _controller.dispose();
+  }
+
+  /// Initialising [_symbol]
   void initializeSymbol() {
-    symbol = Symbol('marker', SymbolOptions());
+    _symbol = Symbol(
+      'marker',
+      SymbolOptions(),
+    );
   }
 }

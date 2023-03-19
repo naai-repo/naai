@@ -42,15 +42,8 @@ class DatabaseService {
     QuerySnapshot querySnapshot = await salonCollection.get().onError(
           (error, stackTrace) => throw Exception(error),
         );
-
-    final List<SalonData> allData = querySnapshot.docs.map((docData) {
-      return SalonData(
-        address: docData['address'],
-        name: docData['name'],
-        rating: docData['rating'],
-        imagePath: 'assets/images/salon_dummy_image.png',
-      );
-    }).toList();
-    return allData;
+    return querySnapshot.docs
+        .map((docData) => SalonData.fromDocumentSnapshot(docData))
+        .toList();
   }
 }

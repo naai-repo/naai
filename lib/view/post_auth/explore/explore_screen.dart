@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
-import 'package:naai/view_model/post_auth/explore_provider.dart';
+import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -73,93 +74,102 @@ class _ExploreScreenState extends State<ExploreScreen>
           shrinkWrap: true,
           physics: BouncingScrollPhysics(),
           itemCount: provider.filteredSalonData.length,
-          itemBuilder: (context, index) => Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Image.asset(
-                          provider.filteredSalonData[index].imagePath ?? ''),
-                    )
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          provider.filteredSalonData[index].name ?? '',
-                          style: TextStyle(
-                            color: Color(0xFF373737),
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 3.w, vertical: 1.5.w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2.h),
-                            color: ColorsConstant.graphicFill,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                '${provider.filteredSalonData[index].rating}',
-                                style: TextStyle(
-                                  fontSize: 11.5.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: ColorsConstant.textDark,
-                                ),
-                              ),
-                              SizedBox(width: 1.w),
-                              SvgPicture.asset(
-                                ImagePathConstant.starIcon,
-                                height: 2.h,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 1.h),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SvgPicture.asset(ImagePathConstant.locationIconAlt),
-                        SizedBox(width: 1.w),
-                        Text(
-                          '1.3 Km',
-                          style: TextStyle(
-                            color: ColorsConstant.textDark,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 1.2.h),
-                    Text(
-                      '${provider.filteredSalonData[index].address}',
-                      style: StyleConstant.greySemiBoldTextStyle,
-                    ),
-                    SizedBox(height: 1.h),
-                  ],
-                ),
-                index == (provider.filteredSalonData.length - 1)
-                    ? SizedBox()
-                    : Divider(
-                        thickness: 1,
-                        color: ColorsConstant.divider,
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () {
+              provider.setSelectedSalonIndex(context, index: index);
+              Navigator.pushNamed(context, NamedRoutes.salonDetailsRoute);
+            },
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.asset(
+                            provider.filteredSalonData[index].imagePath ?? ''),
                       ),
-                SizedBox(height: 1.h),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 2.h),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            provider.filteredSalonData[index].name ?? '',
+                            style: TextStyle(
+                              color: ColorsConstant.textDark,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 3.w, vertical: 1.5.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2.h),
+                              color: ColorsConstant.graphicFill,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  '${provider.filteredSalonData[index].rating}',
+                                  style: TextStyle(
+                                    fontSize: 11.5.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: ColorsConstant.textDark,
+                                  ),
+                                ),
+                                SizedBox(width: 1.w),
+                                SvgPicture.asset(
+                                  ImagePathConstant.starIcon,
+                                  height: 2.h,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 1.h),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SvgPicture.asset(ImagePathConstant.locationIconAlt),
+                          SizedBox(width: 1.w),
+                          Text(
+                            '1.3 Km',
+                            style: TextStyle(
+                              color: ColorsConstant.textDark,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 1.2.h),
+                      Text(
+                        '${provider.filteredSalonData[index].address}',
+                        style: TextStyle(
+                          color: Color(0xFFA4A4A4),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 1.h),
+                    ],
+                  ),
+                  index == (provider.filteredSalonData.length - 1)
+                      ? SizedBox()
+                      : Divider(
+                          thickness: 1,
+                          color: ColorsConstant.divider,
+                        ),
+                  SizedBox(height: 1.h),
+                ],
+              ),
             ),
           ),
         ),

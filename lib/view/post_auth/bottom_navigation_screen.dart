@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naai/utils/string_constant.dart';
+import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/post_auth/explore/explore_screen.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/view_model/post_auth/bottom_navigation_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:sizer/sizer.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
@@ -55,45 +58,41 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
           child: Scaffold(
             body: _screens[provider.currentScreenIndex],
             bottomNavigationBar: Container(
-              padding: EdgeInsets.only(bottom: 2.h),
+              padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 5.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(3.h),
                   topRight: Radius.circular(3.h),
                 ),
-                color: Colors.white,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        _bottomWidget(
-                            image: ImagePathConstant.homeIcon,
-                            index: 0,
-                            onTap: () => provider.setCurrentScreenIndex(0)),
-                        _bottomWidget(
-                          image: ImagePathConstant.exploreIcon,
-                          index: 1,
-                          onTap: () => provider.setCurrentScreenIndex(1),
-                        ),
-                        _bottomWidget(
-                          image: ImagePathConstant.mapIcon,
-                          index: 2,
-                          onTap: () => provider.setCurrentScreenIndex(2),
-                        ),
-                        _bottomWidget(
-                          image: ImagePathConstant.profileIcon,
-                          index: 3,
-                          onTap: () => provider.setCurrentScreenIndex(3),
-                        ),
-                      ],
-                    ),
-                  )
+              child: SalomonBottomBar(
+                currentIndex: provider.currentScreenIndex,
+                onTap: (i) => provider.setCurrentScreenIndex(i),
+                items: <SalomonBottomBarItem>[
+                  _bottomWidget(
+                    provider: provider,
+                    tabName: StringConstant.home,
+                    image: ImagePathConstant.homeIcon,
+                    index: 0,
+                  ),
+                  _bottomWidget(
+                    provider: provider,
+                    tabName: StringConstant.explore,
+                    image: ImagePathConstant.exploreIcon,
+                    index: 1,
+                  ),
+                  _bottomWidget(
+                    provider: provider,
+                    tabName: StringConstant.map,
+                    image: ImagePathConstant.mapIcon,
+                    index: 2,
+                  ),
+                  _bottomWidget(
+                    provider: provider,
+                    tabName: StringConstant.profile,
+                    image: ImagePathConstant.profileIcon,
+                    index: 3,
+                  ),
                 ],
               ),
             ),
@@ -103,28 +102,25 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     );
   }
 
-  Widget _bottomWidget({
+  SalomonBottomBarItem _bottomWidget({
+    required BottomNavigationProvider provider,
+    required String tabName,
     required String image,
     required int index,
-    required VoidCallback onTap,
   }) {
-    return Consumer<BottomNavigationProvider>(
-        builder: (context, provider, child) {
-      return GestureDetector(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              image,
-              color: provider.currentScreenIndex == index
-                  ? ColorsConstant.appColor
-                  : ColorsConstant.bottomNavIconsDisabled,
-              height: 2.5.h,
-            ),
-          ],
-        ),
-      );
-    });
+    return SalomonBottomBarItem(
+      icon: SvgPicture.asset(
+        image,
+        color: provider.currentScreenIndex == index
+            ? ColorsConstant.appColor
+            : ColorsConstant.bottomNavIconsDisabled,
+        height: 3.h,
+      ),
+      title: Text(
+        tabName,
+        style: StyleConstant.appColorBoldTextStyle,
+      ),
+      selectedColor: ColorsConstant.appColor,
+    );
   }
 }

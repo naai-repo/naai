@@ -22,6 +22,12 @@ class StyleConstant {
     fontWeight: FontWeight.w500,
   );
 
+  static TextStyle appColorBoldTextStyle = TextStyle(
+    color: ColorsConstant.appColor,
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w500,
+  );
+
   static InputDecoration searchBoxInputDecoration = InputDecoration(
     filled: true,
     fillColor: ColorsConstant.graphicFillDark,
