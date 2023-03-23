@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:naai/view/post_auth/set_location_screen.dart';
+import 'package:naai/utils/routing/named_routes.dart';
+import 'package:naai/view/post_auth/home/set_home_location_screen.dart';
 import 'package:naai/view_model/post_auth/home/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -24,11 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Center(
         child: ElevatedButton(
-          onPressed: () => Navigator.push(
+          onPressed: () => Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => SetupHome(),
-            ),
+            NamedRoutes.setHomeLocationRoute,
           ),
           child: Text('Home'),
         ),

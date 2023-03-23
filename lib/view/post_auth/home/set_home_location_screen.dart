@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -10,20 +9,19 @@ import 'package:naai/utils/keys.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
-import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:math';
 
-class SetupHome extends StatefulWidget {
-  const SetupHome({Key? key}) : super(key: key);
+class SetHomeLocationScreen extends StatefulWidget {
+  const SetHomeLocationScreen({Key? key}) : super(key: key);
 
   @override
-  State<SetupHome> createState() => _SetupHomeState();
+  State<SetHomeLocationScreen> createState() => _SetHomeLocationScreenState();
 }
 
-class _SetupHomeState extends State<SetupHome> {
+class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
   bool _isSearchBoxActive = false;
 
   @override
