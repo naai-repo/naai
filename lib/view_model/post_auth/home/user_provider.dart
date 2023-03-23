@@ -14,6 +14,7 @@ import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/exception/exception_handling.dart';
 import 'package:naai/utils/keys.dart';
 import 'package:naai/utils/loading_indicator.dart';
+import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
 // import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -72,7 +73,11 @@ class UserProvider with ChangeNotifier {
     }
 
     Loader.showLoader(context);
-    var _locationData = await _mapLocation.getLocation();
+    var _locationData = await _mapLocation.getLocation().timeout(
+          const Duration(seconds: 7),
+          onTimeout: () => UtilityFunctions.locationApiTimeout(context,
+              message: 'Fetching location took too long!'),
+        );
 
     LatLng _currentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);

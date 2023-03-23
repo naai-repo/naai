@@ -46,4 +46,7 @@ class StringConstant {
 
   // Profile screen strings
   static const String profile = 'Profile';
+
+  // Exception related strings
+  static const String locationApiTookTooLong = 'Fetching location took too long';
 }

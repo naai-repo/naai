@@ -148,6 +148,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                                   Flexible(
                                     flex: 1,
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           provider.userData.homeLocation
