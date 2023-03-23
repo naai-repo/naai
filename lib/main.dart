@@ -4,6 +4,7 @@ import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/routing/routing_functions.dart';
 import 'package:naai/view_model/post_auth/bottom_navigation_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/user_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:naai/view_model/pre_auth/authentication_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => SalonDetailsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
         ),
       ],
       builder: (context, snapshot) {

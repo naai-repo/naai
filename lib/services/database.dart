@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naai/models/salon.dart';
+import 'package:naai/models/user.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 
 class DatabaseService {
@@ -40,10 +41,27 @@ class DatabaseService {
   /// Fetch the salon list from [FirebaseFirestore]
   Future<List<SalonData>> getSalonData() async {
     QuerySnapshot querySnapshot = await salonCollection.get().onError(
-          (error, stackTrace) => throw Exception(error),
-        );
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
     return querySnapshot.docs
         .map((docData) => SalonData.fromDocumentSnapshot(docData))
         .toList();
+  }
+
+  /// Fetch the user details from [FirebaseFirestore]
+  Future<UserModel> getUserDetails() async {
+    QuerySnapshot querySnapshot = await userCollection.get().onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    String uid = await SharedPreferenceHelper.getUserId();
+
+    return UserModel.fromSnapshot(
+      querySnapshot.docs.firstWhere((docData) => docData.id == uid),
+    );
   }
 }

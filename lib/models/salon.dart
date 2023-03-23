@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/models/service_detail.dart';
-import 'package:naai/utils/enums.dart';
 
 class SalonData {
   String? address;
@@ -13,7 +12,7 @@ class SalonData {
   List<Artist>? artist;
   List<Review>? reviewList;
   List<ServiceDetail>? services;
-  Map<String, bool>? timing;
+  List<Timing>? timing;
 
   SalonData({
     this.address,
@@ -27,45 +26,77 @@ class SalonData {
     this.timing,
   });
 
-  SalonData.fromDocumentSnapshot(DocumentSnapshot docData)
-      : address = docData['address'],
-        name = docData['name'],
-        rating = docData['rating'],
-        imagePath = 'assets/images/salon_dummy_image.png',
-        salonType = docData['salonType'],
-        artist = docData['artist'].map<Artist>((artist) {
-          return Artist(
-            imagePath: 'assets/images/artist_dummy_image.svg',
-            name: artist['name'],
-            rating: artist['rating'],
-          );
-        }).toList(),
-        reviewList = docData['reviews'].length > 0
-            ? docData['reviews'].map<Review>((review) {
-                return Review(
-                  userName: review['userName'],
-                  imagePath: 'assets/images/artist_dummy_image.svg',
-                  rating: review['rating'],
-                  createdAt: (review['createdAt'] as Timestamp).toDate(),
-                  reviewText: review['reviewText'],
-                );
-              }).toList()
-            : null,
-        services = docData['services'].length > 0
-            ? docData['services'].map<ServiceDetail>((service) {
-                return ServiceDetail(
-                  category: ServiceEnum.values.elementAt(ServiceEnum.values
-                      .indexWhere((category) =>
-                          category.name.toLowerCase() == service['category'])),
-                  price: service['price'].toDouble(),
-                  serviceTitle: service['serviceTitle'],
-                  targetGender: service['targetGender'] == 'male'
-                      ? Gender.MEN
-                      : service['targetGender'] == 'female'
-                          ? Gender.WOMEN
-                          : null,
-                );
-              }).toList()
-            : null;
-  // timing = docData['timing'];
+  factory SalonData.fromDocumentSnapshot(DocumentSnapshot data) {
+    Map<String, dynamic> docData = data.data() as Map<String, dynamic>;
+
+    return SalonData(
+      address: docData['address'],
+      name: docData['name'],
+      rating: docData['rating'],
+      imagePath: 'assets/images/salon_dummy_image.png',
+      salonType: docData['salonType'],
+      artist: docData['artist'].length > 0
+          ? docData['artist'].map<Artist>((artist) {
+              return Artist.fromFirestore(artist);
+            }).toList()
+          : null,
+      reviewList: docData['reviews'].length > 0
+          ? docData['reviews'].map<Review>((review) {
+              return Review.fromFirestore(review);
+            }).toList()
+          : null,
+      services: docData['services'].length > 0
+          ? docData['services'].map<ServiceDetail>((serviceDetail) {
+              return ServiceDetail.fromFirestore(serviceDetail);
+            }).toList()
+          : null,
+      timing: docData['timing'] != null
+          ? docData['timing'].map<Timing>((time) {
+              return Timing.fromFirestore(time);
+            }).toList()
+          : null,
+    );
+  }
+}
+
+enum Weekday {
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
+  sunday,
+}
+
+class Timing {
+  Weekday? weekday;
+  bool? open;
+  String? openingTime;
+  String? closingTime;
+
+  Timing({
+    this.weekday,
+    this.open,
+    this.openingTime,
+    this.closingTime,
+  });
+
+  factory Timing.fromFirestore(Map<String, dynamic>? data) {
+    return Timing(
+      weekday: Weekday.values[Weekday.values.indexWhere(
+        (weekdayEnum) => weekdayEnum.name.toString() == data?['weekday'],
+      )],
+      open: data?['open'] ?? false,
+      openingTime: data?['openingTime'] ?? '',
+      closingTime: data?['closingTime'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'weekday': weekday?.index,
+        'open': open,
+        'openingTime': openingTime,
+        'closingTime': closingTime,
+      };
 }

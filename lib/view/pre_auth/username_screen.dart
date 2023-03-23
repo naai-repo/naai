@@ -25,6 +25,7 @@ class UsernameScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           title: IconButton(
             onPressed: () {
+              provider.clearUsernameController();
               Navigator.pop(context);
             },
             splashRadius: 0.1,

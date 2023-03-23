@@ -102,7 +102,6 @@ class AuthenticationProvider with ChangeNotifier {
       throw Exception('Something went wrong!');
     }))
         .user;
-    setUserId(userId: _userId);
     if ((await DatabaseService().checkUserExists(uid: user!.uid)) == false) {
       storeUserDataInCollection(
         context: context,
@@ -111,6 +110,7 @@ class AuthenticationProvider with ChangeNotifier {
           gmailId: user.email,
         ),
       );
+      setUserId(userId: user.uid);
     }
     notifyListeners();
   }
@@ -193,8 +193,9 @@ class AuthenticationProvider with ChangeNotifier {
       User? user = FirebaseAuth.instance.currentUser;
 
       Loader.hideLoader(context);
-      setUserId(userId: _userId);
+
       if (await DatabaseService().checkUserExists(uid: user!.uid) == false) {
+        _userId = user.uid;
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
       } else {
         Navigator.pushReplacementNamed(
@@ -210,7 +211,7 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  /// Trigger [storeUserDataInCollection] method.
+  /// Trigger [storeUserDataInCollection] method to store the data in database
   /// Specifically for phone authentication
   void storePhoneAuthDataInDb(BuildContext context) {
     storeUserDataInCollection(
@@ -220,7 +221,15 @@ class AuthenticationProvider with ChangeNotifier {
         phoneNumber: _phoneNumber,
       ),
     );
-    // Navigator.pushReplacementNamed(context, NamedRoutes.navigationScreenRoute);
+
+    setUserId(userId: _userId);
+    
+    // Reset all the text controllers
+    resetMobielNumberController();
+    resetOtpControllers();
+    clearUsernameController();
+
+    Navigator.pushReplacementNamed(context, NamedRoutes.bottomNavigationRoute);
   }
 
   /// Store user data in the [FirebaseFirestore]
@@ -230,10 +239,8 @@ class AuthenticationProvider with ChangeNotifier {
   }) async {
     Loader.showLoader(context);
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-      await DatabaseService()
-          .setUserData(userData: userData.toJson())
-          .onError((FirebaseException error, stackTrace) =>
+      await DatabaseService().setUserData(userData: userData.toMap()).onError(
+          (FirebaseException error, stackTrace) =>
               throw ExceptionHandling(message: error.message ?? ""));
       Loader.hideLoader(context);
     } catch (e) {
@@ -322,6 +329,12 @@ class AuthenticationProvider with ChangeNotifier {
     _otpDigitFiveController.clear();
     _otpDigitSixController.clear();
     _isVerifyOtpButtonActive = false;
+    notifyListeners();
+  }
+
+  /// Clear the value of [_userNameController]
+  void clearUsernameController() {
+    _userNameController.clear();
     notifyListeners();
   }
 }

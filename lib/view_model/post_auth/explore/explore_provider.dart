@@ -1,22 +1,12 @@
-import 'package:location/location.dart' as location;
-
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/services/database.dart';
-import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class ExploreProvider with ChangeNotifier {
-  late Symbol _symbol;
-
-  late MapboxMapController _controller;
-
   TextEditingController _salonSearchController = TextEditingController();
 
   List<SalonData> _salonData = [];
@@ -26,8 +16,6 @@ class ExploreProvider with ChangeNotifier {
 
   List<SalonData> get salonData => _salonData;
   List<SalonData> get filteredSalonData => _filteredSalonData;
-
-  final _mapLocation = location.Location();
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   void getSalonList(BuildContext context) async {
@@ -39,6 +27,7 @@ class ExploreProvider with ChangeNotifier {
       Loader.hideLoader(context);
     } catch (e) {
       Loader.hideLoader(context);
+      print(e);
       ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
@@ -58,58 +47,5 @@ class ExploreProvider with ChangeNotifier {
   /// Save the index of the selected salon from the list of salons
   void setSelectedSalonIndex(BuildContext context, {int index = 0}) {
     context.read<SalonDetailsProvider>().setSelectedSalonIndex(index);
-  }
-
-  /// Initialising map related values as soon as the map  is rendered on screen.
-  Future<void> onMapCreated(
-      MapboxMapController mapController, BuildContext context) async {
-    this._controller = mapController;
-
-    var _serviceEnabled = await _mapLocation.serviceEnabled();
-
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _mapLocation.requestService();
-    }
-    var _permissionGranted = await _mapLocation.hasPermission();
-    if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
-    }
-
-    Loader.showLoader(context);
-    var _locationData = await _mapLocation.getLocation();
-
-    LatLng currentLatLng =
-        LatLng(_locationData.latitude!, _locationData.longitude!);
-    mapController.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: currentLatLng,
-          zoom: 16,
-        ),
-      ),
-    );
-
-    _symbol = await this._controller.addSymbol(
-          SymbolOptions(
-            geometry: currentLatLng,
-            iconImage: ImagePathConstant.currentLocationPointer,
-            iconSize: 0.2,
-          ),
-        );
-
-    Loader.hideLoader(context);
-  }
-
-  /// Dispose [_controller] when the map is unmounted
-  void disposeMapController() {
-    _controller.dispose();
-  }
-
-  /// Initialising [_symbol]
-  void initializeSymbol() {
-    _symbol = Symbol(
-      'marker',
-      SymbolOptions(),
-    );
   }
 }

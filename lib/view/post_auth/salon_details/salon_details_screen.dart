@@ -55,11 +55,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                       salonDetailOverview(),
                       Divider(
                         thickness: 5,
-                        color: ColorsConstant.graphicFillDark,
-                      ),
-                      SizedBox(height: 3.h),
-                      Divider(
-                        thickness: 5,
                         height: 0,
                         color: ColorsConstant.graphicFillDark,
                       ),

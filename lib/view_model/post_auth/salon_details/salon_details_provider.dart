@@ -73,25 +73,22 @@ class SalonDetailsProvider with ChangeNotifier {
     bool serviceCategoryFiltersApplied = false,
   }) {
     _filteredServiceList.clear();
-    if (genderFiltersApplied) {
-      if (_selectedGendersFilter.isNotEmpty) {
-        _filteredServiceList.addAll(_selectedSalonData.services?.where(
-                (service) =>
-                    _selectedGendersFilter.contains(service.targetGender)) ??
-            []);
-      } else {
-        _filteredServiceList.addAll(_selectedSalonData.services ?? []);
-      }
-    } else {
-      if (_selectedServiceCategories.isNotEmpty) {
-        print('Aya');
-        _filteredServiceList.addAll(_selectedSalonData.services?.where(
-                (service) =>
-                    _selectedServiceCategories.contains(service.category)) ??
-            []);
-      } else {
-        _filteredServiceList.addAll(_selectedSalonData.services ?? []);
-      }
+    if (_selectedGendersFilter.isEmpty && _selectedServiceCategories.isEmpty) {
+      _filteredServiceList.addAll(_selectedSalonData.services ?? []);
+    }
+
+    if (_selectedGendersFilter.isNotEmpty) {
+      _filteredServiceList.addAll(_selectedSalonData.services?.where(
+              (service) =>
+                  _selectedGendersFilter.contains(service.targetGender)) ??
+          []);
+    }
+
+    if (_selectedServiceCategories.isNotEmpty) {
+      _filteredServiceList.addAll(_selectedSalonData.services?.where(
+              (service) =>
+                  _selectedServiceCategories.contains(service.category)) ??
+          []);
     }
     notifyListeners();
   }
