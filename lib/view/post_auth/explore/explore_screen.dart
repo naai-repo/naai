@@ -7,6 +7,7 @@ import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -152,7 +153,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       ),
                       SizedBox(height: 1.2.h),
                       Text(
-                        '${provider.filteredSalonData[index].address}',
+                        '${provider.filteredSalonData[index].address?.addressString}',
                         style: TextStyle(
                           color: Color(0xFFA4A4A4),
                           fontWeight: FontWeight.w500,
@@ -204,37 +205,44 @@ class _ExploreScreenState extends State<ExploreScreen>
                   ),
                   SizedBox(width: 3.w),
                   Flexible(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        ReusableWidgets.circularLocationWidget(),
-                        Flexible(
-                          flex: 1,
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Delhi, India",
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w600,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                          context, NamedRoutes.exploreNearbySalonsRoute),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          ReusableWidgets.circularLocationWidget(),
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  context
+                                      .read<UserProvider>()
+                                      .getHomeAddressText(),
+                                  style: TextStyle(
+                                    color: Color(0xFF333333),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                StringConstant.changeLocation,
-                                style: TextStyle(
-                                  color: ColorsConstant.appColor,
-                                  fontSize: 9.sp,
-                                  decoration: TextDecoration.underline,
+                                Text(
+                                  StringConstant.changeLocation,
+                                  style: TextStyle(
+                                    color: ColorsConstant.appColor,
+                                    fontSize: 9.sp,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

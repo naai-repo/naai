@@ -7,6 +7,8 @@ import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/view_model/post_auth/home/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,12 +27,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkIfUserExists() {
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(
-        context,
-        FirebaseAuth.instance.currentUser != null
-            ? NamedRoutes.bottomNavigationRoute
-            : NamedRoutes.authenticationRoute,
-      );
+      if (FirebaseAuth.instance.currentUser != null) {
+        context
+            .read<UserProvider>()
+            .checkUserIdInSharedPref(FirebaseAuth.instance.currentUser!.uid);
+
+        Navigator.pushReplacementNamed(
+            context, NamedRoutes.bottomNavigationRoute);
+      } else {
+        Navigator.pushReplacementNamed(
+          context,
+          NamedRoutes.authenticationRoute,
+        );
+      }
     });
   }
 

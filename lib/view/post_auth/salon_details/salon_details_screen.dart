@@ -923,7 +923,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            salonAddress(address: provider.selectedSalonData.address ?? ""),
+            salonAddress(address: provider.selectedSalonData.address?.addressString ?? ""),
             salonTiming(),
             salonContactDetails(),
             SizedBox(height: 2.h),

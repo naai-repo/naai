@@ -14,14 +14,14 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:math';
 
-class SetHomeLocationScreen extends StatefulWidget {
-  const SetHomeLocationScreen({Key? key}) : super(key: key);
+class ExploreNearbySalonsScreen extends StatefulWidget {
+  const ExploreNearbySalonsScreen({Key? key}) : super(key: key);
 
   @override
-  State<SetHomeLocationScreen> createState() => _SetHomeLocationScreenState();
+  State<ExploreNearbySalonsScreen> createState() => _ExploreNearbySalonsScreenState();
 }
 
-class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
+class _ExploreNearbySalonsScreenState extends State<ExploreNearbySalonsScreen> {
   bool _isSearchBoxActive = false;
 
   @override
@@ -46,10 +46,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               IconButton(
-                onPressed: () {
-                  provider.clearMapSearchText();
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
                 splashRadius: 0.1,
                 splashColor: Colors.transparent,
                 icon: SvgPicture.asset(
@@ -151,8 +148,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                                   Flexible(
                                     flex: 1,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           provider.userData.homeLocation

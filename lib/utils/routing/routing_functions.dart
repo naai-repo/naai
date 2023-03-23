@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
+import 'package:naai/view/post_auth/explore/explore_nearby_salons_screen.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/post_auth/home/set_home_location_screen.dart';
 import 'package:naai/view/post_auth/salon_details/salon_details_screen.dart';
@@ -24,6 +25,8 @@ class RoutingFunctions {
     NamedRoutes.homeRoute: (context) => HomeScreen(),
     NamedRoutes.salonDetailsRoute: (context) => SalonDetailsScreen(),
     NamedRoutes.setHomeLocationRoute: (context) => SetHomeLocationScreen(),
+    NamedRoutes.exploreNearbySalonsRoute: (context) =>
+        ExploreNearbySalonsScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -60,6 +63,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.setHomeLocationRoute:
         target = SetHomeLocationScreen();
+        break;
+      case NamedRoutes.exploreNearbySalonsRoute:
+        target = ExploreNearbySalonsScreen();
         break;
     }
 

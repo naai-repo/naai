@@ -11,6 +11,8 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/home/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -198,6 +200,8 @@ class AuthenticationProvider with ChangeNotifier {
         _userId = user.uid;
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
       } else {
+        context.read<UserProvider>().checkUserIdInSharedPref(
+            FirebaseAuth.instance.currentUser?.uid ?? "");
         Navigator.pushReplacementNamed(
             context, NamedRoutes.bottomNavigationRoute);
       }
@@ -223,7 +227,7 @@ class AuthenticationProvider with ChangeNotifier {
     );
 
     setUserId(userId: _userId);
-    
+
     // Reset all the text controllers
     resetMobielNumberController();
     resetOtpControllers();

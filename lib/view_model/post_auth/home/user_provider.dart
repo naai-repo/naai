@@ -14,10 +14,11 @@ import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/exception/exception_handling.dart';
 import 'package:naai/utils/keys.dart';
 import 'package:naai/utils/loading_indicator.dart';
-import 'package:naai/utils/string_constant.dart';
+import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/utils/utility_functions.dart';
 // import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class UserProvider with ChangeNotifier {
@@ -38,6 +39,26 @@ class UserProvider with ChangeNotifier {
   UserModel get userData => _userData;
 
   final _mapLocation = location.Location();
+
+  /// Check if there is a [uid] stored in [SharedPreferences] or not.
+  /// If no [uid] is found, then get the userId of the currently logged in
+  /// user and save it in [SharedPreferences].
+  /// 
+  /// The [uid] is necessary to get the user data.
+  void checkUserIdInSharedPref(String uid) async {
+    String storedUid = await SharedPreferenceHelper.getUserId();
+    if (storedUid.isEmpty) {
+      await SharedPreferenceHelper.setUserId(uid);
+    }
+  }
+
+  /// Initialising [_symbol]
+  void initializeSymbol() {
+    _symbol = Symbol(
+      'marker',
+      SymbolOptions(),
+    );
+  }
 
   /// Fetch the user details from [FirebaseFirestore]
   void getUserDetails(BuildContext context) async {
@@ -79,72 +100,27 @@ class UserProvider with ChangeNotifier {
               message: 'Fetching location took too long!'),
         );
 
-    LatLng _currentLatLng =
+    LatLng currentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
 
     await mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: _currentLatLng,
+          target: currentLatLng,
           zoom: 16,
         ),
       ),
     );
 
     _symbol = await this._controller.addSymbol(
-          UtilityFunctions.getLocationSymbolOptions(latLng: _currentLatLng),
+          UtilityFunctions.getLocationSymbolOptions(latLng: currentLatLng),
         );
 
     Loader.hideLoader(context);
-    UserLocationModel model =
-        await getAddressFromCoordinates(context, coordinates: _currentLatLng) ??
-            UserLocationModel();
-    _addressText = getAddressText(model);
 
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+    await getFormattedAddressConfirmation(
       context: context,
-      builder: (context) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(2.h),
-        ),
-        height: 20.h,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              _addressText,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 1.h),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(ColorsConstant.appColor),
-              ),
-              onPressed: () => updateUserLocation(context, _currentLatLng),
-              child: Text('Confirm Location'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Dispose [_controller] when the map is unmounted
-  void disposeMapController() {
-    _controller.dispose();
-  }
-
-  /// Initialising [_symbol]
-  void initializeSymbol() {
-    _symbol = Symbol(
-      'marker',
-      SymbolOptions(),
+      coordinates: currentLatLng,
     );
   }
 
@@ -168,6 +144,11 @@ class UserProvider with ChangeNotifier {
 
     await _controller.addSymbol(
       UtilityFunctions.getLocationSymbolOptions(latLng: selectedLatLng),
+    );
+
+    await getFormattedAddressConfirmation(
+      context: context,
+      coordinates: selectedLatLng,
     );
 
     notifyListeners();
@@ -226,46 +207,9 @@ class UserProvider with ChangeNotifier {
           ),
         );
 
-    Loader.showLoader(context);
-
-    UserLocationModel model =
-        await getAddressFromCoordinates(context, coordinates: coordinates) ??
-            UserLocationModel();
-    _addressText = getAddressText(model);
-
-    Loader.hideLoader(context);
-
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+    await getFormattedAddressConfirmation(
       context: context,
-      builder: (context) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(2.h),
-        ),
-        height: 20.h,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              _addressText,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 1.h),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(ColorsConstant.appColor),
-              ),
-              onPressed: () => updateUserLocation(context, coordinates),
-              child: Text('Confirm Location'),
-            ),
-          ],
-        ),
-      ),
+      coordinates: coordinates,
     );
 
     notifyListeners();
@@ -301,7 +245,7 @@ class UserProvider with ChangeNotifier {
   /// Formats the address text for the provided location.
   /// The address format is [x, y] where the precedence of x and y is
   /// Neighborhood, Locality, Place, District, Region
-  String getAddressText(UserLocationModel locationModel) {
+  String formatAddressText(UserLocationModel locationModel) {
     String address = '';
     for (int i = 0; i < (locationModel.features?.length ?? 0); i++) {
       var element = locationModel.features?[i];
@@ -359,5 +303,72 @@ class UserProvider with ChangeNotifier {
     }
 
     Navigator.pop(context);
+  }
+
+  /// Get complete address from the provided coordinates
+  /// Format the address according to the need.
+  /// Show a bottom sheet with the formatted address text and a button to confirm
+  /// the new address.
+  Future<void> getFormattedAddressConfirmation({
+    required BuildContext context,
+    required LatLng coordinates,
+  }) async {
+    Loader.showLoader(context);
+
+    UserLocationModel model =
+        await getAddressFromCoordinates(context, coordinates: coordinates) ??
+            UserLocationModel();
+    _addressText = formatAddressText(model);
+
+    Loader.hideLoader(context);
+
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(2.h),
+        ),
+        height: 20.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              _addressText,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 1.h),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(ColorsConstant.appColor),
+              ),
+              onPressed: () => updateUserLocation(context, coordinates),
+              child: Text('Confirm Location'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Get the address text from the user's home location
+  String getHomeAddressText() {
+    return userData.homeLocation?.addressString ?? "";
+  }
+
+  /// Dispose [_controller] when the map is unmounted
+  void disposeMapController() {
+    _controller.dispose();
+  }
+
+  /// Clear the value of[_mapSearchController]
+  void clearMapSearchText() {
+    _mapSearchController.clear();
+    notifyListeners();
   }
 }

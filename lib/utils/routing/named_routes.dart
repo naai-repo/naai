@@ -12,4 +12,5 @@ class NamedRoutes {
   static const String homeRoute = '/home';
   static const String salonDetailsRoute = '/salon-details';
   static const String setHomeLocationRoute = '/set-home-location';
+  static const String exploreNearbySalonsRoute = '/explore-nearby-salons';
 }

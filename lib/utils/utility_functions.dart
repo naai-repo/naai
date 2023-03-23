@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 
@@ -24,6 +25,7 @@ class UtilityFunctions {
   }) {
     ReusableWidgets.showFlutterToast(
         context, StringConstant.locationApiTookTooLong);
+    Loader.hideLoader(context);
     return LocationData.fromMap({});
   }
 }
