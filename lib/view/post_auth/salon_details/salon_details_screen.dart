@@ -767,7 +767,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                     borderRadius: BorderRadius.circular(1.5.h),
                     child: Container(
                       margin: EdgeInsets.only(
-                        right: 2.5.w,
                         top: 0.5.h,
                         bottom: 0.5.h,
                         left: index == 0 ? 0 : 2.5.w,
