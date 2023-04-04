@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:naai/utils/routing/named_routes.dart';
-import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -40,27 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 100.w,
                 height: 100.h,
                 color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () => Navigator.pushNamed(
-                        context,
-                        NamedRoutes.setHomeLocationRoute,
-                      ),
-                      child: Text('Home'),
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      NamedRoutes.setHomeLocationRoute,
                     ),
-                    SizedBox(height: 5.h),
-                    ElevatedButton(
-                      onPressed: () {
-                        FirebaseAuth.instance.signOut();
-                        SharedPreferenceHelper.clearAll();
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            NamedRoutes.authenticationRoute, (route) => false);
-                      },
-                      child: Text('Logout'),
-                    ),
-                  ],
+                    child: Text('Home'),
+                  ),
                 ),
               ),
             ),

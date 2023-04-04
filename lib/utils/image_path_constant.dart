@@ -61,4 +61,20 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'right_arrow_icon.svg');
   static final String appBackgroundImage =
       UtilityFunctions.getImagePath(imageTitle: 'app_background_image.svg');
+  static final String pencilIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'pencil_icon.svg');
+  static final String reviewsIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'reviews_icon.svg');
+  static final String bookingHistoryIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'booking_history_icon.svg');
+  static final String referralIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'referral_icon.svg');
+  static final String salonRegistrationIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'salon_registration_icon.svg');
+  static final String settingsIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'settings_icon.svg');
+  static final String informationIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'information_icon.svg');
+  static final String logoutIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'logout_icon.svg');
 }

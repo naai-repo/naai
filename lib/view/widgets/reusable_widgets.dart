@@ -253,7 +253,7 @@ class ReusableWidgets {
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: [
+                                children: <Widget>[
                                   Text(
                                     StringConstant.viewSalon,
                                     style: TextStyle(

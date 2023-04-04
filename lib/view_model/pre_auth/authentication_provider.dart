@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:naai/models/user.dart';
@@ -315,6 +316,13 @@ class AuthenticationProvider with ChangeNotifier {
         otpDigitFiveController.text.isNotEmpty &&
         otpDigitSixController.text.isNotEmpty);
     notifyListeners();
+  }
+
+  /// Trigger logout event
+  Future<void> logout(BuildContext context) async {
+    FirebaseAuth.instance.signOut();
+    SharedPreferenceHelper.clearAll();
+    Phoenix.rebirth(context);
   }
 
   /// Save the [_userId] after authentication in [SharedPreferences]

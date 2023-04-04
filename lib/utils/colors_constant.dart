@@ -26,4 +26,6 @@ class ColorsConstant {
   static const Color lightAppColor = Color(0xFFFCF3F3);
   static const Color reviewStarGreyColor = Color(0xFFD9D9D9);
   static const Color appBackgroundColor = Color(0xFF565656);
+  static const Color incompleteProfileBoxColor = Color(0xFFFFF48E);
+  static const Color incompleteProfileBoxBorderColor = Color(0xFFDBCC49);
 }

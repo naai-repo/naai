@@ -35,7 +35,7 @@ class StringConstant {
   // Salon detail screen strings
   static const String availableStaff = 'AVAILABLE STAFF';
   static const String services = "SERVICES";
-  static const String reviews = "REVIEWS";
+  static const String reviews = "Reviews";
   static const String addYourReview = "Add your review";
   static const String summarizeYourReview = "Summarize your review";
   static const String submitReview = "Submit Review";
@@ -50,6 +50,14 @@ class StringConstant {
 
   // Profile screen strings
   static const String profile = 'Profile';
+  static const String yourProfile = 'Your profile';
+  static const String incompleteProfile = 'Incomplete Profile';
+  static const String bookingHistoryz = 'Booking History';
+  static const String referral = 'Referral';
+  static const String salonRegistration = 'Salon Registration';
+  static const String settings = 'Settings';
+  static const String more = 'More';
+  static const String logout = 'Logout';
 
   // Exception related strings
   static const String locationApiTookTooLong =

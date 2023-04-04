@@ -728,7 +728,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 1.h),
                   child: Tab(
-                    child: Text(StringConstant.reviews),
+                    child: Text(StringConstant.reviews.toUpperCase()),
                   ),
                 ),
               ],

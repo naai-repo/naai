@@ -16,7 +16,6 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
-// import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';

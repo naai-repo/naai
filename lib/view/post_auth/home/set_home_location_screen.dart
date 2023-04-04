@@ -71,7 +71,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
               padding: EdgeInsets.symmetric(horizontal: 4.5.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   screenSubtitle(),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 2.h),
