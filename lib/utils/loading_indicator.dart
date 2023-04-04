@@ -1,18 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:naai/utils/colors_constant.dart';
 
 class Loader {
   static showLoader(BuildContext context) {
     showDialog(
         context: context,
-        barrierColor: Colors.white.withOpacity(0.8),
+        barrierColor: Colors.white.withOpacity(0.3),
         builder: (BuildContext context) {
           return WillPopScope(
             onWillPop: () async => false,
             child: Center(
-              child: CircularProgressIndicator(
-                color: ColorsConstant.appColor,
-              ),
+              child: CupertinoActivityIndicator()
             ),
           );
         });

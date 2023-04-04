@@ -5,7 +5,7 @@ import 'package:naai/models/service_detail.dart';
 import 'package:naai/models/user.dart';
 
 class SalonData {
-  // String? address;
+  String? salonId;
   HomeLocation? address;
   double? rating;
   String? name;
@@ -17,10 +17,11 @@ class SalonData {
   List<Timing>? timing;
 
   SalonData({
+    this.salonId,
     this.address,
     this.rating,
     this.name,
-    this.imagePath = 'https',
+    this.imagePath = 'assets/images/salon_dummy_image.png',
     this.salonType,
     this.artist,
     this.reviewList,
@@ -32,6 +33,7 @@ class SalonData {
     Map<String, dynamic> docData = data.data() as Map<String, dynamic>;
 
     return SalonData(
+      salonId: docData['salonId'],
       address: HomeLocation.fromFirestore(docData['address'] ?? {}),
       name: docData['name'],
       rating: docData['rating'],

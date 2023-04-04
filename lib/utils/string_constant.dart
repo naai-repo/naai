@@ -22,6 +22,9 @@ class StringConstant {
   static const String exploreSalons = 'Explore Salons';
   static const String search = 'Search';
   static const String changeLocation = 'change location';
+  static const String cantFindAnyLocation = 'Can\'t find anything!';
+  static const String exploreSalonsSearchHint = 'explore salons';
+  static const String salonData = 'screen-data';
 
   // Home screen strings
   static const String home = 'Home';
@@ -43,10 +46,14 @@ class StringConstant {
 
   // Maps screen strings
   static const String map = 'Map';
+  static const String viewSalon = 'View Salon';
 
   // Profile screen strings
   static const String profile = 'Profile';
 
   // Exception related strings
-  static const String locationApiTookTooLong = 'Fetching location took too long';
+  static const String locationApiTookTooLong =
+      'Fetching location took too long';
+  static const String loading = 'loading';
+  static const String unknown = 'unknown';
 }

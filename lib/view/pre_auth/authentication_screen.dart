@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -47,7 +48,7 @@ class AuthenticationScreen extends StatelessWidget {
                         SizedBox(height: 8.h),
                         mobileNumberTextField(),
                         SizedBox(height: 4.h),
-                        ReusableWidgets.redFullWidthButon(
+                        ReusableWidgets.redFullWidthButton(
                           buttonText: StringConstant.getOtp,
                           onTap: () {
                             FocusManager.instance.primaryFocus!.unfocus();
@@ -81,11 +82,9 @@ class AuthenticationScreen extends StatelessWidget {
                     Container(
                       height: 80.h,
                       width: 100.h,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withOpacity(0.3),
                       child: Center(
-                        child: CircularProgressIndicator(
-                          color: ColorsConstant.appColor,
-                        ),
+                        child: CupertinoActivityIndicator(),
                       ),
                     ),
                 ],

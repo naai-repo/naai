@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:marquee/marquee.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
@@ -26,7 +27,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   void initState() {
     homeScreenController = TabController(length: 1, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<ExploreProvider>().getSalonList(context);
+      context.read<ExploreProvider>().initExploreScreen(context);
     });
     super.initState();
   }
@@ -36,29 +37,43 @@ class _ExploreScreenState extends State<ExploreScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       body: Consumer<ExploreProvider>(builder: (context, provider, child) {
-        return NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            SliverAppBar(
-              elevation: 10,
-              backgroundColor: Colors.white,
-              pinned: true,
-              floating: true,
-              title: Padding(
-                padding: EdgeInsets.only(top: 3.h),
-                child: Text(
-                  StringConstant.exploreSalons,
-                  style: StyleConstant.headingTextStyle,
-                ),
-              ),
-              centerTitle: false,
-              bottom: searchBarWithLocation(),
-            ),
-          ],
-          body: TabBarView(
-            controller: homeScreenController,
+        return Scaffold(
+          body: Stack(
             children: <Widget>[
-              salonList(),
+              ReusableWidgets.appScreenCommonBackground(),
+              CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: [
+                  SliverAppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    pinned: true,
+                    stretch: true,
+                    expandedHeight: 5.h,
+                    collapsedHeight: 0,
+                    flexibleSpace: const FlexibleSpaceBar(
+                      stretchModes: [StretchMode.zoomBackground],
+                    ),
+                    toolbarHeight: 0,
+                  ),
+                  titleSearchBarWithLocation(context),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        print(provider.filteredSalonData);
+                        return provider.filteredSalonData.length == 0
+                            ? Container(
+                                width: 100.w,
+                                height: 100.h,
+                                color: Colors.pink,
+                              )
+                            : salonList(context, index);
+                      },
+                      childCount: provider.filteredSalonData.length,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         );
@@ -66,16 +81,120 @@ class _ExploreScreenState extends State<ExploreScreen>
     );
   }
 
-  Widget salonList() {
-    return Consumer<ExploreProvider>(builder: (context, provider, child) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 4.w),
-        color: Colors.white,
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: provider.filteredSalonData.length,
-          itemBuilder: (context, index) => GestureDetector(
+  MediaQuery titleSearchBarWithLocation(BuildContext context) {
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: SliverAppBar(
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(3.h),
+            topRight: Radius.circular(3.h),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        pinned: true,
+        floating: true,
+        title: Container(
+          padding: EdgeInsets.only(top: 3.h),
+          child: Text(
+            StringConstant.exploreSalons,
+            style: StyleConstant.headingTextStyle,
+          ),
+        ),
+        centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(13.h),
+          child: Consumer<ExploreProvider>(builder: (context, provider, child) {
+            return TabBar(
+              controller: homeScreenController,
+              indicatorColor: Colors.white,
+              tabs: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 4.3.h, bottom: 2.h),
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 50.w,
+                        child: TextFormField(
+                          controller: provider.salonSearchController,
+                          cursorColor: ColorsConstant.appColor,
+                          style: StyleConstant.searchTextStyle,
+                          textInputAction: TextInputAction.done,
+                          onChanged: (searchText) =>
+                              provider.filterSalonList(searchText),
+                          decoration: StyleConstant.searchBoxInputDecoration(
+                              hintText: StringConstant.search),
+                        ),
+                      ),
+                      SizedBox(width: 3.w),
+                      Flexible(
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, NamedRoutes.setHomeLocationRoute),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              ReusableWidgets.circularLocationWidget(),
+                              Flexible(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 3.h,
+                                      child: Marquee(
+                                        text: context
+                                                .read<UserProvider>()
+                                                .getHomeAddressText() ??
+                                            "",
+                                        velocity: 40.0,
+                                        pauseAfterRound:
+                                            const Duration(seconds: 1),
+                                        blankSpace: 30.0,
+                                        style: TextStyle(
+                                          color: Color(0xFF333333),
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      StringConstant.changeLocation,
+                                      style: TextStyle(
+                                        color: ColorsConstant.appColor,
+                                        fontSize: 9.sp,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget salonList(BuildContext context, int index) {
+    return Consumer<ExploreProvider>(
+      builder: (context, provider, child) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          color: Colors.white,
+          child: GestureDetector(
             onTap: () {
               provider.setSelectedSalonIndex(context, index: index);
               Navigator.pushNamed(context, NamedRoutes.salonDetailsRoute);
@@ -155,7 +274,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       Text(
                         '${provider.filteredSalonData[index].address?.addressString}',
                         style: TextStyle(
-                          color: Color(0xFFA4A4A4),
+                          color: ColorsConstant.greySalonAddress,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -163,7 +282,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                     ],
                   ),
                   index == (provider.filteredSalonData.length - 1)
-                      ? SizedBox()
+                      ? SizedBox(height: 10.h)
                       : Divider(
                           thickness: 1,
                           color: ColorsConstant.divider,
@@ -173,84 +292,19 @@ class _ExploreScreenState extends State<ExploreScreen>
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
-  PreferredSizeWidget searchBarWithLocation() {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(10.h),
-      child: Consumer<ExploreProvider>(builder: (context, provider, child) {
-        return TabBar(
-          controller: homeScreenController,
-          indicatorColor: Colors.white,
-          tabs: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 50.w,
-                    height: 5.h,
-                    child: TextFormField(
-                      controller: provider.salonSearchController,
-                      cursorColor: ColorsConstant.appColor,
-                      style: StyleConstant.searchTextStyle,
-                      textInputAction: TextInputAction.done,
-                      onChanged: (searchText) =>
-                          provider.filterSalonList(searchText),
-                      decoration: StyleConstant.searchBoxInputDecoration,
-                    ),
-                  ),
-                  SizedBox(width: 3.w),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(
-                          context, NamedRoutes.exploreNearbySalonsRoute),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          ReusableWidgets.circularLocationWidget(),
-                          Flexible(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  context
-                                      .read<UserProvider>()
-                                      .getHomeAddressText(),
-                                  style: TextStyle(
-                                    color: Color(0xFF333333),
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  StringConstant.changeLocation,
-                                  style: TextStyle(
-                                    color: ColorsConstant.appColor,
-                                    fontSize: 9.sp,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      }),
+  Widget appScreenCommonBackground() {
+    return Container(
+      color: ColorsConstant.appBackgroundColor,
+      alignment: Alignment.topCenter,
+      child: SvgPicture.asset(
+        ImagePathConstant.appBackgroundImage,
+        color: ColorsConstant.graphicFill,
+      ),
     );
   }
 }

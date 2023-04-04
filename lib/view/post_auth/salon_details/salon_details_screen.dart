@@ -116,17 +116,24 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   GestureDetector(
+                    behavior: HitTestBehavior.opaque,
                     onTap: () => Navigator.pop(context),
+                    child: Padding(
+                      padding: EdgeInsets.all(1.h),
+                      child: SvgPicture.asset(
+                        ImagePathConstant.leftArrowIcon,
+                        color: Colors.white,
+                        height: 2.5.h,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(1.h),
                     child: SvgPicture.asset(
-                      ImagePathConstant.leftArrowIcon,
+                      ImagePathConstant.burgerIcon,
                       color: Colors.white,
                       height: 2.5.h,
                     ),
-                  ),
-                  SvgPicture.asset(
-                    ImagePathConstant.burgerIcon,
-                    color: Colors.white,
-                    height: 2.5.h,
                   ),
                 ],
               ),
@@ -923,7 +930,9 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            salonAddress(address: provider.selectedSalonData.address?.addressString ?? ""),
+            salonAddress(
+                address:
+                    provider.selectedSalonData.address?.addressString ?? ""),
             salonTiming(),
             salonContactDetails(),
             SizedBox(height: 2.h),

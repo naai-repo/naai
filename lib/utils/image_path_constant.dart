@@ -55,4 +55,10 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'hairstyle_women_icon.svg');
   static final String tickBox =
       UtilityFunctions.getImagePath(imageTitle: 'tick_box.svg');
+  static final String salonLocationPointer =
+      UtilityFunctions.getImagePath(imageTitle: 'salon_location_marker.png');
+  static final String rightArrowIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'right_arrow_icon.svg');
+  static final String appBackgroundImage =
+      UtilityFunctions.getImagePath(imageTitle: 'app_background_image.svg');
 }

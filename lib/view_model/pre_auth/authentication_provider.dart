@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/utils/exception/exception_handling.dart';
@@ -105,6 +106,8 @@ class AuthenticationProvider with ChangeNotifier {
     }))
         .user;
     if ((await DatabaseService().checkUserExists(uid: user!.uid)) == false) {
+      setUserId(userId: user.uid);
+
       storeUserDataInCollection(
         context: context,
         userData: UserModel(
@@ -112,7 +115,6 @@ class AuthenticationProvider with ChangeNotifier {
           gmailId: user.email,
         ),
       );
-      setUserId(userId: user.uid);
     }
     notifyListeners();
   }
@@ -217,43 +219,53 @@ class AuthenticationProvider with ChangeNotifier {
 
   /// Trigger [storeUserDataInCollection] method to store the data in database
   /// Specifically for phone authentication
-  void storePhoneAuthDataInDb(BuildContext context) {
-    storeUserDataInCollection(
+  void storePhoneAuthDataInDb(BuildContext context) async {
+    setUserId(userId: _userId);
+
+    bool wasLoginSuccessful = await storeUserDataInCollection(
       context: context,
       userData: UserModel(
         name: _userNameController.text,
         phoneNumber: _phoneNumber,
+        homeLocation: HomeLocation(),
       ),
     );
-
-    setUserId(userId: _userId);
 
     // Reset all the text controllers
     resetMobielNumberController();
     resetOtpControllers();
     clearUsernameController();
 
-    Navigator.pushReplacementNamed(context, NamedRoutes.bottomNavigationRoute);
+    if (wasLoginSuccessful) {
+      Navigator.pushReplacementNamed(
+          context, NamedRoutes.bottomNavigationRoute);
+    } else {
+      FirebaseAuth.instance.signOut();
+      Navigator.pop(context);
+    }
   }
 
   /// Store user data in the [FirebaseFirestore]
-  void storeUserDataInCollection({
+  Future<bool> storeUserDataInCollection({
     required BuildContext context,
     required UserModel userData,
   }) async {
     Loader.showLoader(context);
     try {
       await DatabaseService().setUserData(userData: userData.toMap()).onError(
-          (FirebaseException error, stackTrace) =>
-              throw ExceptionHandling(message: error.message ?? ""));
-      Loader.hideLoader(context);
+            (FirebaseException error, stackTrace) =>
+                throw ExceptionHandling(message: error.message ?? ""),
+          );
+      return true;
     } catch (e) {
       Loader.hideLoader(context);
+      Logger().d(e);
       ReusableWidgets.showFlutterToast(
         context,
         '$e',
       );
     }
+    return false;
   }
 
   /// Method to check the validity of mobile number

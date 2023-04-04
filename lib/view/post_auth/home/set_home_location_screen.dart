@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:marquee/marquee.dart';
 import 'package:naai/models/user_location.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
@@ -99,7 +100,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                                   noItemsFoundBuilder: (context) => ListTile(
                                     tileColor: Colors.white,
                                     title: Text(
-                                      "Can't find anything!",
+                                      StringConstant.cantFindAnyLocation,
                                       style: TextStyle(
                                         fontSize: 12.sp,
                                         color: ColorsConstant.appColor,
@@ -135,7 +136,8 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                                     style: StyleConstant.searchTextStyle,
                                     controller: provider.mapSearchController,
                                     decoration:
-                                        StyleConstant.searchBoxInputDecoration,
+                                        StyleConstant.searchBoxInputDecoration(
+                                            hintText: StringConstant.search),
                                   ),
                                 ),
                               ),
@@ -154,16 +156,22 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Text(
-                                          provider.userData.homeLocation
-                                                  ?.addressString ??
-                                              "Loading",
-                                          style: TextStyle(
-                                            color: Color(0xFF333333),
-                                            fontSize: 13.sp,
-                                            fontWeight: FontWeight.w600,
+                                        SizedBox(
+                                          height: 3.h,
+                                          child: Marquee(
+                                            text:
+                                                provider.getHomeAddressText() ??
+                                                    StringConstant.loading,
+                                            velocity: 40.0,
+                                            pauseAfterRound:
+                                                const Duration(seconds: 1),
+                                            blankSpace: 30.0,
+                                            style: TextStyle(
+                                              color: Color(0xFF333333),
+                                              fontSize: 13.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                         Text(
                                           StringConstant.changeLocation,
@@ -199,7 +207,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
     });
   }
 
-  GestureDetector screenSubtitle() {
+  Widget screenSubtitle() {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
       child: Text(
@@ -211,17 +219,22 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
 
   Widget _mapBox() {
     return Consumer<UserProvider>(builder: (context, provider, child) {
-      return MapboxMap(
-        accessToken: Keys.mapbox_public_key,
-        initialCameraPosition:
-            const CameraPosition(target: LatLng(28.6304, 77.2177), zoom: 15.0),
-        onMapCreated: (MapboxMapController mapController) async {
-          await provider.onMapCreated(mapController, context);
-        },
-        onMapClick: (Point<double> point, LatLng coordinates) {
-          FocusManager.instance.primaryFocus?.unfocus();
-          provider.onMapClick(coordinates: coordinates, context: context);
-        },
+      return Stack(
+        children: <Widget>[
+          MapboxMap(
+            accessToken: Keys.mapbox_public_key,
+            initialCameraPosition: const CameraPosition(
+                target: LatLng(28.6304, 77.2177), zoom: 15.0),
+            onMapCreated: (MapboxMapController mapController) async {
+              await provider.onMapCreated(mapController, context);
+            },
+            onMapClick: (Point<double> point, LatLng coordinates) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              provider.onMapClick(coordinates: coordinates, context: context);
+            },
+          ),
+          ReusableWidgets.recenterWidget(context, provider: provider),
+        ],
       );
     });
   }

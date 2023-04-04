@@ -25,4 +25,5 @@ class ColorsConstant {
   static const Color unselectedGenderAbbrColor = Color(0xFFBD227F);
   static const Color lightAppColor = Color(0xFFFCF3F3);
   static const Color reviewStarGreyColor = Color(0xFFD9D9D9);
+  static const Color appBackgroundColor = Color(0xFF565656);
 }

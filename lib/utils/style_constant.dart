@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
-import 'package:naai/utils/string_constant.dart';
 import 'package:sizer/sizer.dart';
 
 class StyleConstant {
@@ -13,7 +12,7 @@ class StyleConstant {
   );
 
   static TextStyle greySemiBoldTextStyle = TextStyle(
-    color: Color(0xFFA4A4A4),
+    color: ColorsConstant.greySalonAddress,
     fontWeight: FontWeight.w500,
   );
 
@@ -28,27 +27,28 @@ class StyleConstant {
     fontWeight: FontWeight.w600,
   );
 
-  static InputDecoration searchBoxInputDecoration = InputDecoration(
-    filled: true,
-    fillColor: ColorsConstant.graphicFillDark,
-    contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
-    prefixIcon: Padding(
-      padding: EdgeInsets.only(left: 3.5.w),
-      child: SvgPicture.asset(
-        ImagePathConstant.searchIcon,
-        fit: BoxFit.scaleDown,
-      ),
-    ),
-    prefixIconConstraints: BoxConstraints(minWidth: 11.w),
-    hintText: StringConstant.search,
-    hintStyle: TextStyle(
-      color: ColorsConstant.textLight,
-      fontSize: 13.sp,
-      fontWeight: FontWeight.w500,
-    ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5.h),
-      borderSide: BorderSide.none,
-    ),
-  );
+  static InputDecoration searchBoxInputDecoration({required String hintText}) =>
+      InputDecoration(
+        filled: true,
+        fillColor: ColorsConstant.graphicFillDark,
+        contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 3.5.w),
+          child: SvgPicture.asset(
+            ImagePathConstant.searchIcon,
+            fit: BoxFit.scaleDown,
+          ),
+        ),
+        prefixIconConstraints: BoxConstraints(minWidth: 11.w),
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: ColorsConstant.textLight,
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w500,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5.h),
+          borderSide: BorderSide.none,
+        ),
+      );
 }

@@ -72,7 +72,7 @@ class VerifyOtpScreen extends StatelessWidget {
                   ],
                 ),
                 otpTextBoxRow(),
-                ReusableWidgets.redFullWidthButon(
+                ReusableWidgets.redFullWidthButton(
                   buttonText: StringConstant.verifyNumber,
                   onTap: () => provider.verifyOtp(context),
                   isActive: provider.isVerifyOtpButtonActive,

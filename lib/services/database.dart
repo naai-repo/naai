@@ -13,6 +13,7 @@ class DatabaseService {
   /// Set the user data to the [FirebaseFirestore] as a new entry
   Future<void> setUserData({required Map<String, dynamic> userData}) async {
     String uid = await SharedPreferenceHelper.getUserId();
+    print(uid);
     return await userCollection.doc(uid).set(userData).onError(
           (error, stackTrace) => throw Exception(error),
         );

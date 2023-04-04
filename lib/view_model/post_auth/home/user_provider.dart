@@ -12,9 +12,9 @@ import 'package:naai/services/database.dart';
 import 'package:naai/utils/api_endpoint_constant.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/exception/exception_handling.dart';
-import 'package:naai/utils/keys.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
+import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
 // import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -22,28 +22,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class UserProvider with ChangeNotifier {
+  final _mapLocation = location.Location();
+
   late Symbol _symbol;
 
   late MapboxMapController _controller;
 
-  String _addressText = '';
+  String _addressText = StringConstant.loading;
 
   TextEditingController _mapSearchController = TextEditingController();
 
   UserModel _userData = UserModel();
 
+  //============= GETTERS =============//
   String get addressText => _addressText;
 
   TextEditingController get mapSearchController => _mapSearchController;
 
   UserModel get userData => _userData;
 
-  final _mapLocation = location.Location();
-
   /// Check if there is a [uid] stored in [SharedPreferences] or not.
   /// If no [uid] is found, then get the userId of the currently logged in
   /// user and save it in [SharedPreferences].
-  /// 
+  ///
   /// The [uid] is necessary to get the user data.
   void checkUserIdInSharedPref(String uid) async {
     String storedUid = await SharedPreferenceHelper.getUserId();
@@ -76,7 +77,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Initialising map related values as soon as the map  is rendered on screen.
+  /// Initialising map related values as soon as the map is rendered on screen.
   Future<void> onMapCreated(
     MapboxMapController mapController,
     BuildContext context,
@@ -97,7 +98,7 @@ class UserProvider with ChangeNotifier {
     var _locationData = await _mapLocation.getLocation().timeout(
           const Duration(seconds: 7),
           onTimeout: () => UtilityFunctions.locationApiTimeout(context,
-              message: 'Fetching location took too long!'),
+              message: StringConstant.locationApiTookTooLong),
         );
 
     LatLng currentLatLng =
@@ -113,7 +114,8 @@ class UserProvider with ChangeNotifier {
     );
 
     _symbol = await this._controller.addSymbol(
-          UtilityFunctions.getLocationSymbolOptions(latLng: currentLatLng),
+          UtilityFunctions.getCurrentLocationSymbolOptions(
+              latLng: currentLatLng),
         );
 
     Loader.hideLoader(context);
@@ -143,32 +145,25 @@ class UserProvider with ChangeNotifier {
     );
 
     await _controller.addSymbol(
-      UtilityFunctions.getLocationSymbolOptions(latLng: selectedLatLng),
+      UtilityFunctions.getCurrentLocationSymbolOptions(latLng: selectedLatLng),
     );
+
+    clearMapSearchText();
 
     await getFormattedAddressConfirmation(
       context: context,
       coordinates: selectedLatLng,
     );
-
     notifyListeners();
   }
 
   /// Get place suggestions according to the search text
   Future<List<Feature>> getPlaceSuggestions(BuildContext context) async {
     List<Feature> _data = [];
-    Map<String, dynamic> param = {
-      'proximity': 'ip',
-      'limit': '10',
-      'language': 'en-gb',
-      'autocomplete': 'true',
-      'fuzzyMatch': 'true',
-      'access_token': Keys.mapbox_public_key
-    };
 
     Uri uri = Uri.parse(
             "${ApiEndpointConstant.mapboxPlacesApi}${_mapSearchController.text}.json")
-        .replace(queryParameters: param);
+        .replace(queryParameters: UtilityFunctions.mapSearchQueryParameters());
 
     try {
       var response = await BaseClient()
@@ -198,7 +193,7 @@ class UserProvider with ChangeNotifier {
     await _controller.removeSymbol(_symbol);
 
     _symbol = await _controller.addSymbol(
-      UtilityFunctions.getLocationSymbolOptions(latLng: coordinates),
+      UtilityFunctions.getCurrentLocationSymbolOptions(latLng: coordinates),
     );
 
     this._controller.animateCamera(
@@ -215,78 +210,19 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fetches the complete address for the provided coordinates.
-  Future<UserLocationModel?> getAddressFromCoordinates(
-    BuildContext context, {
-    required LatLng coordinates,
-  }) async {
-    Map<String, dynamic> param = {
-      'types': 'locality,neighborhood,place,district,region',
-      'access_token': Keys.mapbox_public_key
-    };
-
-    Uri uri = Uri.parse(
-            "${ApiEndpointConstant.mapboxPlacesApi}${coordinates.longitude},${coordinates.latitude}.json")
-        .replace(queryParameters: param);
-
-    try {
-      var response = await BaseClient().get(
-        baseUrl: '',
-        api: uri.toString(),
-      );
-      return UserLocationModel.fromJson(jsonDecode(response.body));
-    } catch (e) {
-      Logger().d(e);
-      ReusableWidgets.showFlutterToast(context, e.toString());
-      return null;
-    }
-  }
-
-  /// Formats the address text for the provided location.
-  /// The address format is [x, y] where the precedence of x and y is
-  /// Neighborhood, Locality, Place, District, Region
-  String formatAddressText(UserLocationModel locationModel) {
-    String address = '';
-    for (int i = 0; i < (locationModel.features?.length ?? 0); i++) {
-      var element = locationModel.features?[i];
-
-      switch (element?.placeType?[0]) {
-        case 'neighborhood':
-          address += '${element?.text}, ';
-          break;
-        case 'locality':
-          address += '${element?.text}, ';
-          break;
-        case 'place':
-          address += '${element?.text}, ';
-          break;
-        case 'district':
-          address += '${element?.text}, ';
-          break;
-        case 'region':
-          address += '${element?.text}';
-          break;
-      }
-    }
-    var addressArray = address.split(',');
-    address = addressArray.first + ',' + addressArray.last;
-    return address;
-  }
-
   /// Update the user's location related data in [FirebaseFirestore]
   void updateUserLocation(
     BuildContext context,
     LatLng latLng,
   ) async {
-    Map<String, dynamic> data = UserModel(
-        homeLocation: HomeLocation(
-      addressString: _addressText,
-      geoLocation: GeoPoint(
-        latLng.latitude,
-        latLng.longitude,
-      ),
-    )).toMap();
+    UserModel user = UserModel.fromMap(_userData.toMap());
 
+    user.homeLocation?.addressString = _addressText;
+    user.homeLocation?.geoLocation =
+        GeoPoint(latLng.latitude, latLng.longitude);
+
+    Map<String, dynamic> data = user.toMap();
+    print(data);
     Loader.showLoader(context);
     try {
       await DatabaseService().updateUserData(data: data).onError(
@@ -315,10 +251,10 @@ class UserProvider with ChangeNotifier {
   }) async {
     Loader.showLoader(context);
 
-    UserLocationModel model =
-        await getAddressFromCoordinates(context, coordinates: coordinates) ??
-            UserLocationModel();
-    _addressText = formatAddressText(model);
+    _addressText = await UtilityFunctions.getAddressCoordinateAndFormatAddress(
+      context: context,
+      latLng: coordinates,
+    );
 
     Loader.hideLoader(context);
 
@@ -356,9 +292,39 @@ class UserProvider with ChangeNotifier {
     );
   }
 
+  /// Method to fetch the current location of the user using [location] package
+  Future<LatLng> fetchCurrentLocation(BuildContext context) async {
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _mapLocation.requestService();
+    }
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      _permissionGranted = await _mapLocation.requestPermission();
+    }
+
+    var _locationData = await _mapLocation.getLocation().timeout(
+          const Duration(seconds: BaseClient.TIME_OUT_DURATION),
+          onTimeout: () => UtilityFunctions.locationApiTimeout(context,
+              message: StringConstant.locationApiTookTooLong),
+        );
+
+    return LatLng(_locationData.latitude!, _locationData.longitude!);
+  }
+
+  /// Animate the map to given [latLng]
+  Future<void> animateToPosition(LatLng latLng) async {
+    await _controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: latLng, zoom: 16),
+      ),
+    );
+  }
+
   /// Get the address text from the user's home location
-  String getHomeAddressText() {
-    return userData.homeLocation?.addressString ?? "";
+  String? getHomeAddressText() {
+    return userData.homeLocation?.addressString;
   }
 
   /// Dispose [_controller] when the map is unmounted

@@ -8,16 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
-  int _selectedSalonIndex = 0;
-
-  List<Gender> _selectedGendersFilter = [];
-
-  List<ServiceEnum> _selectedServiceCategories = [];
-
-  SalonData _selectedSalonData = SalonData();
-
-  List<ServiceDetail> _filteredServiceList = [];
-
   List<Color> colors = [
     ColorsConstant.reviewStarGreyColor,
     ColorsConstant.reviewStarGreyColor,
@@ -32,19 +22,26 @@ class SalonDetailsProvider with ChangeNotifier {
     'assets/images/salon_dummy_image.png',
   ];
 
+  int _selectedSalonIndex = 0;
+
+  List<Gender> _selectedGendersFilter = [];
+  List<ServiceEnum> _selectedServiceCategories = [];
+  List<ServiceDetail> _filteredServiceList = [];
+
+  SalonData _selectedSalonData = SalonData();
+
   TextEditingController _searchController = TextEditingController();
 
   PageController _salonImageCarouselController = PageController();
 
+  //============= GETTERS =============//
   int get selectedSalonIndex => _selectedSalonIndex;
 
   List<Gender> get selectedGendersFilter => _selectedGendersFilter;
-
   List<ServiceEnum> get selectedServiceCategories => _selectedServiceCategories;
+  List<ServiceDetail> get filteredServiceList => _filteredServiceList;
 
   SalonData get selectedSalonData => _selectedSalonData;
-
-  List<ServiceDetail> get filteredServiceList => _filteredServiceList;
 
   TextEditingController get searchController => _searchController;
 
@@ -80,7 +77,7 @@ class SalonDetailsProvider with ChangeNotifier {
     if (_selectedGendersFilter.isNotEmpty) {
       _filteredServiceList.addAll(_selectedSalonData.services?.where(
               (service) =>
-                  _selectedGendersFilter.contains(service.targetGender)) ??
+                  (_selectedGendersFilter.contains(service.targetGender))) ??
           []);
     }
 
