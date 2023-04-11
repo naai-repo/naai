@@ -51,8 +51,10 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'add_your_review_icon.svg');
   static final String reviewStarIcon =
       UtilityFunctions.getImagePath(imageTitle: 'review_star_icon.svg');
-  static final String hairstyleWomenIcon =
-      UtilityFunctions.getImagePath(imageTitle: 'hairstyle_women_icon.svg');
+  static final String womanIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'woman_icon.svg');
+  static final String manIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'man_icon.svg');
   static final String tickBox =
       UtilityFunctions.getImagePath(imageTitle: 'tick_box.svg');
   static final String salonLocationPointer =
@@ -77,4 +79,10 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'information_icon.svg');
   static final String logoutIcon =
       UtilityFunctions.getImagePath(imageTitle: 'logout_icon.svg');
+  static final String blackLocationIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'black_location_icon.svg');
+  static final String womanGenderTypeIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'woman_gender_type_icon.svg');
+  static final String manGenderTypeIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'man_gender_type_icon.svg');
 }

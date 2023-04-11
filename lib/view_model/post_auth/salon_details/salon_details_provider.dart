@@ -3,9 +3,9 @@ import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/enums.dart';
+import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sizer/sizer.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
   List<Color> colors = [
@@ -128,6 +128,11 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Set the index of selected artist in [BarberProvider]
+  void setSelectedArtistIndex(BuildContext context, {required int index}) {
+    context.read<BarberProvider>().setSelectedArtistIndex(index);
+  }
+
   /// Clear the value of [_selectedGendersFilter]
   void clearSelectedGendersFilter() {
     _selectedGendersFilter.clear();
@@ -144,28 +149,5 @@ class SalonDetailsProvider with ChangeNotifier {
   void clearSelectedServiceCategories() {
     _selectedServiceCategories.clear();
     notifyListeners();
-  }
-
-  void setColor(double x) {
-    if (x > 25.w) {
-      colors[0] = Colors.red;
-      notifyListeners();
-    }
-    if (x > 35.w) {
-      colors[1] = Colors.red;
-      notifyListeners();
-    }
-    if (x > 50.w) {
-      colors[2] = Colors.red;
-      notifyListeners();
-    }
-    if (x > 65.w) {
-      colors[3] = Colors.red;
-      notifyListeners();
-    }
-    if (x >= 80.w) {
-      colors[4] = Colors.red;
-      notifyListeners();
-    }
   }
 }

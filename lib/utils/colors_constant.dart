@@ -28,4 +28,5 @@ class ColorsConstant {
   static const Color appBackgroundColor = Color(0xFF565656);
   static const Color incompleteProfileBoxColor = Color(0xFFFFF48E);
   static const Color incompleteProfileBoxBorderColor = Color(0xFFDBCC49);
+  static const Color worksAtColor = Color(0xFF808080);
 }

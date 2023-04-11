@@ -221,7 +221,6 @@ class UserProvider with ChangeNotifier {
         GeoPoint(latLng.latitude, latLng.longitude);
 
     Map<String, dynamic> data = user.toMap();
-    print(data);
     Loader.showLoader(context);
     try {
       await DatabaseService().updateUserData(data: data).onError(

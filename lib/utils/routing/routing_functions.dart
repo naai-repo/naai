@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naai/view/post_auth/barber_profile/barber_profile_screen.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/post_auth/home/set_home_location_screen.dart';
@@ -26,6 +27,7 @@ class RoutingFunctions {
     NamedRoutes.salonDetailsRoute: (context) => SalonDetailsScreen(),
     NamedRoutes.setHomeLocationRoute: (context) => SetHomeLocationScreen(),
     NamedRoutes.mapRoute: (context) => MapScreen(),
+    NamedRoutes.barberProfileRoute: (context) => BarberProfileScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -65,6 +67,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.mapRoute:
         target = MapScreen();
+        break;
+      case NamedRoutes.barberProfileRoute:
+        target = BarberProfileScreen();
         break;
     }
 

@@ -73,7 +73,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                 ),
                 child: SalomonBottomBar(
                   margin: EdgeInsets.symmetric(
-                    horizontal: 2.h,
+                    horizontal: 7.w,
                     vertical: 1.5.h,
                   ),
                   currentIndex: provider.currentScreenIndex,

@@ -106,6 +106,8 @@ class _MapScreenState extends State<MapScreen> {
                                         StyleConstant.searchBoxInputDecoration(
                                       hintText: StringConstant
                                           .exploreSalonsSearchHint,
+                                      context,
+                                      isExploreScreenSearchBar: true,
                                     ),
                                   ),
                                 ),
@@ -115,7 +117,10 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       ),
                       Expanded(
-                        child: _mapBox(),
+                        child: Container(
+                          color: Colors.white,
+                          child: mapBox(),
+                        ),
                       ),
                     ],
                   ),
@@ -128,7 +133,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  Widget _mapBox() {
+  Widget mapBox() {
     return Consumer<MapProvider>(builder: (context, provider, child) {
       return Stack(
         children: <Widget>[

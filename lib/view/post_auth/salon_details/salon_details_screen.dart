@@ -5,7 +5,9 @@ import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -21,7 +23,7 @@ class SalonDetailsScreen extends StatefulWidget {
 
 class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   int selectedTab = 0;
-  bool isHover = false;
+
   @override
   void initState() {
     context.read<SalonDetailsProvider>().setSelectedSalonData(context);
@@ -58,7 +60,9 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                         height: 0,
                         color: ColorsConstant.graphicFillDark,
                       ),
-                      selectedTab == 0 ? servicesTab() : reviewsTab(),
+                      selectedTab == 0
+                          ? ReusableWidgets.servicesTab()
+                          : ReusableWidgets.reviewsTab(),
                     ],
                   ),
                 ),
@@ -144,563 +148,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
     });
   }
 
-  Widget reviewsTab() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            addReviewContainer(),
-            Padding(
-              padding: EdgeInsets.only(top: 2.h, bottom: 1.h),
-              child: Text(
-                StringConstant.userReviews,
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: ColorsConstant.blackAvailableStaff,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            (provider.selectedSalonData.reviewList?.length ?? 0) > 0
-                ? reviewList()
-                : SizedBox(),
-          ],
-        ),
-      );
-    });
-  }
-
-  Widget servicesTab() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Column(
-        children: <Widget>[
-          GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-            child: Container(
-              padding: EdgeInsets.all(2.h),
-              decoration: BoxDecoration(
-                color: ColorsConstant.graphicFillDark,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  genderAndSearchFilterWidget(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.h, bottom: 1.h),
-                    child: Text(
-                      "${StringConstant.selectCategory}:",
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                        color: ColorsConstant.textDark,
-                      ),
-                    ),
-                  ),
-                  serviceCategoryFilterWidget(),
-                ],
-              ),
-            ),
-          ),
-          provider.filteredServiceList.length == 0
-              ? Container(
-                  height: 10.h,
-                  child: Center(
-                    child: Text('Nothing here :('),
-                  ),
-                )
-              : ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: provider.filteredServiceList.length,
-                  itemBuilder: (context, index) {
-                    ServiceDetail? serviceDetail =
-                        provider.filteredServiceList[index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: 1.5.h, horizontal: 5.w),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 3.w,
-                        vertical: 1.5.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(1.h),
-                        border: Border.all(color: ColorsConstant.divider),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SvgPicture.asset(
-                              ImagePathConstant.hairstyleWomenIcon),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 52.w,
-                                child: Text(
-                                  serviceDetail.serviceTitle ?? "",
-                                  style: TextStyle(
-                                    color: ColorsConstant.textDark,
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Rs. ${serviceDetail.price}",
-                                      style: TextStyle(
-                                        fontSize: 11.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: ColorsConstant.textDark,
-                                      ),
-                                    ),
-                                    SizedBox(width: 1.h),
-                                    SvgPicture.asset(ImagePathConstant.tickBox),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-          SizedBox(height: 3.h),
-        ],
-      );
-    });
-  }
-
-  Widget serviceCategoryFilterWidget() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Container(
-        height: 4.2.h,
-        child: ListView.builder(
-          physics: BouncingScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: ServiceEnum.values.length,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: () {
-              provider.setSelectedServiceCategories(
-                selectedServiceCategory: ServiceEnum.values[index],
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 2.w),
-              height: 4.2.h,
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.7.h),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.h),
-                color: provider.selectedServiceCategories
-                        .contains(ServiceEnum.values[index])
-                    ? ColorsConstant.appColor
-                    : Colors.white,
-              ),
-              child: Center(
-                child: Text(
-                  "${ServiceEnum.values[index].name}",
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w600,
-                    color: provider.selectedServiceCategories
-                            .contains(ServiceEnum.values[index])
-                        ? Colors.white
-                        : ColorsConstant.textDark,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget genderAndSearchFilterWidget() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          SizedBox(
-            height: 5.h,
-            child: Row(
-              children: <Widget>[
-                genderFilterTabs(isMen: true, isWomen: false),
-                genderFilterTabs(isMen: false, isWomen: true),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 30.w,
-            height: 4.5.h,
-            child: TextFormField(
-              controller: provider.searchController,
-              cursorColor: ColorsConstant.appColor,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: ColorsConstant.textDark,
-                fontWeight: FontWeight.w500,
-              ),
-              textInputAction: TextInputAction.done,
-              onChanged: (searchText) =>
-                  provider.filterOnSearchText(searchText),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
-                prefixIcon: Padding(
-                  padding: EdgeInsets.only(left: 0.5.w),
-                  child: SvgPicture.asset(
-                    ImagePathConstant.searchIcon,
-                    color: ColorsConstant.textDark,
-                    height: 11.sp,
-                  ),
-                ),
-                prefixIconConstraints: BoxConstraints(minWidth: 8.w),
-                hintText: StringConstant.search,
-                hintStyle: TextStyle(
-                  color: ColorsConstant.textDark,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.h),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
-  Widget genderFilterTabs({
-    required bool isMen,
-    required bool isWomen,
-  }) {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return GestureDetector(
-        onTap: () => provider.setSelectedGendersFilter(
-            selectedGender: isMen ? Gender.MEN : Gender.WOMEN),
-        child: Container(
-          margin: EdgeInsets.only(right: 2.w),
-          padding: EdgeInsets.all(1.5.w),
-          decoration: BoxDecoration(
-            color: provider.selectedGendersFilter.isEmpty
-                ? Colors.white
-                : isMen
-                    ? provider.selectedGendersFilter.contains(Gender.MEN)
-                        ? ColorsConstant.selectedGenderFilterBoxColor
-                        : Colors.white
-                    : provider.selectedGendersFilter.contains(Gender.WOMEN)
-                        ? ColorsConstant.selectedGenderFilterBoxColor
-                        : Colors.white,
-            borderRadius: BorderRadius.circular(1.5.w),
-            border: Border.all(
-              color: provider.selectedGendersFilter.isEmpty
-                  ? ColorsConstant.divider
-                  : isMen
-                      ? provider.selectedGendersFilter.contains(Gender.MEN)
-                          ? ColorsConstant.appColor
-                          : ColorsConstant.divider
-                      : provider.selectedGendersFilter.contains(Gender.WOMEN)
-                          ? ColorsConstant.appColor
-                          : ColorsConstant.divider,
-            ),
-            boxShadow: provider.selectedGendersFilter.isEmpty
-                ? null
-                : isMen
-                    ? provider.selectedGendersFilter.contains(Gender.MEN)
-                        ? [
-                            BoxShadow(
-                              color: Color(0xFF000000).withOpacity(0.14),
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                            )
-                          ]
-                        : null
-                    : provider.selectedGendersFilter.contains(Gender.WOMEN)
-                        ? [
-                            BoxShadow(
-                              color: ColorsConstant.dropShadowColor,
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                            )
-                          ]
-                        : null,
-          ),
-          child: Row(
-            children: <Widget>[
-              Container(
-                height: 3.h,
-                width: 3.h,
-                margin: EdgeInsets.only(right: 1.5.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(1.w),
-                  border: Border.all(
-                    color: provider.selectedGendersFilter.isEmpty
-                        ? ColorsConstant.unselectedGenderAbbrColor
-                        : isMen
-                            ? provider.selectedGendersFilter
-                                    .contains(Gender.MEN)
-                                ? ColorsConstant.selectedGenderAbbrColor
-                                : ColorsConstant.unselectedGenderAbbrColor
-                            : provider.selectedGendersFilter
-                                    .contains(Gender.WOMEN)
-                                ? ColorsConstant.selectedGenderAbbrColor
-                                : ColorsConstant.unselectedGenderAbbrColor,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    isMen ? 'M' : 'W',
-                    style: TextStyle(
-                      color: provider.selectedGendersFilter.isEmpty
-                          ? ColorsConstant.unselectedGenderAbbrColor
-                          : isMen
-                              ? provider.selectedGendersFilter
-                                      .contains(Gender.MEN)
-                                  ? ColorsConstant.selectedGenderAbbrColor
-                                  : ColorsConstant.unselectedGenderAbbrColor
-                              : provider.selectedGendersFilter
-                                      .contains(Gender.WOMEN)
-                                  ? ColorsConstant.selectedGenderAbbrColor
-                                  : ColorsConstant.unselectedGenderAbbrColor,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              Text(
-                isMen ? StringConstant.men : StringConstant.women,
-                style: TextStyle(
-                  color: ColorsConstant.textDark,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget reviewList() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return ListView.builder(
-        padding: EdgeInsets.zero,
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: provider.selectedSalonData.reviewList?.length,
-        itemBuilder: (context, index) {
-          Review? reviewItem = provider.selectedSalonData.reviewList?[index];
-
-          return Container(
-            margin: EdgeInsets.symmetric(vertical: 1.h),
-            padding: EdgeInsets.symmetric(
-              horizontal: 3.w,
-              vertical: 1.5.h,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1.h),
-              border: Border.all(color: ColorsConstant.reviewBoxBorderColor),
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 229, 229, 229),
-                  spreadRadius: 0.1,
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                reviewerImageAndName(
-                  imageUrl: reviewItem?.imagePath,
-                  userName: reviewItem?.userName ?? "",
-                ),
-                SizedBox(width: 2.w),
-                Container(
-                  constraints: BoxConstraints(maxWidth: 55.w),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          ...List.generate(
-                            5,
-                            (i) => SvgPicture.asset(
-                              ImagePathConstant.starIcon,
-                              color: i < (reviewItem?.rating as int)
-                                  ? ColorsConstant.appColor
-                                  : ColorsConstant.greyStar,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 0.5.h, bottom: 1.h),
-                        child: Text(
-                          '${DateFormat.yMMMM().format(reviewItem?.createdAt ?? DateTime.now())}',
-                          style: TextStyle(
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        reviewItem?.reviewText ?? "",
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    });
-  }
-
-  Widget reviewerImageAndName({String? imageUrl, required String userName}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-          radius: 5.h,
-          backgroundImage: AssetImage('assets/images/salon_dummy_image.png'),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 0.5.h),
-          child: Text(
-            userName,
-            style: TextStyle(
-              fontSize: 10.sp,
-              color: ColorsConstant.textDark,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget addReviewContainer() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Container(
-        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
-        decoration: BoxDecoration(
-            color: ColorsConstant.graphicFillDark,
-            borderRadius: BorderRadius.circular(2.h)),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SvgPicture.asset(
-                  ImagePathConstant.addYourReviewIcon,
-                  fit: BoxFit.scaleDown,
-                ),
-                SizedBox(width: 5.w),
-                Text(
-                  StringConstant.addYourReview,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 2.h),
-            GestureDetector(
-              onHorizontalDragUpdate: (details) {
-                print(details.localPosition.dx);
-                provider.setColor(details.localPosition.dx);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  SizedBox(width: 5.w),
-                  ...List.generate(
-                    5,
-                    (index) => SvgPicture.asset(
-                      ImagePathConstant.reviewStarIcon,
-                      color: provider.colors[index],
-                    ),
-                  ),
-                  SizedBox(width: 5.w),
-                ],
-              ),
-            ),
-            SizedBox(height: 3.h),
-            SizedBox(
-              height: 6.h,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                    left: 5.w,
-                    right: 5.w,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: StringConstant.summarizeYourReview,
-                  hintStyle: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w400,
-                    color: ColorsConstant.textLight,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(1.5.h),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 1.5.h,
-                horizontal: 10.w,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(1.5.h),
-              ),
-              child: Text(
-                StringConstant.submitReview,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12.sp,
-                  color: ColorsConstant.appColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
   Widget servicesAndReviewTabBar() {
     return Container(
       height: 7.h,
@@ -765,27 +212,30 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 itemBuilder: (context, index) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(1.5.h),
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 0.5.h,
-                        bottom: 0.5.h,
-                        left: index == 0 ? 0 : 2.5.w,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(1.5.h),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade100,
-                            spreadRadius: 0.1,
-                            blurRadius: 20,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 1.h,
-                          horizontal: 3.w,
+                    child: GestureDetector(
+                      onTap: () {
+                        provider.setSelectedArtistIndex(context, index: index);
+                        Navigator.pushNamed(
+                          context,
+                          NamedRoutes.barberProfileRoute,
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          bottom: 0.5.h,
+                          left: index == 0 ? 0 : 2.5.w,
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 3.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(1.5.h),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade100,
+                              spreadRadius: 0.1,
+                              blurRadius: 20,
+                            ),
+                          ],
                         ),
                         child: Row(
                           children: <Widget>[
@@ -812,7 +262,11 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                   provider.selectedSalonData.artist?[index]
                                           .name ??
                                       "",
-                                  style: TextStyle(fontSize: 11.sp),
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: ColorsConstant.textDark,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -1059,53 +513,23 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        salonContactImages(
+        ReusableWidgets.contactTypeWidget(
           onTap: () => print('Hello'),
           iconPath: ImagePathConstant.phoneIcon,
         ),
-        salonContactImages(
+        ReusableWidgets.contactTypeWidget(
           onTap: () => print('Hello'),
           iconPath: ImagePathConstant.shareIcon,
         ),
-        salonContactImages(
+        ReusableWidgets.contactTypeWidget(
           onTap: () => print('Hello'),
           iconPath: ImagePathConstant.saveIcon,
         ),
-        salonContactImages(
+        ReusableWidgets.contactTypeWidget(
           onTap: () => print('Hello'),
           iconPath: ImagePathConstant.instagramIcon,
         ),
       ],
-    );
-  }
-
-  Widget salonContactImages({
-    required Function() onTap,
-    required String iconPath,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(6),
-        height: 5.h,
-        width: 5.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3.h),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 5),
-              color: Color(0xFF000000).withOpacity(0.14),
-              spreadRadius: 0.5,
-              blurRadius: 15,
-            ),
-          ],
-        ),
-        child: SvgPicture.asset(
-          iconPath,
-          fit: BoxFit.scaleDown,
-        ),
-      ),
     );
   }
 }

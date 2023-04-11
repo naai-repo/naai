@@ -23,7 +23,6 @@ class SetHomeLocationScreen extends StatefulWidget {
 }
 
 class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
-  bool _isSearchBoxActive = false;
 
   @override
   void initState() {
@@ -77,119 +76,57 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                     padding: EdgeInsets.symmetric(vertical: 2.h),
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        return Row(
-                          children: <Widget>[
-                            AnimatedContainer(
-                              curve: Curves.easeOut,
-                              duration: const Duration(milliseconds: 200),
-                              width: _isSearchBoxActive
-                                  ? constraints.maxWidth
-                                  : 50.w,
-                              child: Focus(
-                                onFocusChange: (value) => setState(() {
-                                  _isSearchBoxActive = value;
-                                }),
-                                child: TypeAheadField(
-                                  debounceDuration: Duration(milliseconds: 300),
-                                  hideSuggestionsOnKeyboardHide: false,
-                                  suggestionsCallback: (pattern) async {
-                                    return await provider
-                                        .getPlaceSuggestions(context);
-                                  },
-                                  minCharsForSuggestions: 1,
-                                  noItemsFoundBuilder: (context) => ListTile(
-                                    tileColor: Colors.white,
-                                    title: Text(
-                                      StringConstant.cantFindAnyLocation,
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: ColorsConstant.appColor,
-                                      ),
-                                    ),
-                                  ),
-                                  itemBuilder: (context, Feature suggestion) {
-                                    return ListTile(
-                                      tileColor: Colors.white,
-                                      title: Text(
-                                        suggestion.placeName ?? "",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: ColorsConstant.appColor,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  onSuggestionSelected: (Feature suggestion) {
-                                    // DO NOT REMOVE THIS PRINT STATEMENT OTHERWISE THE FUNCTION
-                                    // WILL NOT BE TRIGGERED
-                                    print(
-                                        "\t\tNOTE: Do not remove this print statement.");
-                                    provider.handlePlaceSelectionEvent(
-                                        suggestion, context);
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  textFieldConfiguration:
-                                      TextFieldConfiguration(
-                                    textInputAction: TextInputAction.done,
-                                    cursorColor: ColorsConstant.appColor,
-                                    style: StyleConstant.searchTextStyle,
-                                    controller: provider.mapSearchController,
-                                    decoration:
-                                        StyleConstant.searchBoxInputDecoration(
-                                            hintText: StringConstant.search),
-                                  ),
+                        return TypeAheadField(
+                          debounceDuration: Duration(milliseconds: 300),
+                          hideSuggestionsOnKeyboardHide: false,
+                          suggestionsCallback: (pattern) async {
+                            return await provider
+                                .getPlaceSuggestions(context);
+                          },
+                          minCharsForSuggestions: 1,
+                          noItemsFoundBuilder: (context) => ListTile(
+                            tileColor: Colors.white,
+                            title: Text(
+                              StringConstant.cantFindAnyLocation,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: ColorsConstant.appColor,
+                              ),
+                            ),
+                          ),
+                          itemBuilder: (context, Feature suggestion) {
+                            return ListTile(
+                              tileColor: Colors.white,
+                              title: Text(
+                                suggestion.placeName ?? "",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: ColorsConstant.appColor,
                                 ),
                               ),
+                            );
+                          },
+                          onSuggestionSelected: (Feature suggestion) {
+                            // DO NOT REMOVE THIS PRINT STATEMENT OTHERWISE THE FUNCTION
+                            // WILL NOT BE TRIGGERED
+                            print(
+                                "\t\tNOTE: Do not remove this print statement.");
+                            provider.handlePlaceSelectionEvent(
+                                suggestion, context);
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          textFieldConfiguration: TextFieldConfiguration(
+                            textInputAction: TextInputAction.done,
+                            cursorColor: ColorsConstant.appColor,
+                            style: StyleConstant.searchTextStyle,
+                            controller: provider.mapSearchController,
+                            decoration:
+                                StyleConstant.searchBoxInputDecoration(
+                              context,
+                              hintText: StringConstant.search,
+                              isExploreScreenSearchBar: false,
                             ),
-                            Flexible(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  SizedBox(width: 2.w),
-                                  ReusableWidgets.circularLocationWidget(),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        SizedBox(
-                                          height: 3.h,
-                                          child: Marquee(
-                                            text:
-                                                provider.getHomeAddressText() ??
-                                                    StringConstant.loading,
-                                            velocity: 40.0,
-                                            pauseAfterRound:
-                                                const Duration(seconds: 1),
-                                            blankSpace: 30.0,
-                                            style: TextStyle(
-                                              color: Color(0xFF333333),
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          StringConstant.changeLocation,
-                                          style: TextStyle(
-                                            color: ColorsConstant.appColor,
-                                            fontSize: 9.sp,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         );
                       },
                     ),

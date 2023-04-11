@@ -21,6 +21,8 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
+  bool _isSearchBoxActive = false;
+
   late TabController homeScreenController;
 
   @override
@@ -57,21 +59,28 @@ class _ExploreScreenState extends State<ExploreScreen>
                     toolbarHeight: 0,
                   ),
                   titleSearchBarWithLocation(context),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        print(provider.filteredSalonData);
-                        return provider.filteredSalonData.length == 0
-                            ? Container(
-                                width: 100.w,
-                                height: 100.h,
-                                color: Colors.pink,
-                              )
-                            : salonList(context, index);
-                      },
-                      childCount: provider.filteredSalonData.length,
-                    ),
-                  ),
+                  provider.filteredSalonData.length == 0
+                      ? SliverFillRemaining(
+                          child: Container(
+                            color: Colors.white,
+                            height: 100.h,
+                            width: 100.w,
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return provider.filteredSalonData.length == 0
+                                  ? Container(
+                                      width: 100.w,
+                                      height: 100.h,
+                                      color: Colors.pink,
+                                    )
+                                  : salonList(context, index);
+                            },
+                            childCount: provider.filteredSalonData.length,
+                          ),
+                        ),
                 ],
               ),
             ],
@@ -97,10 +106,15 @@ class _ExploreScreenState extends State<ExploreScreen>
         pinned: true,
         floating: true,
         title: Container(
-          padding: EdgeInsets.only(top: 3.h),
-          child: Text(
-            StringConstant.exploreSalons,
-            style: StyleConstant.headingTextStyle,
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+            child: Container(
+              padding: EdgeInsets.only(top: 3.h),
+              child: Text(
+                StringConstant.exploreSalons,
+                style: StyleConstant.headingTextStyle,
+              ),
+            ),
           ),
         ),
         centerTitle: false,
@@ -111,73 +125,95 @@ class _ExploreScreenState extends State<ExploreScreen>
               controller: homeScreenController,
               indicatorColor: Colors.white,
               tabs: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 4.3.h, bottom: 2.h),
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 50.w,
-                        child: TextFormField(
-                          controller: provider.salonSearchController,
-                          cursorColor: ColorsConstant.appColor,
-                          style: StyleConstant.searchTextStyle,
-                          textInputAction: TextInputAction.done,
-                          onChanged: (searchText) =>
-                              provider.filterSalonList(searchText),
-                          decoration: StyleConstant.searchBoxInputDecoration(
-                              hintText: StringConstant.search),
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
-                      Flexible(
-                        child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, NamedRoutes.setHomeLocationRoute),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              ReusableWidgets.circularLocationWidget(),
-                              Flexible(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 3.h,
-                                      child: Marquee(
-                                        text: context
-                                                .read<UserProvider>()
-                                                .getHomeAddressText() ??
-                                            "",
-                                        velocity: 40.0,
-                                        pauseAfterRound:
-                                            const Duration(seconds: 1),
-                                        blankSpace: 30.0,
-                                        style: TextStyle(
-                                          color: Color(0xFF333333),
-                                          fontSize: 13.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      StringConstant.changeLocation,
-                                      style: TextStyle(
-                                        color: ColorsConstant.appColor,
-                                        fontSize: 9.sp,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 4.3.h, bottom: 2.h),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Row(
+                        children: <Widget>[
+                          AnimatedContainer(
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 200),
+                            width: _isSearchBoxActive
+                                ? constraints.maxWidth
+                                : 50.w,
+                            child: Focus(
+                              onFocusChange: (value) => setState(() {
+                                _isSearchBoxActive = value;
+                              }),
+                              child: TextFormField(
+                                controller: provider.salonSearchController,
+                                cursorColor: ColorsConstant.appColor,
+                                style: StyleConstant.searchTextStyle,
+                                textInputAction: TextInputAction.done,
+                                onChanged: (searchText) =>
+                                    provider.filterSalonList(searchText),
+                                decoration:
+                                    StyleConstant.searchBoxInputDecoration(
+                                  context,
+                                  hintText: StringConstant.search,
+                                  isExploreScreenSearchBar: true,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                          Flexible(
+                            child: GestureDetector(
+                              onTap: () => Navigator.pushNamed(
+                                  context, NamedRoutes.setHomeLocationRoute),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  SizedBox(width: 2.w),
+                                  ReusableWidgets.circularLocationWidget(),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 3.h,
+                                          child: Marquee(
+                                            text: context
+                                                    .read<UserProvider>()
+                                                    .getHomeAddressText() ??
+                                                "",
+                                            velocity: 40.0,
+                                            pauseAfterRound:
+                                                const Duration(seconds: 1),
+                                            blankSpace: 30.0,
+                                            style: TextStyle(
+                                              color: Color(0xFF333333),
+                                              fontSize: 13.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          StringConstant.changeLocation,
+                                          style: TextStyle(
+                                            color: ColorsConstant.appColor,
+                                            fontSize: 9.sp,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ),
               ],
@@ -196,6 +232,7 @@ class _ExploreScreenState extends State<ExploreScreen>
           color: Colors.white,
           child: GestureDetector(
             onTap: () {
+              FocusManager.instance.primaryFocus!.unfocus();
               provider.setSelectedSalonIndex(context, index: index);
               Navigator.pushNamed(context, NamedRoutes.salonDetailsRoute);
             },

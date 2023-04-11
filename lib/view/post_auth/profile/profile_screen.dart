@@ -16,8 +16,7 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
-    with SingleTickerProviderStateMixin {
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -61,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     pinned: true,
                     floating: true,
                     title: Container(
-                      padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
+                      padding: EdgeInsets.only(bottom: 2.h),
                       child: Text(
                         StringConstant.yourProfile,
                         style: StyleConstant.headingTextStyle,
@@ -90,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 userDetailsWithEditButton(),
                               ],
                             ),
-                            SizedBox(height: 4.h),
+                            SizedBox(height: 3.h),
                             Column(
                               children: <Widget>[
                                 profileOptions(
@@ -126,7 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   optionTitle: StringConstant.more,
                                 ),
                                 profileOptions(
-                                  onTap: () => provider.handleLogoutClick(context),
+                                  onTap: () =>
+                                      provider.handleLogoutClick(context),
                                   imagePath: ImagePathConstant.logoutIcon,
                                   optionTitle: StringConstant.logout,
                                 ),
@@ -158,7 +158,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: ColorsConstant.graphicFillDark,
+              color: optionTitle == StringConstant.logout
+                  ? Colors.white
+                  : ColorsConstant.graphicFillDark,
             ),
           ),
         ),
@@ -180,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             SvgPicture.asset(
               ImagePathConstant.rightArrowIcon,
               color: ColorsConstant.textDark,
-              height: 2.h,
+              height: 1.5.h,
             ),
           ],
         ),

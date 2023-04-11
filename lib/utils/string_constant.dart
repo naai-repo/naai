@@ -59,6 +59,11 @@ class StringConstant {
   static const String more = 'More';
   static const String logout = 'Logout';
 
+  // Barber profile screen strings
+  static const String barberProfile = 'Barber profile';
+  static const String worksAt = 'WORKS AT';
+  static const String rating = "RATING";
+
   // Exception related strings
   static const String locationApiTookTooLong =
       'Fetching location took too long';
