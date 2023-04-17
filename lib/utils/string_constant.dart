@@ -31,6 +31,7 @@ class StringConstant {
   static const String setLocation = 'Set Location';
   static const String setLocationSubtext =
       'SET YOUR HOME LOCATION TO  SEE SALONS NEAR TO YOUR PLACE';
+  static const String viewMore = 'View more';
 
   // Salon detail screen strings
   static const String availableStaff = 'AVAILABLE STAFF';

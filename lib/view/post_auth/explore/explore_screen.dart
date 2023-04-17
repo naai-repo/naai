@@ -46,18 +46,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               CustomScrollView(
                 physics: BouncingScrollPhysics(),
                 slivers: [
-                  SliverAppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    pinned: true,
-                    stretch: true,
-                    expandedHeight: 5.h,
-                    collapsedHeight: 0,
-                    flexibleSpace: const FlexibleSpaceBar(
-                      stretchModes: [StretchMode.zoomBackground],
-                    ),
-                    toolbarHeight: 0,
-                  ),
+                  ReusableWidgets.transparentFlexibleSpace(),
                   titleSearchBarWithLocation(context),
                   provider.filteredSalonData.length == 0
                       ? SliverFillRemaining(
@@ -105,15 +94,13 @@ class _ExploreScreenState extends State<ExploreScreen>
         backgroundColor: Colors.white,
         pinned: true,
         floating: true,
-        title: Container(
-          child: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-            child: Container(
-              padding: EdgeInsets.only(top: 3.h),
-              child: Text(
-                StringConstant.exploreSalons,
-                style: StyleConstant.headingTextStyle,
-              ),
+        title: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+          child: Container(
+            padding: EdgeInsets.only(top: 3.h),
+            child: Text(
+              StringConstant.exploreSalons,
+              style: StyleConstant.headingTextStyle,
             ),
           ),
         ),

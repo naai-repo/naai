@@ -36,18 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               CustomScrollView(
                 physics: BouncingScrollPhysics(),
                 slivers: [
-                  SliverAppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    pinned: true,
-                    stretch: true,
-                    expandedHeight: 5.h,
-                    collapsedHeight: 0,
-                    flexibleSpace: const FlexibleSpaceBar(
-                      stretchModes: [StretchMode.zoomBackground],
-                    ),
-                    toolbarHeight: 0,
-                  ),
+                  ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
                     elevation: 10,
                     shape: RoundedRectangleBorder(
@@ -73,14 +62,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.white,
                       child: Padding(
                         padding:
-                            EdgeInsets.only(top: 2.h, right: 3.w, left: 3.w),
+                            EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
                               children: <Widget>[
                                 CircleAvatar(
-                                  radius: 9.h,
+                                  radius: 7.h,
                                   backgroundImage: AssetImage(
                                     'assets/images/salon_dummy_image.png',
                                   ),
@@ -154,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -207,21 +196,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       color: ColorsConstant.textDark,
                       fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
+                      fontSize: 15.sp,
                     ),
                   ),
                   Text(
                     provider.userData.phoneNumber ?? '',
                     style: TextStyle(
                       color: ColorsConstant.textLight,
-                      fontSize: 11.sp,
+                      fontSize: 10.sp,
                     ),
                   ),
                 ],
               ),
               SizedBox(width: 3.w),
               Container(
-                padding: EdgeInsets.all(1.3.h),
+                padding: EdgeInsets.all(1.1.h),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -254,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               StringConstant.incompleteProfile,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 11.sp,
+                fontSize: 10.sp,
                 color: ColorsConstant.textDark,
               ),
             ),

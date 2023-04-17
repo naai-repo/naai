@@ -128,7 +128,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         color: provider.currentScreenIndex == index
             ? ColorsConstant.appColor
             : ColorsConstant.bottomNavIconsDisabled,
-        height: 3.h,
+        height: 2.5.h,
       ),
       title: Text(
         tabName,

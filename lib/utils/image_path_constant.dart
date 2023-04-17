@@ -1,6 +1,8 @@
 import 'package:naai/utils/utility_functions.dart';
 
 class ImagePathConstant {
+  static final String appLogo =
+      UtilityFunctions.getImagePath(imageTitle: 'app_logo.png');
   static final String inAppLogo =
       UtilityFunctions.getImagePath(imageTitle: 'in_app_logo.svg');
   static final String splashLogo =
@@ -85,4 +87,8 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'woman_gender_type_icon.svg');
   static final String manGenderTypeIcon =
       UtilityFunctions.getImagePath(imageTitle: 'man_gender_type_icon.svg');
+  static final String appointmentIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'appointment_icon.svg');
+  static final String homeLocationIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'home_location_icon.svg');
 }

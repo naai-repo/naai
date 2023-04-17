@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:marquee/marquee.dart';
 import 'package:naai/models/user_location.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naai/models/review.dart';
-import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
-import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
@@ -12,7 +9,6 @@ import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.d
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:intl/intl.dart';
 
 class SalonDetailsScreen extends StatefulWidget {
   const SalonDetailsScreen({Key? key}) : super(key: key);

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:naai/models/review.dart';
-import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
-import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
@@ -12,7 +9,6 @@ import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 
 class BarberProfileScreen extends StatefulWidget {
   BarberProfileScreen({Key? key}) : super(key: key);
@@ -43,18 +39,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
               CustomScrollView(
                 physics: BouncingScrollPhysics(),
                 slivers: [
-                  SliverAppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    pinned: true,
-                    stretch: true,
-                    expandedHeight: 5.h,
-                    collapsedHeight: 0,
-                    flexibleSpace: const FlexibleSpaceBar(
-                      stretchModes: [StretchMode.zoomBackground],
-                    ),
-                    toolbarHeight: 0,
-                  ),
+                  ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
                     elevation: 10,
                     shape: RoundedRectangleBorder(
@@ -79,6 +64,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                               child: SvgPicture.asset(
                                 ImagePathConstant.leftArrowIcon,
                                 color: ColorsConstant.textDark,
+                                height: 2.h,
                               ),
                             ),
                           ),
@@ -102,7 +88,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                             children: <Widget>[
                               Container(
                                 margin: EdgeInsets.only(
-                                    top: 4.h, right: 4.w, left: 4.w),
+                                    top: 1.h, right: 4.w, left: 4.w),
                                 padding: EdgeInsets.all(1.h),
                                 decoration: BoxDecoration(
                                   color: ColorsConstant.lightAppColor,
@@ -156,13 +142,13 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   ],
                 ),
                 child: CircleAvatar(
-                  radius: 9.h,
+                  radius: 7.h,
                   backgroundImage: AssetImage(
                     'assets/images/salon_dummy_image.png',
                   ),
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 8.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -178,17 +164,17 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                             style: TextStyle(
                               color: ColorsConstant.blackAvailableStaff,
                               fontWeight: FontWeight.w600,
-                              fontSize: 20.sp,
+                              fontSize: 18.sp,
                             ),
                             overflow: TextOverflow.fade,
                           ),
-                          SizedBox(height: 1.h),
+                          SizedBox(height: 0.6.h),
                           Text(
                             StringConstant.worksAt,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: ColorsConstant.worksAtColor,
-                              fontSize: 10.sp,
+                              fontSize: 8.sp,
                             ),
                           ),
                           Text(
@@ -200,7 +186,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                             style: TextStyle(
                               color: ColorsConstant.blackAvailableStaff,
                               fontWeight: FontWeight.w600,
-                              fontSize: 18.sp,
+                              fontSize: 16.sp,
                             ),
                           ),
                         ],
@@ -226,7 +212,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                         StringConstant.rating,
                         style: TextStyle(
                           color: ColorsConstant.textDark,
-                          fontSize: 11.sp,
+                          fontSize: 10.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

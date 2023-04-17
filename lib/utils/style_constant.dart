@@ -3,9 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:marquee/marquee.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
-import 'package:naai/utils/string_constant.dart';
-import 'package:naai/view/widgets/reusable_widgets.dart';
-import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -14,7 +11,7 @@ class StyleConstant {
   static TextStyle headingTextStyle = TextStyle(
     color: ColorsConstant.textDark,
     fontWeight: FontWeight.w600,
-    fontSize: 17.sp,
+    fontSize: 15.sp,
   );
 
   static TextStyle greySemiBoldTextStyle = TextStyle(
@@ -29,7 +26,7 @@ class StyleConstant {
 
   static TextStyle appColorBoldTextStyle = TextStyle(
     color: ColorsConstant.appColor,
-    fontSize: 12.sp,
+    fontSize: 10.sp,
     fontWeight: FontWeight.w600,
   );
 

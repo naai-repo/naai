@@ -293,19 +293,16 @@ class ReusableWidgets {
   static Widget appScreenCommonBackground() {
     return Container(
       height: 100.h,
-      color: ColorsConstant.appBackgroundColor,
+      color: Color(0xFF212121),
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Opacity(
-              opacity: 0.4,
-              child: SvgPicture.asset(
-                ImagePathConstant.appBackgroundImage,
-                color: ColorsConstant.graphicFill,
-              ),
+            SvgPicture.asset(
+              ImagePathConstant.appBackgroundImage,
+              color: ColorsConstant.graphicFill,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
@@ -914,5 +911,20 @@ class ReusableWidgets {
         ),
       );
     });
+  }
+
+  static SliverAppBar transparentFlexibleSpace() {
+    return SliverAppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      pinned: true,
+      stretch: true,
+      expandedHeight: 5.h,
+      collapsedHeight: 0,
+      flexibleSpace: const FlexibleSpaceBar(
+        stretchModes: [StretchMode.zoomBackground],
+      ),
+      toolbarHeight: 0,
+    );
   }
 }
