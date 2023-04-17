@@ -194,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }),
                           ),
+                          
                           dummyDeal(),
                           SizedBox(height: 1.h),
                           Row(
