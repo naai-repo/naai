@@ -307,6 +307,12 @@ class AuthenticationProvider with ChangeNotifier {
       } else {
         FocusManager.instance.primaryFocus!.unfocus();
       }
+    } else {
+      if (index != 0) {
+        FocusManager.instance.primaryFocus!.previousFocus();
+      } else {
+        FocusManager.instance.primaryFocus!.unfocus();
+      }
     }
 
     _isVerifyOtpButtonActive = (otpDigitOneController.text.isNotEmpty &&

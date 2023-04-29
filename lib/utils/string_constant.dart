@@ -1,5 +1,5 @@
 class StringConstant {
-  //General strings
+  // General strings
   static const String imageBaseDirectory = 'assets/images/';
   static const String splashScreenText = 'redefining your salon experience';
 
