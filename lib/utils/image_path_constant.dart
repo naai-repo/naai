@@ -91,4 +91,10 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'appointment_icon.svg');
   static final String homeLocationIcon =
       UtilityFunctions.getImagePath(imageTitle: 'home_location_icon.svg');
+  static final String facialImage =
+      UtilityFunctions.getImagePath(imageTitle: 'facial_image.png');
+  static final String hairColorImage =
+      UtilityFunctions.getImagePath(imageTitle: 'hair_color_image.png');
+  static final String massageImage =
+      UtilityFunctions.getImagePath(imageTitle: 'massage_image.png');
 }

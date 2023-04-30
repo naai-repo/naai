@@ -127,74 +127,67 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(0.5.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(9.5.h),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(2, 2),
-                      color: Colors.grey.shade300,
-                      spreadRadius: 0.5,
-                      blurRadius: 15,
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(0.5.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9.5.h),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(2, 2),
+                        color: Colors.grey.shade300,
+                        spreadRadius: 0.5,
+                        blurRadius: 15,
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 7.h,
+                    backgroundImage: AssetImage(
+                      'assets/images/salon_dummy_image.png',
                     ),
-                  ],
-                ),
-                child: CircleAvatar(
-                  radius: 7.h,
-                  backgroundImage: AssetImage(
-                    'assets/images/salon_dummy_image.png',
                   ),
                 ),
               ),
-              SizedBox(width: 8.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            provider.artist.name ?? '',
-                            style: TextStyle(
-                              color: ColorsConstant.blackAvailableStaff,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18.sp,
-                            ),
-                            overflow: TextOverflow.fade,
-                          ),
-                          SizedBox(height: 0.6.h),
-                          Text(
-                            StringConstant.worksAt,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: ColorsConstant.worksAtColor,
-                              fontSize: 8.sp,
-                            ),
-                          ),
-                          Text(
-                            context
-                                    .read<SalonDetailsProvider>()
-                                    .selectedSalonData
-                                    .name ??
-                                '',
-                            style: TextStyle(
-                              color: ColorsConstant.blackAvailableStaff,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ],
+              SizedBox(width: 5.w),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      provider.artist.name ?? '',
+                      style: TextStyle(
+                        color: ColorsConstant.blackAvailableStaff,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.sp,
                       ),
-                      SizedBox(width: 3.w),
-                    ],
-                  ),
-                ],
+                      overflow: TextOverflow.fade,
+                    ),
+                    SizedBox(height: 0.6.h),
+                    Text(
+                      StringConstant.worksAt,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: ColorsConstant.worksAtColor,
+                        fontSize: 8.sp,
+                      ),
+                    ),
+                    Text(
+                      context
+                              .read<SalonDetailsProvider>()
+                              .selectedSalonData
+                              .name ??
+                          '',
+                      style: TextStyle(
+                        color: ColorsConstant.blackAvailableStaff,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -238,7 +231,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                   height: 2.2.h,
                                 ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

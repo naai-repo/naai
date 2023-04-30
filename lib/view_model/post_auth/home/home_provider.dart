@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:naai/models/salon.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/models/user_location.dart';
 import 'package:naai/services/api_service/base_client.dart';
@@ -17,11 +18,15 @@ import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
-class UserProvider with ChangeNotifier {
+class HomeProvider with ChangeNotifier {
   final _mapLocation = location.Location();
+
+  List<SalonData> _salonData = [];
 
   late Symbol _symbol;
 
@@ -34,6 +39,8 @@ class UserProvider with ChangeNotifier {
   UserModel _userData = UserModel();
 
   //============= GETTERS =============//
+  List<SalonData> get salonData => _salonData;
+
   String get addressText => _addressText;
 
   TextEditingController get mapSearchController => _mapSearchController;
@@ -60,17 +67,28 @@ class UserProvider with ChangeNotifier {
     );
   }
 
-  /// Fetch the user details from [FirebaseFirestore]
-  void getUserDetails(BuildContext context) async {
+  /// Method to trigger all the API functions
+  Future<void> initHome(BuildContext context) async {
     Loader.showLoader(context);
+    await Future.wait([
+      context.read<ExploreProvider>().getSalonList(context),
+      getUserDetails(context),
+    ]).onError(
+      (error, stackTrace) =>
+          ReusableWidgets.showFlutterToast(context, '$error'),
+    );
+
+    _salonData = [...context.read<ExploreProvider>().salonData];
+    Loader.hideLoader(context);
+    notifyListeners();
+  }
+
+  /// Fetch the user details from [FirebaseFirestore]
+  Future<void> getUserDetails(BuildContext context) async {
     try {
       // await SharedPreferenceHelper.setUserId('Bkor6YYboRZZTQah45N6hVYqDuJ2');
       _userData = await DatabaseService().getUserDetails();
-
-      Loader.hideLoader(context);
     } catch (e) {
-      Loader.hideLoader(context);
-      print(e);
       ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();

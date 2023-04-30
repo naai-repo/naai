@@ -9,7 +9,7 @@ import 'package:naai/utils/keys.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
-import 'package:naai/view_model/post_auth/home/user_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:math';
@@ -26,12 +26,12 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProvider>().initializeSymbol();
+    context.read<HomeProvider>().initializeSymbol();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(builder: (context, provider, child) {
+    return Consumer<HomeProvider>(builder: (context, provider, child) {
       return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
@@ -154,7 +154,7 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
   }
 
   Widget _mapBox() {
-    return Consumer<UserProvider>(builder: (context, provider, child) {
+    return Consumer<HomeProvider>(builder: (context, provider, child) {
       return Stack(
         children: <Widget>[
           MapboxMap(

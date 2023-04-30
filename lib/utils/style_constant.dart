@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:marquee/marquee.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
-import 'package:naai/view_model/post_auth/home/user_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -71,7 +71,7 @@ class StyleConstant {
                       width: 22.w,
                       child: Marquee(
                         text:
-                            "${context.read<UserProvider>().getHomeAddressText()}",
+                            "${context.read<HomeProvider>().getHomeAddressText()}",
                         velocity: 40.0,
                         pauseAfterRound: const Duration(seconds: 1),
                         blankSpace: 30.0,

@@ -15,6 +15,7 @@ class ColorsConstant {
   static const Color greySalonType = Color(0xFFC2C2C2);
   static const Color greySalonAddress = Color(0xFFA4A4A4);
   static const Color greenRating = Color(0xFF22B565);
+  static const Color purpleDistance = Color(0xFF5F7CE1);
   static const Color blackAvailableStaff = Color(0xFF555555);
   static const Color greyStar = Color(0xFFE5E5E5);
   static const Color yellowStar = Color(0xFFFFD700);
@@ -29,4 +30,5 @@ class ColorsConstant {
   static const Color incompleteProfileBoxColor = Color(0xFFFFF48E);
   static const Color incompleteProfileBoxBorderColor = Color(0xFFDBCC49);
   static const Color worksAtColor = Color(0xFF808080);
+  static const Color neutral = Color(0xFFF5F5F5);
 }

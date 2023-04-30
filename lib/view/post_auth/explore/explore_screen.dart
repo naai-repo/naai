@@ -8,7 +8,7 @@ import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
-import 'package:naai/view_model/post_auth/home/user_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -36,47 +36,44 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Consumer<ExploreProvider>(builder: (context, provider, child) {
-        return Scaffold(
-          body: Stack(
-            children: <Widget>[
-              ReusableWidgets.appScreenCommonBackground(),
-              CustomScrollView(
-                physics: BouncingScrollPhysics(),
-                slivers: [
-                  ReusableWidgets.transparentFlexibleSpace(),
-                  titleSearchBarWithLocation(context),
-                  provider.filteredSalonData.length == 0
-                      ? SliverFillRemaining(
-                          child: Container(
-                            color: Colors.white,
-                            height: 100.h,
-                            width: 100.w,
-                          ),
-                        )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return provider.filteredSalonData.length == 0
-                                  ? Container(
-                                      width: 100.w,
-                                      height: 100.h,
-                                      color: Colors.pink,
-                                    )
-                                  : salonList(context, index);
-                            },
-                            childCount: provider.filteredSalonData.length,
-                          ),
+    return Consumer<ExploreProvider>(builder: (context, provider, child) {
+      return Scaffold(
+        body: Stack(
+          children: <Widget>[
+            ReusableWidgets.appScreenCommonBackground(),
+            CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                ReusableWidgets.transparentFlexibleSpace(),
+                titleSearchBarWithLocation(context),
+                provider.filteredSalonData.length == 0
+                    ? SliverFillRemaining(
+                        child: Container(
+                          color: Colors.white,
+                          height: 100.h,
+                          width: 100.w,
                         ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }),
-    );
+                      )
+                    : SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            return provider.filteredSalonData.length == 0
+                                ? Container(
+                                    width: 100.w,
+                                    height: 100.h,
+                                    color: Colors.white,
+                                  )
+                                : salonList(context, index);
+                          },
+                          childCount: provider.filteredSalonData.length,
+                        ),
+                      ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   MediaQuery titleSearchBarWithLocation(BuildContext context) {
@@ -167,7 +164,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                           height: 3.h,
                                           child: Marquee(
                                             text: context
-                                                    .read<UserProvider>()
+                                                    .read<HomeProvider>()
                                                     .getHomeAddressText() ??
                                                 "",
                                             velocity: 40.0,

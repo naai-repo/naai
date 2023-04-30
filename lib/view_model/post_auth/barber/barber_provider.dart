@@ -20,6 +20,7 @@ class BarberProvider with ChangeNotifier {
             .selectedSalonData
             .artist?[_selectedArtistIndex] ??
         Artist();
+    print(_artist.toJson());
     notifyListeners();
   }
 

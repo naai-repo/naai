@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/services/database.dart';
+import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -12,6 +13,9 @@ class ExploreProvider with ChangeNotifier {
   List<SalonData> _salonData = [];
   List<SalonData> _filteredSalonData = [];
 
+  bool _applyServiceFilter = false;
+  ServiceEnum _appliedServiceFilter = ServiceEnum.HAIR;
+
   //============= GETTERS =============//
   TextEditingController get salonSearchController => _salonSearchController;
 
@@ -22,6 +26,13 @@ class ExploreProvider with ChangeNotifier {
   void initExploreScreen(BuildContext context) async {
     Loader.showLoader(context);
     await getSalonList(context);
+
+    if (_applyServiceFilter) {
+      filterSalonListByService(selectedServiceCategory: _appliedServiceFilter);
+    }
+
+    setApplyServiceFilter(value: false);
+
     Loader.hideLoader(context);
     notifyListeners();
   }
@@ -50,6 +61,20 @@ class ExploreProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Set the value of [_filteredSalonData] according to the selected service.
+  void filterSalonListByService(
+      {required ServiceEnum selectedServiceCategory}) {
+    _filteredSalonData.clear();
+    _salonData.forEach((salon) {
+      salon.services?.forEach((salonService) {
+        if (salonService.category == selectedServiceCategory) {
+          _filteredSalonData.add(salon);
+        }
+      });
+    });
+    notifyListeners();
+  }
+
   /// Save the index of the selected salon from the list of salons
   void setSelectedSalonIndex(BuildContext context, {int index = 0}) {
     context.read<SalonDetailsProvider>().setSelectedSalonIndex(index);
@@ -68,6 +93,15 @@ class ExploreProvider with ChangeNotifier {
   /// Clear the value of [_salonSearchController]
   void clearSalonSearchController() {
     _salonSearchController.clear();
+    notifyListeners();
+  }
+
+  void setApplyServiceFilter({
+    required bool value,
+    ServiceEnum? service,
+  }) {
+    _applyServiceFilter = value;
+    _appliedServiceFilter = service ?? ServiceEnum.HAIR;
     notifyListeners();
   }
 }

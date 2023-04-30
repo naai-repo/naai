@@ -6,7 +6,7 @@ import 'package:naai/utils/routing/routing_functions.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/bottom_navigation_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
-import 'package:naai/view_model/post_auth/home/user_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/map/map_provider.dart';
 import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SalonDetailsProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => UserProvider(),
+          create: (context) => HomeProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => MapProvider(),

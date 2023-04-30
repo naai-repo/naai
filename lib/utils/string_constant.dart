@@ -32,6 +32,9 @@ class StringConstant {
   static const String setLocationSubtext =
       'SET YOUR HOME LOCATION TO  SEE SALONS NEAR TO YOUR PLACE';
   static const String viewMore = 'View more';
+  static const String categories = 'Categories';
+  static const String salonsNearMe = 'Salons near me';
+  static const String ourStylist = 'Our stylist';
 
   // Salon detail screen strings
   static const String availableStaff = 'AVAILABLE STAFF';
@@ -70,4 +73,9 @@ class StringConstant {
       'Fetching location took too long';
   static const String loading = 'loading';
   static const String unknown = 'unknown';
+
+  // Service categories
+  static const String hairColor = 'Hair\nColor';
+  static const String facial = 'Facial';
+  static const String massage = 'Massage';
 }
