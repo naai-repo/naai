@@ -427,48 +427,53 @@ class ReusableWidgets {
                   itemBuilder: (context, index) {
                     ServiceDetail? serviceDetail =
                         provider.filteredServiceList[index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: 1.h,
-                        horizontal: 3.w,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 3.w,
-                        vertical: 1.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(1.h),
-                        border: Border.all(color: ColorsConstant.divider),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SvgPicture.asset(
-                            serviceDetail.targetGender == Gender.MEN
-                                ? ImagePathConstant.manIcon
-                                : ImagePathConstant.womanIcon,
-                            height: 4.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 52.w,
-                                child: Text(
-                                  serviceDetail.serviceTitle ?? "",
-                                  style: TextStyle(
-                                    color: ColorsConstant.textDark,
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.w500,
+                    bool isAdded =
+                        provider.selectedServices.contains(serviceDetail.id);
+                    // print(isAdded);
+                    return GestureDetector(
+                      onTap: () =>
+                          provider.setSelectedService(serviceDetail.id ?? ''),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: 1.h,
+                          horizontal: 3.w,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 3.w,
+                          vertical: 1.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(1.h),
+                          border: Border.all(color: ColorsConstant.divider),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              serviceDetail.targetGender == Gender.MEN
+                                  ? ImagePathConstant.manIcon
+                                  : ImagePathConstant.womanIcon,
+                              height: 4.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    serviceDetail.serviceTitle ?? "",
+                                    style: TextStyle(
+                                      color: ColorsConstant.textDark,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
                                       "Rs. ${serviceDetail.price}",
@@ -479,13 +484,18 @@ class ReusableWidgets {
                                       ),
                                     ),
                                     SizedBox(width: 1.h),
-                                    SvgPicture.asset(ImagePathConstant.tickBox),
+                                    Checkbox(
+                                      value: isAdded,
+                                      onChanged: (value) =>
+                                          provider.setSelectedService(
+                                              serviceDetail.id ?? ''),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -638,31 +648,31 @@ class ReusableWidgets {
   }
 
   static Widget reviewsTab() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            addReviewContainer(),
-            Padding(
-              padding: EdgeInsets.only(top: 2.h, bottom: 1.h),
-              child: Text(
-                StringConstant.userReviews,
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: ColorsConstant.blackAvailableStaff,
-                  fontWeight: FontWeight.w500,
+    return Consumer<SalonDetailsProvider>(
+      builder: (context, provider, child) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              addReviewContainer(),
+              Padding(
+                padding: EdgeInsets.only(top: 2.h, bottom: 1.h),
+                child: Text(
+                  StringConstant.userReviews,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: ColorsConstant.blackAvailableStaff,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            (provider.selectedSalonData.reviewList?.length ?? 0) > 0
-                ? reviewList()
-                : SizedBox(),
-          ],
-        ),
-      );
-    });
+              provider.salonReviewList.isNotEmpty ? reviewList() : SizedBox(),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   static Widget serviceCategoryFilterWidget() {
@@ -717,9 +727,9 @@ class ReusableWidgets {
         padding: EdgeInsets.zero,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: provider.selectedSalonData.reviewList?.length,
+        itemCount: provider.salonReviewList.length,
         itemBuilder: (context, index) {
-          Review? reviewItem = provider.selectedSalonData.reviewList?[index];
+          Review? reviewItem = provider.salonReviewList[index];
 
           return Container(
             margin: EdgeInsets.symmetric(vertical: 1.h),
@@ -743,12 +753,11 @@ class ReusableWidgets {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 reviewerImageAndName(
-                  imageUrl: reviewItem?.imagePath,
-                  userName: reviewItem?.userName ?? "",
+                  imageUrl: reviewItem.imagePath,
+                  userName: reviewItem.userName ?? "",
                 ),
                 SizedBox(width: 2.w),
-                Container(
-                  constraints: BoxConstraints(maxWidth: 55.w),
+                Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -760,7 +769,12 @@ class ReusableWidgets {
                             5,
                             (i) => SvgPicture.asset(
                               ImagePathConstant.starIcon,
-                              color: i < (reviewItem?.rating as int)
+                              color: i <
+                                      (int.parse(provider
+                                              .artistList[index].rating
+                                              ?.round()
+                                              .toString() ??
+                                          "0"))
                                   ? ColorsConstant.appColor
                                   : ColorsConstant.greyStar,
                             ),
@@ -770,7 +784,7 @@ class ReusableWidgets {
                       Padding(
                         padding: EdgeInsets.only(top: 0.5.h, bottom: 1.h),
                         child: Text(
-                          '${DateFormat.yMMMM().format(reviewItem?.createdAt ?? DateTime.now())}',
+                          '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
                           style: TextStyle(
                             fontSize: 8.sp,
                             fontWeight: FontWeight.w600,
@@ -779,7 +793,7 @@ class ReusableWidgets {
                         ),
                       ),
                       Text(
-                        reviewItem?.reviewText ?? "",
+                        reviewItem.comment ?? "",
                         style: TextStyle(
                           fontSize: 10.sp,
                         ),
@@ -819,98 +833,91 @@ class ReusableWidgets {
   }
 
   static Widget addReviewContainer() {
-    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Container(
-        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
-        decoration: BoxDecoration(
-            color: ColorsConstant.graphicFillDark,
-            borderRadius: BorderRadius.circular(2.h)),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SvgPicture.asset(
-                  ImagePathConstant.addYourReviewIcon,
-                  fit: BoxFit.scaleDown,
-                ),
-                SizedBox(width: 5.w),
-                Text(
-                  StringConstant.addYourReview,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 2.h),
-            GestureDetector(
-              onHorizontalDragUpdate: (details) {
-                print(details.localPosition.dx);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  SizedBox(width: 5.w),
-                  ...List.generate(
-                    5,
-                    (index) => SvgPicture.asset(
-                      ImagePathConstant.reviewStarIcon,
-                      color: provider.colors[index],
-                    ),
-                  ),
-                  SizedBox(width: 5.w),
-                ],
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
+      decoration: BoxDecoration(
+          color: ColorsConstant.graphicFillDark,
+          borderRadius: BorderRadius.circular(2.h)),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SvgPicture.asset(
+                ImagePathConstant.addYourReviewIcon,
+                fit: BoxFit.scaleDown,
               ),
-            ),
-            SizedBox(height: 3.h),
-            SizedBox(
-              height: 6.h,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                    left: 5.w,
-                    right: 5.w,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: StringConstant.summarizeYourReview,
-                  hintStyle: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w400,
-                    color: ColorsConstant.textLight,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(1.5.h),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 1.5.h,
-                horizontal: 10.w,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(1.5.h),
-              ),
-              child: Text(
-                StringConstant.submitReview,
+              SizedBox(width: 5.w),
+              Text(
+                StringConstant.addYourReview,
                 style: TextStyle(
-                  fontWeight: FontWeight.w700,
                   fontSize: 11.sp,
-                  color: ColorsConstant.appColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 2.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              SizedBox(width: 5.w),
+              ...List.generate(
+                5,
+                (index) => SvgPicture.asset(
+                  ImagePathConstant.reviewStarIcon,
+                  color: ColorsConstant.reviewStarGreyColor,
+                ),
+              ),
+              SizedBox(width: 5.w),
+            ],
+          ),
+          SizedBox(height: 3.h),
+          SizedBox(
+            height: 6.h,
+            child: TextFormField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                  left: 5.w,
+                  right: 5.w,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                hintText: StringConstant.summarizeYourReview,
+                hintStyle: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w400,
+                  color: ColorsConstant.textLight,
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(1.5.h),
                 ),
               ),
             ),
-          ],
-        ),
-      );
-    });
+          ),
+          SizedBox(height: 2.h),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 1.5.h,
+              horizontal: 10.w,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(1.5.h),
+            ),
+            child: Text(
+              StringConstant.submitReview,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 11.sp,
+                color: ColorsConstant.appColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   static SliverAppBar transparentFlexibleSpace() {

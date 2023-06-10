@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
@@ -22,7 +23,9 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
 
   @override
   void initState() {
-    context.read<SalonDetailsProvider>().setSelectedSalonData(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<SalonDetailsProvider>().initSalonDetailsData(context);
+    });
     super.initState();
   }
 
@@ -35,10 +38,10 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
         context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
         return true;
       },
-      child: Scaffold(
-        body:
-            Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-          return SingleChildScrollView(
+      child:
+          Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+        return Scaffold(
+          body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Column(
               children: <Widget>[
@@ -64,10 +67,71 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 ),
               ],
             ),
-          );
-        }),
-        bottomNavigationBar: servicesAndReviewTabBar(),
-      ),
+          ),
+          bottomNavigationBar: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              servicesAndReviewTabBar(),
+              provider.totalPrice > 0
+                  ? Container(
+                      margin: EdgeInsets.only(
+                        bottom: 2.h,
+                        right: 5.w,
+                        left: 5.w,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 1.h,
+                        horizontal: 3.w,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1.h),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            offset: Offset(0, 2.0),
+                            color: Colors.grey,
+                            spreadRadius: 0.2,
+                            blurRadius: 15,
+                          ),
+                        ],
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                StringConstant.total,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10.sp,
+                                  color: ColorsConstant.textDark,
+                                ),
+                              ),
+                              Text(
+                                'Rs. ${provider.totalPrice}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15.sp,
+                                  color: ColorsConstant.textDark,
+                                ),
+                              ),
+                            ],
+                          ),
+                          VariableWidthCta(
+                            onTap: () {},
+                            buttonText: StringConstant.confirmBooking,
+                          )
+                        ],
+                      ),
+                    )
+                  : SizedBox()
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -204,7 +268,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: provider.selectedSalonData.artist?.length,
+                itemCount: provider.artistList.length,
                 itemBuilder: (context, index) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(1.5.h),
@@ -255,9 +319,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  provider.selectedSalonData.artist?[index]
-                                          .name ??
-                                      "",
+                                  provider.artistList[index].name ?? "",
                                   style: TextStyle(
                                     fontSize: 11.sp,
                                     color: ColorsConstant.textDark,
@@ -270,8 +332,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                   children: List<Widget>.generate(
                                     5,
                                     (i) => (i >
-                                            int.parse(provider.selectedSalonData
-                                                        .artist?[index].rating
+                                            int.parse(provider.artistList[index]
+                                                        .rating
                                                         ?.round()
                                                         .toString() ??
                                                     "0") -

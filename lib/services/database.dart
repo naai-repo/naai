@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:naai/models/artist.dart';
+import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
+import 'package:naai/models/service_detail.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 
@@ -8,7 +11,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   final CollectionReference salonCollection =
-      FirebaseFirestore.instance.collection('salons');
+      FirebaseFirestore.instance.collection('salon');
 
   /// Set the user data to the [FirebaseFirestore] as a new entry
   Future<void> setUserData({required Map<String, dynamic> userData}) async {
@@ -48,6 +51,73 @@ class DatabaseService {
     );
     return querySnapshot.docs
         .map((docData) => SalonData.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the salon list from [FirebaseFirestore]
+  Future<List<ServiceDetail>> getServiceList(String? salonId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('services')
+        .where('salonId', isEqualTo: salonId)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+    return querySnapshot.docs
+        .map((docData) => ServiceDetail.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the salon list from [FirebaseFirestore]
+  Future<List<Review>> getArtistReviewList(String? artistId) async {
+    print(artistId);
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('reviews')
+        .where('artistId', isEqualTo: artistId)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+    return querySnapshot.docs
+        .map((docData) => Review.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the salon list from [FirebaseFirestore]
+  Future<List<Artist>> getArtistList(String? salonId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('artist')
+        .where('salonId', isEqualTo: salonId)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    return querySnapshot.docs
+        .map((docData) => Artist.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the salon list from [FirebaseFirestore]
+  Future<List<Review>> getSalonReviewsList(String? salonId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('reviews')
+        .where('salonId', isEqualTo: salonId)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    return querySnapshot.docs
+        .map((docData) => Review.fromDocumentSnapshot(docData))
         .toList();
   }
 

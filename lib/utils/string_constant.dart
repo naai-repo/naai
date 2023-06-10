@@ -47,6 +47,8 @@ class StringConstant {
   static const String men = "Men";
   static const String women = "Women";
   static const String selectCategory = 'SELECT CATEGORY';
+  static const String total = 'TOTAL';
+  static const String confirmBooking = 'Confirm Booking';
 
   // Maps screen strings
   static const String map = 'Map';

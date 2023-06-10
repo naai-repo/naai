@@ -1,37 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Review {
-  String? userName;
-  String? imagePath;
-  int? rating;
+  String? artistId;
+  String? comment;
+  String? id;
+  String? salonId;
+  String? userId;
   DateTime? createdAt;
-  String? reviewText;
+  String? imagePath;
+  String? userName;
+  double? rating;
 
   Review({
-    this.userName,
-    this.imagePath,
-    this.rating,
+    this.artistId,
+    this.comment,
+    this.id,
     this.createdAt,
-    this.reviewText,
+    this.salonId,
+    this.userId,
+    this.imagePath,
+    this.userName,
+    this.rating,
   });
 
-  factory Review.fromFirestore(Map<String, dynamic> json) {
+  factory Review.fromDocumentSnapshot(DocumentSnapshot docData) {
+    Map<String, dynamic> json = docData.data() as Map<String, dynamic>;
+
     return Review(
-      userName: json['userName'],
-      imagePath: 'assets/images/artist_dummy_image.svg',
-      rating: json['rating'],
+      artistId: json['artistId'],
+      comment: json['comment'],
+      id: json['id'],
       createdAt: (json['createdAt'] as Timestamp).toDate(),
-      reviewText: json['reviewText'],
+      salonId: json['salonId'],
+      userId: json['userId'],
+      imagePath: 'assets/images/salon_dummy_image.png',
+      userName: json['userName'],
+      rating: json['rating'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'artistId': artistId,
+      'comment': comment,
+      'id': id,
+      'createdAt': Timestamp.fromDate(createdAt ?? DateTime.now()),
+      'salonId': salonId,
+      'userId': userId,
       'userName': userName,
-      'imagePath': imagePath,
       'rating': rating,
-      'createdAt': createdAt,
-      'reviewText': reviewText,
     };
   }
 }

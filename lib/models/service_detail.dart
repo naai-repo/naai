@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naai/utils/enums.dart';
 
 class ServiceDetail {
@@ -5,16 +6,24 @@ class ServiceDetail {
   String? serviceTitle;
   double? price;
   Gender? targetGender;
+  String? id;
+  String? salonId;
 
   ServiceDetail({
     this.category,
     this.serviceTitle,
     this.price,
     this.targetGender,
+    this.salonId,
+    this.id,
   });
 
-  factory ServiceDetail.fromFirestore(Map<String, dynamic> data) {
+  factory ServiceDetail.fromDocumentSnapshot(DocumentSnapshot docData) {
+    Map<String, dynamic> data = docData.data() as Map<String, dynamic>;
+
     return ServiceDetail(
+      id: data['id'],
+      salonId: data['salonId'],
       category: ServiceEnum.values[(ServiceEnum.values.indexWhere(
           (category) => category.name.toLowerCase() == data['category']))],
       serviceTitle: data['serviceTitle'],

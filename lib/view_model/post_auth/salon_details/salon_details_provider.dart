@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:naai/models/artist.dart';
+import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
-import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/services/database.dart';
 import 'package:naai/utils/enums.dart';
+import 'package:naai/utils/loading_indicator.dart';
+import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:provider/provider.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
-  List<Color> colors = [
-    ColorsConstant.reviewStarGreyColor,
-    ColorsConstant.reviewStarGreyColor,
-    ColorsConstant.reviewStarGreyColor,
-    ColorsConstant.reviewStarGreyColor,
-    ColorsConstant.reviewStarGreyColor,
-  ];
-
   List<String> imagePaths = [
     'assets/images/salon_dummy_image.png',
     'assets/images/salon_dummy_image.png',
@@ -24,9 +20,16 @@ class SalonDetailsProvider with ChangeNotifier {
 
   int _selectedSalonIndex = 0;
 
+  double _totalPrice = 0;
+
   List<Gender> _selectedGendersFilter = [];
   List<ServiceEnum> _selectedServiceCategories = [];
+  List<ServiceDetail> _serviceList = [];
+  List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
+  List<Artist> _artistList = [];
+
+  List<String> _selectedServices = [];
 
   SalonData _selectedSalonData = SalonData();
 
@@ -37,9 +40,17 @@ class SalonDetailsProvider with ChangeNotifier {
   //============= GETTERS =============//
   int get selectedSalonIndex => _selectedSalonIndex;
 
+  double get totalPrice => _totalPrice;
+
   List<Gender> get selectedGendersFilter => _selectedGendersFilter;
   List<ServiceEnum> get selectedServiceCategories => _selectedServiceCategories;
+
+  List<ServiceDetail> get serviceList => _serviceList;
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
+  List<Artist> get artistList => _artistList;
+  List<Review> get salonReviewList => _salonReviewList;
+
+  List<String> get selectedServices => _selectedServices;
 
   SalonData get selectedSalonData => _selectedSalonData;
 
@@ -54,7 +65,65 @@ class SalonDetailsProvider with ChangeNotifier {
         context.read<ExploreProvider>().filteredSalonData[_selectedSalonIndex];
 
     _filteredServiceList.clear();
-    _filteredServiceList.addAll(_selectedSalonData.services ?? []);
+    _filteredServiceList.addAll(_serviceList);
+  }
+
+  void setSelectedService(String id) {
+    if (_selectedServices.contains(id)) {
+      _selectedServices.remove(id);
+      var service = _serviceList.firstWhere((element) => element.id == id);
+      _totalPrice -= service.price ?? 0;
+    } else {
+      _selectedServices.add(id);
+      var service = _serviceList.firstWhere((element) => element.id == id);
+      _totalPrice += service.price ?? 0;
+    }
+
+    notifyListeners();
+  }
+
+  void initSalonDetailsData(BuildContext context) async {
+    Loader.showLoader(context);
+    setSelectedSalonData(context);
+    await getServiceList(context);
+    await getArtistList(context);
+    await getSalonReviewsList(context);
+    Loader.hideLoader(context);
+  }
+
+  /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
+  Future<void> getServiceList(BuildContext context) async {
+    try {
+      _serviceList =
+          await DatabaseService().getServiceList(_selectedSalonData.id);
+      _filteredServiceList.clear();
+      _filteredServiceList.addAll(_serviceList);
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
+  Future<void> getSalonReviewsList(BuildContext context) async {
+    try {
+      _salonReviewList =
+          await DatabaseService().getSalonReviewsList(_selectedSalonData.id);
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
+  Future<void> getArtistList(BuildContext context) async {
+    try {
+      _artistList =
+          await DatabaseService().getArtistList(_selectedSalonData.id);
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
   }
 
   /// Save the index of selected [SalonData] instance in [SalonDetailsProvider]
@@ -71,21 +140,23 @@ class SalonDetailsProvider with ChangeNotifier {
   }) {
     _filteredServiceList.clear();
     if (_selectedGendersFilter.isEmpty && _selectedServiceCategories.isEmpty) {
-      _filteredServiceList.addAll(_selectedSalonData.services ?? []);
+      _filteredServiceList.addAll(_serviceList);
     }
 
     if (_selectedGendersFilter.isNotEmpty) {
-      _filteredServiceList.addAll(_selectedSalonData.services?.where(
-              (service) =>
-                  (_selectedGendersFilter.contains(service.targetGender))) ??
-          []);
+      _filteredServiceList.addAll(
+        _serviceList.where(
+          (service) => (_selectedGendersFilter.contains(service.targetGender)),
+        ),
+      );
     }
 
     if (_selectedServiceCategories.isNotEmpty) {
-      _filteredServiceList.addAll(_selectedSalonData.services?.where(
-              (service) =>
-                  _selectedServiceCategories.contains(service.category)) ??
-          []);
+      _filteredServiceList.addAll(
+        _serviceList.where(
+          (service) => _selectedServiceCategories.contains(service.category),
+        ),
+      );
     }
     notifyListeners();
   }
@@ -118,7 +189,7 @@ class SalonDetailsProvider with ChangeNotifier {
   /// search text by the user
   void filterOnSearchText(String searchText) {
     _filteredServiceList.clear();
-    _selectedSalonData.services?.forEach((service) {
+    _serviceList.forEach((service) {
       if (service.serviceTitle!
           .toLowerCase()
           .contains(searchText.toLowerCase())) {

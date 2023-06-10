@@ -28,6 +28,7 @@ class RoutingFunctions {
     NamedRoutes.setHomeLocationRoute: (context) => SetHomeLocationScreen(),
     NamedRoutes.mapRoute: (context) => MapScreen(),
     NamedRoutes.barberProfileRoute: (context) => BarberProfileScreen(),
+    NamedRoutes.barberProfileRoute: (context) => BarberProfileScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.

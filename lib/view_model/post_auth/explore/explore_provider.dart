@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:naai/models/salon.dart';
+import 'package:naai/models/service_detail.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/loading_indicator.dart';
@@ -12,6 +13,7 @@ class ExploreProvider with ChangeNotifier {
 
   List<SalonData> _salonData = [];
   List<SalonData> _filteredSalonData = [];
+  List<ServiceDetail> _currentSalonServices = [];
 
   bool _applyServiceFilter = false;
   ServiceEnum _appliedServiceFilter = ServiceEnum.HAIR;
@@ -44,7 +46,6 @@ class ExploreProvider with ChangeNotifier {
       _filteredSalonData.clear();
       _filteredSalonData.addAll(_salonData);
     } catch (e) {
-      print(e);
       ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
@@ -66,7 +67,7 @@ class ExploreProvider with ChangeNotifier {
       {required ServiceEnum selectedServiceCategory}) {
     _filteredSalonData.clear();
     _salonData.forEach((salon) {
-      salon.services?.forEach((salonService) {
+      _currentSalonServices.forEach((salonService) {
         if (salonService.category == selectedServiceCategory) {
           _filteredSalonData.add(salon);
         }
@@ -85,8 +86,8 @@ class ExploreProvider with ChangeNotifier {
     BuildContext context,
     SalonData clickedSalonData,
   ) {
-    int indexOfSalon = _salonData
-        .indexWhere((salon) => salon.salonId == clickedSalonData.salonId);
+    int indexOfSalon =
+        _salonData.indexWhere((salon) => salon.id == clickedSalonData.id);
     setSelectedSalonIndex(context, index: indexOfSalon);
   }
 

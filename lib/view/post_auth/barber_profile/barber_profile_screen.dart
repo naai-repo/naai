@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naai/models/review.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/add_review_component.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
@@ -9,6 +11,7 @@ import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
 
 class BarberProfileScreen extends StatefulWidget {
   BarberProfileScreen({Key? key}) : super(key: key);
@@ -23,7 +26,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<BarberProvider>().setArtistData(context);
+      context.read<BarberProvider>().initArtistData(context);
     });
     super.initState();
   }
@@ -33,6 +36,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
     return Consumer<BarberProvider>(
       builder: (context, provider, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           body: Stack(
             children: <Widget>[
               ReusableWidgets.appScreenCommonBackground(),
@@ -104,7 +108,156 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                               ),
                               selectedTab == 0
                                   ? ReusableWidgets.servicesTab()
-                                  : ReusableWidgets.reviewsTab(),
+                                  : Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w, vertical: 2.h),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          AddReviewComponent(),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 2.h, bottom: 1.h),
+                                            child: Text(
+                                              StringConstant.userReviews,
+                                              style: TextStyle(
+                                                fontSize: 11.sp,
+                                                color: ColorsConstant
+                                                    .blackAvailableStaff,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                          provider.artistReviewList.isNotEmpty
+                                              ? ListView.builder(
+                                                  padding: EdgeInsets.zero,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemCount: provider
+                                                      .artistReviewList.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    Review? reviewItem = provider
+                                                            .artistReviewList[
+                                                        index];
+
+                                                    return Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 1.h),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 3.w,
+                                                        vertical: 1.5.h,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(1.h),
+                                                        border: Border.all(
+                                                            color: ColorsConstant
+                                                                .reviewBoxBorderColor),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color:
+                                                                Color.fromARGB(
+                                                              255,
+                                                              229,
+                                                              229,
+                                                              229,
+                                                            ),
+                                                            spreadRadius: 0.1,
+                                                            blurRadius: 10,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          reviewerImageAndName(
+                                                            imageUrl: reviewItem
+                                                                .imagePath,
+                                                            userName: reviewItem
+                                                                    .userName ??
+                                                                "",
+                                                          ),
+                                                          SizedBox(width: 2.w),
+                                                          Expanded(
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: <
+                                                                  Widget>[
+                                                                Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    ...List
+                                                                        .generate(
+                                                                      5,
+                                                                      (i) => SvgPicture
+                                                                          .asset(
+                                                                        ImagePathConstant
+                                                                            .starIcon,
+                                                                        color: i < (int.parse(provider.artistReviewList[index].rating?.round().toString() ?? "0"))
+                                                                            ? ColorsConstant.appColor
+                                                                            : ColorsConstant.greyStar,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsets.only(
+                                                                      top: 0.5
+                                                                          .h,
+                                                                      bottom:
+                                                                          1.h),
+                                                                  child: Text(
+                                                                    '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          8.sp,
+                                                                      fontWeight:
+                                                                          FontWeight.w600,
+                                                                      fontStyle:
+                                                                          FontStyle.italic,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  reviewItem
+                                                                          .comment ??
+                                                                      "",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              : SizedBox(),
+                                        ],
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
@@ -118,6 +271,28 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
           bottomNavigationBar: servicesAndReviewTabBar(),
         );
       },
+    );
+  }
+
+  Widget reviewerImageAndName({String? imageUrl, required String userName}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        CircleAvatar(
+          radius: 5.h,
+          backgroundImage: AssetImage('assets/images/salon_dummy_image.png'),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 0.5.h),
+          child: Text(
+            userName,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: ColorsConstant.textDark,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
