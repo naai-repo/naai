@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:naai/utils/colors_constant.dart';
+import 'package:sizer/sizer.dart';
+
+class ProcessStatusIndicatorText extends StatelessWidget {
+  final String text;
+  final bool isActive;
+
+  const ProcessStatusIndicatorText({
+    super.key,
+    required this.text,
+    this.isActive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicWidth(
+      child: Column(
+        children: <Widget>[
+          Text(
+            text,
+            style: TextStyle(
+              color:
+                  isActive ? ColorsConstant.appColor : ColorsConstant.textLight,
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 1.h),
+          if (isActive)
+            ClipRRect(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(1.h),
+                right: Radius.circular(1.h),
+              ),
+              child: Divider(
+                height: 3,
+                thickness: 3,
+                color: ColorsConstant.appColor,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

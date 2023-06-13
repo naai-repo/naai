@@ -12,12 +12,12 @@ class BottomNavigationProvider with ChangeNotifier {
     required BuildContext context,
     required int indexValue,
     bool applyServiceFilter = false,
-    ServiceEnum? appliedService,
+    Services? appliedService,
   }) {
     if (_currentScreenIndex == 1) {
       context.read<ExploreProvider>().clearSalonSearchController();
     }
-    
+
     if (applyServiceFilter) {
       context.read<ExploreProvider>().setApplyServiceFilter(
             value: applyServiceFilter,

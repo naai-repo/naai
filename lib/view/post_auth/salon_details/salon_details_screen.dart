@@ -121,7 +121,10 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                             ],
                           ),
                           VariableWidthCta(
-                            onTap: () {},
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              NamedRoutes.createBookingRoute,
+                            ),
                             buttonText: StringConstant.confirmBooking,
                           )
                         ],

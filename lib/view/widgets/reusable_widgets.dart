@@ -472,8 +472,7 @@ class ReusableWidgets {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
                                       "Rs. ${serviceDetail.price}",
@@ -683,11 +682,11 @@ class ReusableWidgets {
           physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: ServiceEnum.values.length,
+          itemCount: Services.values.length,
           itemBuilder: (context, index) => GestureDetector(
             onTap: () {
               provider.setSelectedServiceCategories(
-                selectedServiceCategory: ServiceEnum.values[index],
+                selectedServiceCategory: Services.values[index],
               );
             },
             child: Container(
@@ -697,18 +696,18 @@ class ReusableWidgets {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3.h),
                 color: provider.selectedServiceCategories
-                        .contains(ServiceEnum.values[index])
+                        .contains(Services.values[index])
                     ? ColorsConstant.appColor
                     : Colors.white,
               ),
               child: Center(
                 child: Text(
-                  "${ServiceEnum.values[index].name}",
+                  "${Services.values[index].name}",
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w600,
                     color: provider.selectedServiceCategories
-                            .contains(ServiceEnum.values[index])
+                            .contains(Services.values[index])
                         ? Colors.white
                         : ColorsConstant.textDark,
                   ),

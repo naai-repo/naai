@@ -5,11 +5,15 @@ import 'package:sizer/sizer.dart';
 class VariableWidthCta extends StatelessWidget {
   final Function() onTap;
   final String buttonText;
+  final double? horizontalPadding;
+  final double? verticalPadding;
 
   const VariableWidthCta({
     super.key,
     required this.onTap,
     required this.buttonText,
+    this.horizontalPadding,
+    this.verticalPadding,
   });
 
   @override
@@ -18,8 +22,8 @@ class VariableWidthCta extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: 1.7.h,
-          horizontal: 3.w,
+          vertical: verticalPadding ?? 1.7.h,
+          horizontal: horizontalPadding ?? 3.w,
         ),
         decoration: BoxDecoration(
           color: ColorsConstant.appColor,

@@ -16,7 +16,7 @@ class ExploreProvider with ChangeNotifier {
   List<ServiceDetail> _currentSalonServices = [];
 
   bool _applyServiceFilter = false;
-  ServiceEnum _appliedServiceFilter = ServiceEnum.HAIR;
+  Services _appliedServiceFilter = Services.HAIR;
 
   //============= GETTERS =============//
   TextEditingController get salonSearchController => _salonSearchController;
@@ -63,8 +63,7 @@ class ExploreProvider with ChangeNotifier {
   }
 
   /// Set the value of [_filteredSalonData] according to the selected service.
-  void filterSalonListByService(
-      {required ServiceEnum selectedServiceCategory}) {
+  void filterSalonListByService({required Services selectedServiceCategory}) {
     _filteredSalonData.clear();
     _salonData.forEach((salon) {
       _currentSalonServices.forEach((salonService) {
@@ -99,10 +98,10 @@ class ExploreProvider with ChangeNotifier {
 
   void setApplyServiceFilter({
     required bool value,
-    ServiceEnum? service,
+    Services? service,
   }) {
     _applyServiceFilter = value;
-    _appliedServiceFilter = service ?? ServiceEnum.HAIR;
+    _appliedServiceFilter = service ?? Services.HAIR;
     notifyListeners();
   }
 }

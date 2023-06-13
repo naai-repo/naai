@@ -49,6 +49,14 @@ class StringConstant {
   static const String selectCategory = 'SELECT CATEGORY';
   static const String total = 'TOTAL';
   static const String confirmBooking = 'Confirm Booking';
+  static const String salon = 'SALON';
+  static const String selectStaff = 'Select Staff';
+  static const String selectSlot = 'Select Slot';
+  static const String payment = 'Payment';
+  static const String singleStaffText = 'SINGLE STAFF FOR ALL SERVICE';
+  static const String multipleStaffText = 'MULTIPLE STAFF';
+  static const String useThisToSaveTime = 'USE THIS TO SAVE TIME';
+  static const String next = 'NEXT';
 
   // Maps screen strings
   static const String map = 'Map';
@@ -80,4 +88,7 @@ class StringConstant {
   static const String hairColor = 'Hair\nColor';
   static const String facial = 'Facial';
   static const String massage = 'Massage';
+
+  // Schedule appointment strings
+  static const String yourAppointment = 'Your appointment';
 }

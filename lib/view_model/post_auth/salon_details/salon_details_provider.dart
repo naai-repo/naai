@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:naai/models/artist.dart';
+import 'package:naai/models/booking.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
@@ -23,13 +24,21 @@ class SalonDetailsProvider with ChangeNotifier {
   double _totalPrice = 0;
 
   List<Gender> _selectedGendersFilter = [];
-  List<ServiceEnum> _selectedServiceCategories = [];
+  List<Services> _selectedServiceCategories = [];
   List<ServiceDetail> _serviceList = [];
   List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
   List<Artist> _artistList = [];
 
+  Booking _currentBooking = Booking();
+  bool _selectedSingleStaff = false;
+  bool _selectedMultipleStaff = false;
+
   List<String> _selectedServices = [];
+
+  bool _isOnSelectStaffType = true;
+  bool _isOnSelectSlot = false;
+  bool _isOnPaymentPage = false;
 
   SalonData _selectedSalonData = SalonData();
 
@@ -43,7 +52,7 @@ class SalonDetailsProvider with ChangeNotifier {
   double get totalPrice => _totalPrice;
 
   List<Gender> get selectedGendersFilter => _selectedGendersFilter;
-  List<ServiceEnum> get selectedServiceCategories => _selectedServiceCategories;
+  List<Services> get selectedServiceCategories => _selectedServiceCategories;
 
   List<ServiceDetail> get serviceList => _serviceList;
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
@@ -52,12 +61,45 @@ class SalonDetailsProvider with ChangeNotifier {
 
   List<String> get selectedServices => _selectedServices;
 
+  bool get isOnSelectStaffType => _isOnSelectStaffType;
+  bool get isOnSelectSlot => _isOnSelectSlot;
+  bool get isOnPaymentPage => _isOnPaymentPage;
+  bool get selectedSingleStaff => _selectedSingleStaff;
+  bool get selectedMultipleStaff => _selectedMultipleStaff;
+
   SalonData get selectedSalonData => _selectedSalonData;
 
   TextEditingController get searchController => _searchController;
 
   PageController get salonImageCarouselController =>
       _salonImageCarouselController;
+
+  void setStaffSelectionMethod({required bool selectedSingleStaff}) {
+    _selectedSingleStaff = selectedSingleStaff;
+    _selectedMultipleStaff = !selectedSingleStaff;
+    notifyListeners();
+  }
+
+  void setSchedulingStatus({
+    bool onSelectStaff = false,
+    bool selectStaffFinished = false,
+    bool selectSlotFinished = false,
+  }) {
+    if (onSelectStaff) {
+      _isOnSelectStaffType = true;
+      _isOnSelectSlot = false;
+      _isOnPaymentPage = false;
+    } else if (selectStaffFinished) {
+      _isOnSelectStaffType = false;
+      _isOnSelectSlot = true;
+      _isOnPaymentPage = false;
+    } else if (selectSlotFinished) {
+      _isOnSelectStaffType = false;
+      _isOnSelectSlot = false;
+      _isOnPaymentPage = true;
+    }
+    notifyListeners();
+  }
 
   /// Set the value of selected [SalonData] instance in [SalonDetailsProvider]
   void setSelectedSalonData(BuildContext context) {
@@ -176,7 +218,7 @@ class SalonDetailsProvider with ChangeNotifier {
   /// Set the value of [_selectedServiceCategories] according to the service categories selected
   /// by the user
   void setSelectedServiceCategories(
-      {required ServiceEnum selectedServiceCategory}) {
+      {required Services selectedServiceCategory}) {
     _selectedServiceCategories.contains(selectedServiceCategory)
         ? _selectedServiceCategories.removeWhere(
             (serviceCategory) => serviceCategory == selectedServiceCategory)

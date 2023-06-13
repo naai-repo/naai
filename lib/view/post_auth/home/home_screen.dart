@@ -64,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 children: <Widget>[
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       SvgPicture.asset(
                                         ImagePathConstant.inAppLogo,
@@ -670,7 +671,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         indexValue: 1,
                         applyServiceFilter: true,
-                        appliedService: ServiceEnum.HAIR,
+                        appliedService: Services.HAIR,
                       ),
                   imagePath: ImagePathConstant.hairColorImage,
                   text: StringConstant.hairColor,
@@ -682,7 +683,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         indexValue: 1,
                         applyServiceFilter: true,
-                        appliedService: ServiceEnum.MAKEUP,
+                        appliedService: Services.MAKEUP,
                       ),
                   imagePath: ImagePathConstant.facialImage,
                   text: StringConstant.facial,
@@ -694,7 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         indexValue: 1,
                         applyServiceFilter: true,
-                        appliedService: ServiceEnum.SPA,
+                        appliedService: Services.SPA,
                       ),
                   imagePath: ImagePathConstant.massageImage,
                   text: StringConstant.massage,
