@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/icon_text_selector_component.dart';
 import 'package:naai/utils/components/process_status_indicator_text.dart';
+import 'package:naai/utils/components/rating_box.dart';
 import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
@@ -13,8 +15,15 @@ import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.d
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class CreateBookingScreen extends StatelessWidget {
+class CreateBookingScreen extends StatefulWidget {
   const CreateBookingScreen({super.key});
+
+  @override
+  State<CreateBookingScreen> createState() => _CreateBookingScreenState();
+}
+
+class _CreateBookingScreenState extends State<CreateBookingScreen> {
+  bool singleStaffListExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,111 +74,119 @@ class CreateBookingScreen extends StatelessWidget {
                   ),
                   centerTitle: false,
                 ),
-                SliverFillRemaining(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 4.w,
-                    ),
-                    color: Colors.white,
-                    child: Column(
-                      children: <Widget>[
-                        salonOverviewCard(),
-                        SizedBox(height: 2.h),
-                        CurvedBorderedCard(
-                          child: Column(
-                            children: <Widget>[
-                              schedulingStatus(),
-                              SizedBox(height: 2.h),
-                              Padding(
-                                padding: EdgeInsets.all(2.h),
-                                child: Column(
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () =>
-                                          provider.setStaffSelectionMethod(
-                                              selectedSingleStaff: true),
-                                      child: selectSingleStaffCard(),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: Text(
-                                        StringConstant.or,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10.sp,
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () =>
-                                          provider.setStaffSelectionMethod(
-                                              selectedSingleStaff: false),
-                                      child: selectMultipleStaffCard(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    <Widget>[
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
                         ),
-                        Spacer(),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 3.h),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 1.h,
-                            horizontal: 3.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(1.h),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                offset: Offset(0, 2.0),
-                                color: Colors.grey,
-                                spreadRadius: 0.2,
-                                blurRadius: 15,
-                              ),
-                            ],
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        color: Colors.white,
+                        child: Column(
+                          children: <Widget>[
+                            salonOverviewCard(),
+                            SizedBox(height: 2.h),
+                            CurvedBorderedCard(
+                              child: Column(
                                 children: <Widget>[
-                                  Text(
-                                    StringConstant.total,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10.sp,
-                                      color: ColorsConstant.textDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Rs. ${provider.totalPrice}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15.sp,
-                                      color: ColorsConstant.textDark,
+                                  schedulingStatus(),
+                                  SizedBox(height: 2.h),
+                                  Padding(
+                                    padding: EdgeInsets.all(2.h),
+                                    child: Column(
+                                      children: <Widget>[
+                                        GestureDetector(
+                                          onTap: () =>
+                                              provider.setStaffSelectionMethod(
+                                                  selectedSingleStaff: true),
+                                          child: selectSingleStaffCard(),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.h),
+                                          child: Text(
+                                            StringConstant.or,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10.sp,
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () =>
+                                              provider.setStaffSelectionMethod(
+                                                  selectedSingleStaff: false),
+                                          child: selectMultipleStaffCard(),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                              VariableWidthCta(
-                                onTap: () {},
-                                buttonText: StringConstant.next,
-                                horizontalPadding: 7.w,
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            ),
+                            SizedBox(height: 35.h),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
+            ),
+            Positioned(
+              bottom: 3.h,
+              right: 3.h,
+              left: 3.h,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 1.h,
+                  horizontal: 3.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1.h),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      offset: Offset(0, 2.0),
+                      color: Colors.grey,
+                      spreadRadius: 0.2,
+                      blurRadius: 15,
+                    ),
+                  ],
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          StringConstant.total,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10.sp,
+                            color: ColorsConstant.textDark,
+                          ),
+                        ),
+                        Text(
+                          'Rs. ${provider.totalPrice}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15.sp,
+                            color: ColorsConstant.textDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                    VariableWidthCta(
+                      onTap: () {},
+                      buttonText: StringConstant.next,
+                      horizontalPadding: 7.w,
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -243,23 +260,101 @@ class CreateBookingScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 1.5.h),
-              Container(
-                padding: EdgeInsets.all(1.w),
-                decoration: BoxDecoration(
-                  color: Color(0xFFEA8BA1),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(1.h),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  StringConstant.useThisToSaveTime,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 10.sp,
-                  ),
-                ),
-              ),
+              provider.selectedSingleStaff
+                  ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          singleStaffListExpanded = true;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(1.2.h),
+                        padding: EdgeInsets.all(1.5.h),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(1.h),
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  StringConstant.chooseAStaff,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10.sp,
+                                  ),
+                                ),
+                                SvgPicture.asset(
+                                  ImagePathConstant.downArrow,
+                                  width: 3.w,
+                                  color: Colors.black,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ],
+                            ),
+                            singleStaffListExpanded
+                                ? Container(
+                                    constraints:
+                                        BoxConstraints(maxHeight: 20.h),
+                                    child: ListView.separated(
+                                      shrinkWrap: true,
+                                      itemCount: provider.artistList.length,
+                                      itemBuilder: (context, index) {
+                                        Artist artist =
+                                            provider.artistList[index];
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 2.w,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                artist.name ?? '',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 10.sp,
+                                                  color: Color(0xFF727272),
+                                                ),
+                                              ),
+                                              RatingBox(
+                                                rating: artist.rating ?? 0.0,
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) =>
+                                          Divider(),
+                                    ),
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(
+                      padding: EdgeInsets.all(1.w),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFEA8BA1),
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(1.h),
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        StringConstant.useThisToSaveTime,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10.sp,
+                        ),
+                      ),
+                    ),
             ],
           ),
         );

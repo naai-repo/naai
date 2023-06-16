@@ -91,4 +91,5 @@ class StringConstant {
 
   // Schedule appointment strings
   static const String yourAppointment = 'Your appointment';
+  static const String chooseAStaff = 'CHOOSE A STAFF';
 }
