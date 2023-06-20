@@ -203,15 +203,15 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     ),
                   )
                 : Positioned(
-                  bottom: 2.h,
-                  right: 2.h,
-                  left: 2.h,
-                  child: ReusableWidgets.redFullWidthButton(
+                    bottom: 2.h,
+                    right: 2.h,
+                    left: 2.h,
+                    child: ReusableWidgets.redFullWidthButton(
                       buttonText: StringConstant.confirm,
                       onTap: () => provider.createBooking(context),
                       isActive: true,
                     ),
-                ),
+                  ),
             Align(
               alignment: Alignment.center,
               child: showArtistSlotDialogue
@@ -242,8 +242,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                   children: <Widget>[
                     BookingOverviewPart(
                       title: StringConstant.bookingFor,
-                      value:
-                          context.read<HomeProvider>().userData.name ?? '',
+                      value: context.read<HomeProvider>().userData.name ?? '',
                     ),
                     VerticalDivider(
                       color: Color(0xFFDBDBDB),
@@ -558,9 +557,11 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     (element) => GestureDetector(
                                       onTap: () => provider.artistAvailability
                                               .contains(element)
-                                          ? provider.setBookingData(context,
+                                          ? provider.setBookingData(
+                                              context,
                                               setSelectedTime: true,
-                                              startTime: element)
+                                              startTime: element,
+                                            )
                                           : null,
                                       child: Container(
                                         width: 17.w,

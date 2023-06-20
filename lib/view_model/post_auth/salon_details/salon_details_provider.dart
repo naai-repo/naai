@@ -147,19 +147,19 @@ class SalonDetailsProvider with ChangeNotifier {
           _initialAvailability.indexOf(startTime ?? 0);
 
       if ((indexOfStartTime + _selectedServices.length * 2) >
-          (_artistAvailability.length)) {
+          (_artistAvailability.length - 1)) {
         ReusableWidgets.showFlutterToast(
             context, 'We do not have enough slots to process your order!');
       } else if (_artistAvailability[
-              indexOfStartTime + _selectedServices.length * 2 - 1] !=
+              indexOfStartTime + _selectedServices.length * 2] !=
           _initialAvailability[
-              proposedIndexOfStartTime + _selectedServices.length * 2 - 1]) {
+              proposedIndexOfStartTime + _selectedServices.length * 2]) {
         ReusableWidgets.showFlutterToast(
             context, 'Oops! Looks like the slots are filled for this timing!');
       } else {
         _currentBooking.startTime = startTime;
         _currentBooking.endTime = _artistAvailability[
-            indexOfStartTime + _selectedServices.length * 2 - 1];
+            indexOfStartTime + _selectedServices.length * 2];
       }
     }
     updateIsNextButtonActive();
@@ -277,7 +277,7 @@ class SalonDetailsProvider with ChangeNotifier {
 
       _bookingList.forEach((booking) {
         for (int i = booking.startTime ?? 0;
-            i < (booking.endTime ?? 0);
+            i <= (booking.endTime ?? 0);
             i += 1800) {
           _artistAvailability.removeWhere((availability) => availability == i);
         }
