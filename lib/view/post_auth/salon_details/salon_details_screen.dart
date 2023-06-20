@@ -125,6 +125,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               context,
                               NamedRoutes.createBookingRoute,
                             ),
+                            isActive: true,
                             buttonText: StringConstant.confirmBooking,
                           )
                         ],

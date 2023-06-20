@@ -66,7 +66,7 @@ class StringConstant {
   static const String profile = 'Profile';
   static const String yourProfile = 'Your profile';
   static const String incompleteProfile = 'Incomplete Profile';
-  static const String bookingHistoryz = 'Booking History';
+  static const String bookingHistory = 'Booking History';
   static const String referral = 'Referral';
   static const String salonRegistration = 'Salon Registration';
   static const String settings = 'Settings';
@@ -92,4 +92,21 @@ class StringConstant {
   // Schedule appointment strings
   static const String yourAppointment = 'Your appointment';
   static const String chooseAStaff = 'CHOOSE A STAFF';
+  static const String selectData = 'Select date';
+  static const String datePlaceholder = 'DD/MM/YYYY';
+  static const String selectTimeSlot = 'Select time slot';
+  static const String timePlaceholder = '00:00 HRS';
+  static const String morning = 'MORNING';
+  static const String afternoon = 'AFTERNOON';
+  static const String evening = 'EVENING';
+  static const String cancel = 'CANCEL';
+  static const String ok = 'OK';
+  static const String serviceDate = 'SERVICE DATE';
+  static const String serviceTime = 'SERVICE TIME';
+  static const String bookingFor = 'BOOKING FOR';
+  static const String subtotal = 'SUBTOTAL';
+  static const String tax = 'TAX';
+  static const String gst = 'GST';
+  static const String grandTotal = 'GRAND TOTAL';
+  static const String confirm = 'Confirm';
 }

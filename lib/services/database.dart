@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naai/models/artist.dart';
+import 'package:naai/models/booking.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
@@ -105,6 +106,27 @@ class DatabaseService {
   }
 
   /// Fetch the salon list from [FirebaseFirestore]
+  Future<List<Booking>> getArtistBookingList(
+    String? artistId,
+    String bookingDate,
+  ) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('booking')
+        .where('artistId', isEqualTo: artistId)
+        .where('bookingCreatedFor', isEqualTo: bookingDate)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    return querySnapshot.docs
+        .map((docData) => Booking.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the salon list from [FirebaseFirestore]
   Future<List<Review>> getSalonReviewsList(String? salonId) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('reviews')
@@ -134,5 +156,18 @@ class DatabaseService {
     return UserModel.fromSnapshot(
       querySnapshot.docs.firstWhere((docData) => docData.id == uid),
     );
+  }
+
+  Future<void> createBooking(
+      {required List<Map<String, dynamic>> bookingData}) async {
+    final batch = FirebaseFirestore.instance.batch();
+    for (var booking in bookingData) {
+      DocumentReference dbCollection =
+          FirebaseFirestore.instance.collection('booking').doc();
+
+      batch.set(dbCollection, booking);
+    }
+    await batch.commit();
+    ;
   }
 }

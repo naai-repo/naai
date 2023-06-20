@@ -86,7 +86,6 @@ class HomeProvider with ChangeNotifier {
   /// Fetch the user details from [FirebaseFirestore]
   Future<void> getUserDetails(BuildContext context) async {
     try {
-      // await SharedPreferenceHelper.setUserId('Bkor6YYboRZZTQah45N6hVYqDuJ2');
       _userData = await DatabaseService().getUserDetails();
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');

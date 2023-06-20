@@ -7,6 +7,7 @@ class UserModel {
   String? appleId;
   List<String>? preferredSalon;
   HomeLocation? homeLocation;
+  String? id;
 
   UserModel({
     this.name,
@@ -15,8 +16,9 @@ class UserModel {
     this.appleId,
     this.preferredSalon,
     this.homeLocation,
+    this.id,
   });
-  
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -25,6 +27,7 @@ class UserModel {
       'appleId': appleId,
       'preferredSalon': preferredSalon,
       'homeLocation': homeLocation?.toMap(),
+      'id': id,
     };
   }
 
@@ -38,8 +41,8 @@ class UserModel {
     appleId = map['appleId'];
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
     homeLocation = HomeLocation.fromFirestore(map['homeLocation'] ?? {});
+    id = map['id'];
   }
-
 }
 
 class HomeLocation {

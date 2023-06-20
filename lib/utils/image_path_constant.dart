@@ -105,4 +105,10 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'selected_option_icon.svg');
   static final String unselectedOption =
       UtilityFunctions.getImagePath(imageTitle: 'unselected_option_icon.svg');
+  static final String calendarIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'calendar_icon.svg');
+  static final String timeIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'time_icon.svg');
+  static final String deleteIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'delete_icon.svg');
 }
