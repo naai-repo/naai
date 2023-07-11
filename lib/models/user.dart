@@ -26,7 +26,7 @@ class UserModel {
       'gmailId': gmailId,
       'appleId': appleId,
       'preferredSalon': preferredSalon,
-      'homeLocation': homeLocation?.toMap(),
+      'homeLocation': homeLocation == null ? null : homeLocation?.toMap(),
       'id': id,
     };
   }
@@ -40,7 +40,9 @@ class UserModel {
     gmailId = map['gmailId'];
     appleId = map['appleId'];
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
-    homeLocation = HomeLocation.fromFirestore(map['homeLocation'] ?? {});
+    homeLocation = map['homeLocation'] == null
+        ? null
+        : HomeLocation.fromFirestore(map['homeLocation'] ?? {});
     id = map['id'];
   }
 }
@@ -62,10 +64,10 @@ class HomeLocation {
   }
 
   HomeLocation.fromFirestore(Map<String, dynamic> map) {
-    GeoPoint geoPoint = map['geoLocation'];
+    GeoPoint? geoPoint = map['geoLocation'];
 
     addressString = map['addressString'];
-    geoLocation = map['geoLocation'] != null
+    geoLocation = geoPoint != null
         ? GeoPoint(geoPoint.latitude, geoPoint.longitude)
         : null;
   }

@@ -8,7 +8,6 @@ import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
-import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
@@ -106,6 +105,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                 height: 0,
                                 color: ColorsConstant.graphicFillDark,
                               ),
+                              servicesAndReviewTabBar(),
                               selectedTab == 0
                                   ? ReusableWidgets.servicesTab()
                                   : Padding(
@@ -210,7 +210,8 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                                                           .asset(
                                                                         ImagePathConstant
                                                                             .starIcon,
-                                                                        color: i < (int.parse(provider.artistReviewList[index].rating?.round().toString() ?? "0"))
+                                                                        color: i <
+                                                                                (int.parse(provider.artistReviewList[index].rating?.round().toString() ?? "0"))
                                                                             ? ColorsConstant.appColor
                                                                             : ColorsConstant.greyStar,
                                                                       ),
@@ -219,8 +220,8 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                                                 ),
                                                                 Padding(
                                                                   padding: EdgeInsets.only(
-                                                                      top: 0.5
-                                                                          .h,
+                                                                      top:
+                                                                          0.5.h,
                                                                       bottom:
                                                                           1.h),
                                                                   child: Text(
@@ -230,9 +231,11 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                                                       fontSize:
                                                                           8.sp,
                                                                       fontWeight:
-                                                                          FontWeight.w600,
+                                                                          FontWeight
+                                                                              .w600,
                                                                       fontStyle:
-                                                                          FontStyle.italic,
+                                                                          FontStyle
+                                                                              .italic,
                                                                     ),
                                                                   ),
                                                                 ),
@@ -268,7 +271,6 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: servicesAndReviewTabBar(),
         );
       },
     );
@@ -350,11 +352,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                       ),
                     ),
                     Text(
-                      context
-                              .read<SalonDetailsProvider>()
-                              .selectedSalonData
-                              .name ??
-                          '',
+                      provider.artist.salonName ?? '',
                       style: TextStyle(
                         color: ColorsConstant.blackAvailableStaff,
                         fontWeight: FontWeight.w600,
@@ -391,7 +389,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                           5,
                           (i) => (i >
                                   int.parse(provider.artist.rating
-                                              ?.round()
+                                              ?.floor()
                                               .toString() ??
                                           "0") -
                                       1)

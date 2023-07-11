@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
@@ -97,6 +98,7 @@ class ReusableWidgets {
     BuildContext context,
     String text,
   ) {
+    Logger().log(Level.wtf, text);
     FToast fToast = FToast();
     fToast.init(context);
     fToast.showToast(
@@ -302,15 +304,15 @@ class ReusableWidgets {
           children: <Widget>[
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.graphicFill,
+              color: ColorsConstant.appColor,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.graphicFill,
+              color: ColorsConstant.appColor,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.graphicFill,
+              color: ColorsConstant.appColor,
             ),
           ],
         ),

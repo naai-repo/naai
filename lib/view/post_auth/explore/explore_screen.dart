@@ -147,7 +147,9 @@ class _ExploreScreenState extends State<ExploreScreen>
                           Flexible(
                             child: GestureDetector(
                               onTap: () => Navigator.pushNamed(
-                                  context, NamedRoutes.setHomeLocationRoute),
+                                context,
+                                NamedRoutes.setHomeLocationRoute,
+                              ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -239,14 +241,18 @@ class _ExploreScreenState extends State<ExploreScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            provider.filteredSalonData[index].name ?? '',
-                            style: TextStyle(
-                              color: ColorsConstant.textDark,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                          Container(
+                            width: 60.w,
+                            child: Text(
+                              provider.filteredSalonData[index].name ?? '',
+                              style: TextStyle(
+                                color: ColorsConstant.textDark,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                           RatingBox(

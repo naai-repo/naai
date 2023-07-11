@@ -35,6 +35,7 @@ class StringConstant {
   static const String categories = 'Categories';
   static const String salonsNearMe = 'Salons near me';
   static const String ourStylist = 'Our stylist';
+  static const String confirmLocation = 'Confirm Location';
 
   // Salon detail screen strings
   static const String availableStaff = 'AVAILABLE STAFF';
@@ -109,4 +110,5 @@ class StringConstant {
   static const String gst = 'GST';
   static const String grandTotal = 'GRAND TOTAL';
   static const String confirm = 'Confirm';
+  static const String billTotal = 'Bill total';
 }

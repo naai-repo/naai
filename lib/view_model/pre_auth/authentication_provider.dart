@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/logger.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/utils/exception/exception_handling.dart';
@@ -13,8 +12,6 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
-import 'package:naai/view_model/post_auth/home/home_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -106,15 +103,16 @@ class AuthenticationProvider with ChangeNotifier {
       throw Exception('Something went wrong!');
     }))
         .user;
-    if ((await DatabaseService().checkUserExists(uid: user!.uid)) == false) {
-      setUserId(userId: user.uid);
-
+    setUserId(userId: user!.uid);
+    if ((await DatabaseService().checkUserExists(uid: user.uid)) == false) {
       storeUserDataInCollection(
         context: context,
         userData: UserModel(
           name: user.displayName,
           gmailId: user.email,
+          id: user.uid,
         ),
+        docId: user.uid,
       );
     }
     notifyListeners();
@@ -199,18 +197,15 @@ class AuthenticationProvider with ChangeNotifier {
 
       Loader.hideLoader(context);
 
-      if (await DatabaseService().checkUserExists(uid: user!.uid) == false) {
-        _userId = user.uid;
+      setUserId(userId: user!.uid);
+      if (await DatabaseService().checkUserExists(uid: user.uid) == false) {
         Navigator.pushReplacementNamed(context, NamedRoutes.addUserNameRoute);
       } else {
-        context.read<HomeProvider>().checkUserIdInSharedPref(
-            FirebaseAuth.instance.currentUser?.uid ?? "");
         Navigator.pushReplacementNamed(
             context, NamedRoutes.bottomNavigationRoute);
       }
     } catch (e) {
       Loader.hideLoader(context);
-      print('ERROR \t $e');
       ReusableWidgets.showFlutterToast(
         context,
         '$e',
@@ -221,15 +216,15 @@ class AuthenticationProvider with ChangeNotifier {
   /// Trigger [storeUserDataInCollection] method to store the data in database
   /// Specifically for phone authentication
   void storePhoneAuthDataInDb(BuildContext context) async {
-    setUserId(userId: _userId);
-
     bool wasLoginSuccessful = await storeUserDataInCollection(
       context: context,
       userData: UserModel(
         name: _userNameController.text,
         phoneNumber: _phoneNumber,
         homeLocation: HomeLocation(),
+        id: _userId,
       ),
+      docId: _userId ?? '',
     );
 
     // Reset all the text controllers
@@ -250,17 +245,22 @@ class AuthenticationProvider with ChangeNotifier {
   Future<bool> storeUserDataInCollection({
     required BuildContext context,
     required UserModel userData,
+    required String docId,
   }) async {
     Loader.showLoader(context);
     try {
-      await DatabaseService().setUserData(userData: userData.toMap()).onError(
+      await DatabaseService()
+          .setUserData(
+            userData: userData.toMap(),
+            docId: docId,
+          )
+          .onError(
             (FirebaseException error, stackTrace) =>
                 throw ExceptionHandling(message: error.message ?? ""),
           );
       return true;
     } catch (e) {
       Loader.hideLoader(context);
-      Logger().d(e);
       ReusableWidgets.showFlutterToast(
         context,
         '$e',

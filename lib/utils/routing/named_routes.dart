@@ -15,4 +15,5 @@ class NamedRoutes {
   static const String mapRoute = '/maps';
   static const String barberProfileRoute = '/barber-profile';
   static const String createBookingRoute = '/create-booking';
+  static const String paymentRoute = '/payment';
 }

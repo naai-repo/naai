@@ -209,6 +209,10 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     child: ReusableWidgets.redFullWidthButton(
                       buttonText: StringConstant.confirm,
                       onTap: () => provider.createBooking(context),
+                      // onTap: () => Navigator.pushNamed(
+                      //   context,
+                      //   NamedRoutes.paymentRoute,
+                      // ),
                       isActive: true,
                     ),
                   ),

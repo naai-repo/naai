@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
+import 'package:naai/models/artist.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/enums.dart';
@@ -11,10 +12,10 @@ import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view/widgets/stacked_image_text.dart';
 import 'package:naai/view/widgets/title_with_line.dart';
+import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/bottom_navigation_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
-import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -139,94 +140,103 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     ],
                                   ),
-                                  Container(
-                                    margin:
-                                        EdgeInsets.only(top: 4.h, bottom: 2.h),
-                                    padding: EdgeInsets.all(0.5.h),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.h),
-                                      color: ColorsConstant.graphicFillDark,
+                                  GestureDetector(
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      NamedRoutes.setHomeLocationRoute,
                                     ),
-                                    child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                      bool _shouldScroll = (TextPainter(
-                                            text: TextSpan(
-                                                text: Provider.of<HomeProvider>(
-                                                            context,
-                                                            listen: true)
-                                                        .userData
-                                                        .homeLocation
-                                                        ?.addressString ??
-                                                    "",
-                                                style: TextStyle(
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                )),
-                                            maxLines: 1,
-                                            textScaleFactor:
-                                                MediaQuery.of(context)
-                                                    .textScaleFactor,
-                                            textDirection: TextDirection.ltr,
-                                          )..layout())
-                                              .size
-                                              .width >
-                                          constraints.maxWidth * 7 / 10;
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          top: 4.h, bottom: 2.h),
+                                      padding: EdgeInsets.all(0.5.h),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(5.h),
+                                        color: ColorsConstant.graphicFillDark,
+                                      ),
+                                      child: LayoutBuilder(
+                                          builder: (context, constraints) {
+                                        bool _shouldScroll = (TextPainter(
+                                              text: TextSpan(
+                                                  text:
+                                                      Provider.of<HomeProvider>(
+                                                                  context,
+                                                                  listen: true)
+                                                              .userData
+                                                              .homeLocation
+                                                              ?.addressString ??
+                                                          "",
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                  )),
+                                              maxLines: 1,
+                                              textScaleFactor:
+                                                  MediaQuery.of(context)
+                                                      .textScaleFactor,
+                                              textDirection: TextDirection.ltr,
+                                            )..layout())
+                                                .size
+                                                .width >
+                                            constraints.maxWidth * 7 / 10;
 
-                                      return Row(
-                                        children: <Widget>[
-                                          Container(
-                                            padding: EdgeInsets.all(1.5.h),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
+                                        return Row(
+                                          children: <Widget>[
+                                            Container(
+                                              padding: EdgeInsets.all(1.5.h),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                              ),
+                                              child: SvgPicture.asset(
+                                                  ImagePathConstant
+                                                      .homeLocationIcon),
                                             ),
-                                            child: SvgPicture.asset(
-                                                ImagePathConstant
-                                                    .homeLocationIcon),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(left: 2.w),
-                                            width: 73.w,
-                                            height: 4.h,
-                                            alignment: Alignment.centerLeft,
-                                            child: _shouldScroll
-                                                ? Marquee(
-                                                    text:
-                                                        "${context.read<HomeProvider>().getHomeAddressText()}",
-                                                    velocity: 40.0,
-                                                    pauseAfterRound:
-                                                        const Duration(
-                                                            seconds: 1),
-                                                    blankSpace: 30.0,
-                                                    style: TextStyle(
-                                                      color: ColorsConstant
-                                                          .textLight,
-                                                      fontSize: 10.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 2.w),
+                                              width: 73.w,
+                                              height: 4.h,
+                                              alignment: Alignment.centerLeft,
+                                              child: _shouldScroll
+                                                  ? Marquee(
+                                                      text:
+                                                          "${context.read<HomeProvider>().getHomeAddressText()}",
+                                                      velocity: 40.0,
+                                                      pauseAfterRound:
+                                                          const Duration(
+                                                              seconds: 1),
+                                                      blankSpace: 30.0,
+                                                      style: TextStyle(
+                                                        color: ColorsConstant
+                                                            .textLight,
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      "${context.read<HomeProvider>().getHomeAddressText()}",
+                                                      style: TextStyle(
+                                                        color: ColorsConstant
+                                                            .textLight,
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
                                                     ),
-                                                  )
-                                                : Text(
-                                                    "${context.read<HomeProvider>().getHomeAddressText()}",
-                                                    style: TextStyle(
-                                                      color: ColorsConstant
-                                                          .textLight,
-                                                      fontSize: 10.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                          ),
-                                          Spacer(),
-                                          SvgPicture.asset(
-                                            ImagePathConstant.downArrow,
-                                            color: ColorsConstant.textDark,
-                                            width: 2.5.w,
-                                          ),
-                                          SizedBox(width: 1.w),
-                                        ],
-                                      );
-                                    }),
+                                            ),
+                                            Spacer(),
+                                            SvgPicture.asset(
+                                              ImagePathConstant.downArrow,
+                                              color: ColorsConstant.textDark,
+                                              width: 2.5.w,
+                                            ),
+                                            SizedBox(width: 1.w),
+                                          ],
+                                        );
+                                      }),
+                                    ),
                                   ),
                                   dummyDeal(),
                                   Padding(
@@ -273,149 +283,87 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget ourStylist() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 3.w),
-      child: Column(
-        children: <Widget>[
-          TitleWithLine(
-            lineHeight: 3.5.h,
-            lineWidth: 1.w,
-            fontSize: 15.sp,
-            text: StringConstant.ourStylist.toUpperCase(),
-          ),
-          MediaQuery.removePadding(
-            removeTop: true,
-            context: context,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 1.h,
-                right: 2.w,
-                left: 2.w,
-              ),
+    return Consumer<HomeProvider>(builder: (context, provider, child) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 3.w),
+        child: Column(
+          children: <Widget>[
+            TitleWithLine(
+              lineHeight: 3.5.h,
+              lineWidth: 1.w,
+              fontSize: 15.sp,
+              text: StringConstant.ourStylist.toUpperCase(),
+            ),
+            MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Flexible(
                     flex: 1,
-                    child: ListView(
+                    child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      children: <Widget>[
-                        artistCard(
-                          name: 'Test2'.toUpperCase(),
-                          salonName: 'Billu Barber'.toUpperCase(),
-                          rating: 4.0,
-                          color: Color(0xFF2CA3C8),
-                          onTap: () {
-                            context
-                                .read<ExploreProvider>()
-                                .setSelectedSalonIndex(context, index: 0);
+                      itemCount: (provider.artistList.length / 2).ceil(),
+                      itemBuilder: (context, index) {
+                        index = 2 * index;
 
-                            context
-                                .read<SalonDetailsProvider>()
-                                .setSelectedArtistIndex(context, index: 1);
-                            Navigator.pushNamed(
-                              context,
-                              NamedRoutes.barberProfileRoute,
-                            );
-                          },
-                        ),
-                        artistCard(
-                          name: 'Test1'.toUpperCase(),
-                          salonName: 'Billu Barber'.toUpperCase(),
-                          rating: 3.0,
-                          color: Color(0xFF373737),
-                          isThin: false,
+                        Artist artist = provider.artistList[index];
+                        return artistCard(
+                          isThin: (index / 2).floor().isEven,
+                          name: artist.name ?? '',
+                          rating: artist.rating ?? 0,
+                          salonName: artist.salonName ?? '',
+                          color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
                             context
-                                .read<ExploreProvider>()
-                                .setSelectedSalonIndex(context, index: 0);
-                            context
-                                .read<SalonDetailsProvider>()
-                                .setSelectedArtistIndex(context, index: 0);
+                                .read<BarberProvider>()
+                                .setArtistDataFromHome(artist);
                             Navigator.pushNamed(
                               context,
                               NamedRoutes.barberProfileRoute,
                             );
                           },
-                        ),
-                        artistCard(
-                          name: 'Test6'.toUpperCase(),
-                          salonName: 'Billu Barber'.toUpperCase(),
-                          rating: 2.0,
-                          color: Color(0xFF46C6A7),
-                          onTap: () {
-                            context
-                                .read<ExploreProvider>()
-                                .setSelectedSalonIndex(context, index: 0);
-                            context
-                                .read<SalonDetailsProvider>()
-                                .setSelectedArtistIndex(context, index: 2);
-                            Navigator.pushNamed(
-                              context,
-                              NamedRoutes.barberProfileRoute,
-                            );
-                          },
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
-                  SizedBox(width: 2.w),
                   Flexible(
                     flex: 1,
-                    child: ListView(
+                    child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      children: <Widget>[
-                        artistCard(
-                          name: 'Test5'.toUpperCase(),
-                          salonName: 'Glemazone Unisex Salon'.toUpperCase(),
-                          rating: 3.0,
-                          color: Color(0xFF373737),
-                          isThin: false,
+                      itemCount: (provider.artistList.length / 2).floor(),
+                      itemBuilder: (context, index) {
+                        index = 2 * index + 1;
+                        Artist artist = provider.artistList[index];
+                        return artistCard(
+                          isThin: ((index - 1) / 2).floor().isOdd,
+                          name: artist.name ?? '',
+                          rating: artist.rating ?? 0,
+                          salonName: artist.salonName ?? '',
+                          color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
                             context
-                                .read<ExploreProvider>()
-                                .setSelectedSalonIndex(context, index: 1);
-                            context
-                                .read<SalonDetailsProvider>()
-                                .setSelectedArtistIndex(context, index: 0);
+                                .read<BarberProvider>()
+                                .setArtistDataFromHome(artist);
                             Navigator.pushNamed(
                               context,
                               NamedRoutes.barberProfileRoute,
                             );
                           },
-                        ),
-                        artistCard(
-                          name: 'Test7'.toUpperCase(),
-                          salonName: 'Billu Barber'.toUpperCase(),
-                          rating: 4.0,
-                          color: Color(0xFFC64655),
-                          isThin: false,
-                          onTap: () {
-                            context
-                                .read<ExploreProvider>()
-                                .setSelectedSalonIndex(context, index: 0);
-                            context
-                                .read<SalonDetailsProvider>()
-                                .setSelectedArtistIndex(context, index: 3);
-                            Navigator.pushNamed(
-                              context,
-                              NamedRoutes.barberProfileRoute,
-                            );
-                          },
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget artistCard({
@@ -435,13 +383,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 vertical: 1.h,
               )
             : EdgeInsets.symmetric(
-                horizontal: 0.w,
+                horizontal: 1.5.w,
                 vertical: 1.h,
               ),
-        height: isThin ? 25.h : 33.h,
+        // height: isThin ? 25.h : 33.h,
         decoration: BoxDecoration(
           color: color,
-          boxShadow: [
+          boxShadow: <BoxShadow>[
             BoxShadow(
               offset: Offset(2, 2),
               color: Colors.grey.shade500,
@@ -476,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    name,
+                    name.toUpperCase(),
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w600,
@@ -484,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Text(
-                    salonName,
+                    salonName.toUpperCase(),
                     style: TextStyle(
                       fontSize: 9.sp,
                       fontWeight: FontWeight.w500,
@@ -505,6 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            SizedBox(height: isThin ? 3.h : 5.h),
           ],
         ),
       ),
