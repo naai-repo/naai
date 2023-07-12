@@ -6,6 +6,7 @@ class Artist {
   double? rating;
   String? imagePath;
   String? salonId;
+  String? salonName;
   Availability? availability;
 
   Artist({
@@ -14,6 +15,7 @@ class Artist {
     this.rating,
     this.imagePath,
     this.salonId,
+    this.salonName,
     this.availability,
   });
 
@@ -25,6 +27,7 @@ class Artist {
       rating: json['rating'],
       imagePath: 'assets/images/artist_dummy_image.svg',
       salonId: json['salonId'],
+      salonName: json['salonName'],
       availability: Availability.fromFirestore(json['availability'] ?? {}),
     );
   }
@@ -36,6 +39,8 @@ class Artist {
     data['rating'] = this.rating;
     data['name'] = this.name;
     data['imagePath'] = this.imagePath;
+    data['salonName'] = this.salonName;
+    data['salonId'] = this.salonId;
     if (this.availability != null) {
       data['availability'] = this.availability!.toJson();
     }

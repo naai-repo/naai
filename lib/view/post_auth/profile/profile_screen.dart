@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   onTap: () => print('tapped'),
                                   imagePath:
                                       ImagePathConstant.bookingHistoryIcon,
-                                  optionTitle: StringConstant.bookingHistoryz,
+                                  optionTitle: StringConstant.bookingHistory,
                                 ),
                                 profileOptions(
                                   onTap: () => print('tapped'),

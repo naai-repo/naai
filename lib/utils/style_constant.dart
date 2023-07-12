@@ -68,10 +68,11 @@ class StyleConstant {
                     ),
                     SizedBox(
                       height: 3.h,
-                      width: 22.w,
+                      width: 20.w,
                       child: Marquee(
                         text:
-                            "${context.read<HomeProvider>().getHomeAddressText()}",
+                            context.read<HomeProvider>().getHomeAddressText() ??
+                                'No Address Found!',
                         velocity: 40.0,
                         pauseAfterRound: const Duration(seconds: 1),
                         blankSpace: 30.0,

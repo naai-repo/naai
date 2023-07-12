@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
+import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void checkIfUserExists() {
-    Timer(const Duration(seconds: 2), () {
-      if (FirebaseAuth.instance.currentUser != null) {
+    Timer(const Duration(seconds: 2), () async {
+      String uid = await SharedPreferenceHelper.getUserId();
+      if (FirebaseAuth.instance.currentUser != null && uid != '') {
         context
             .read<HomeProvider>()
             .checkUserIdInSharedPref(FirebaseAuth.instance.currentUser!.uid);

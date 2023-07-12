@@ -31,4 +31,13 @@ class ColorsConstant {
   static const Color incompleteProfileBoxBorderColor = Color(0xFFDBCC49);
   static const Color worksAtColor = Color(0xFF808080);
   static const Color neutral = Color(0xFFF5F5F5);
+
+  static const List<Color> artistListColors = <Color>[
+    Color(0xFF46C6A7),
+    Color(0xFF1D5B79),
+    Color(0xFFEF6262),
+    Color(0xFFF3AA60),
+    Color(0xFF9681EB),
+    Color(0xFFFF2171),
+  ];
 }

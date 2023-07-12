@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:naai/models/artist.dart';
+import 'package:naai/models/booking.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
@@ -9,7 +10,9 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
   List<String> imagePaths = [
@@ -18,18 +21,28 @@ class SalonDetailsProvider with ChangeNotifier {
     'assets/images/salon_dummy_image.png',
   ];
 
-  int _selectedSalonIndex = 0;
-
-  double _totalPrice = 0;
-
   List<Gender> _selectedGendersFilter = [];
-  List<ServiceEnum> _selectedServiceCategories = [];
+  List<Services> _selectedServiceCategories = [];
   List<ServiceDetail> _serviceList = [];
   List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
   List<Artist> _artistList = [];
-
   List<String> _selectedServices = [];
+
+  List<int> _artistAvailability = [];
+  List<int> _initialAvailability = [];
+
+  int _selectedSalonIndex = 0;
+  double _totalPrice = 0;
+
+  Booking _currentBooking = Booking();
+
+  bool _selectedMultipleStaff = false;
+  bool _selectedSingleStaff = false;
+  bool _isOnSelectStaffType = true;
+  bool _isOnSelectSlot = false;
+  bool _isOnPaymentPage = false;
+  bool _isNextButtonActive = false;
 
   SalonData _selectedSalonData = SalonData();
 
@@ -38,19 +51,29 @@ class SalonDetailsProvider with ChangeNotifier {
   PageController _salonImageCarouselController = PageController();
 
   //============= GETTERS =============//
-  int get selectedSalonIndex => _selectedSalonIndex;
-
-  double get totalPrice => _totalPrice;
-
   List<Gender> get selectedGendersFilter => _selectedGendersFilter;
-  List<ServiceEnum> get selectedServiceCategories => _selectedServiceCategories;
-
+  List<Services> get selectedServiceCategories => _selectedServiceCategories;
   List<ServiceDetail> get serviceList => _serviceList;
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
   List<Artist> get artistList => _artistList;
   List<Review> get salonReviewList => _salonReviewList;
-
   List<String> get selectedServices => _selectedServices;
+
+  List<int> get artistAvailability => _artistAvailability;
+  List<int> get initialAvailability => _initialAvailability;
+
+  int get selectedSalonIndex => _selectedSalonIndex;
+
+  double get totalPrice => _totalPrice;
+
+  Booking get currentBooking => _currentBooking;
+
+  bool get isOnSelectStaffType => _isOnSelectStaffType;
+  bool get isOnSelectSlot => _isOnSelectSlot;
+  bool get isOnPaymentPage => _isOnPaymentPage;
+  bool get selectedSingleStaff => _selectedSingleStaff;
+  bool get selectedMultipleStaff => _selectedMultipleStaff;
+  bool get isNextButtonActive => _isNextButtonActive;
 
   SalonData get selectedSalonData => _selectedSalonData;
 
@@ -58,6 +81,257 @@ class SalonDetailsProvider with ChangeNotifier {
 
   PageController get salonImageCarouselController =>
       _salonImageCarouselController;
+
+  dynamic getServiceDetails({
+    required String serviceId,
+    bool getServiceName = false,
+    bool getServiceCharge = false,
+    bool getGender = false,
+  }) {
+    ServiceDetail? service =
+        _serviceList.firstWhere((element) => element.id == serviceId);
+    if (getServiceCharge) {
+      return service.price;
+    }
+    if (getServiceName) {
+      return service.serviceTitle;
+    }
+    if (getGender) {
+      return service.targetGender;
+    }
+  }
+
+  void updateIsNextButtonActive() {
+    if ((_isOnSelectStaffType && _currentBooking.artistId != null) ||
+        (_isOnSelectSlot &&
+            _currentBooking.startTime != null &&
+            _currentBooking.endTime != null)) {
+      _isNextButtonActive = true;
+    } else {
+      _isNextButtonActive = false;
+    }
+
+    notifyListeners();
+  }
+
+  void setStaffSelectionMethod({required bool selectedSingleStaff}) {
+    _selectedSingleStaff = selectedSingleStaff;
+    _selectedMultipleStaff = !selectedSingleStaff;
+    notifyListeners();
+  }
+
+  String getSelectedArtistName(String artistId) {
+    return artistList.firstWhere((element) => element.id == artistId).name ??
+        '';
+  }
+
+  void setBookingData(
+    BuildContext context, {
+    bool setArtistId = false,
+    bool setSelectedDate = false,
+    bool setSelectedTime = false,
+    String? artistId,
+    DateTime? selectedDate,
+    int? startTime,
+  }) {
+    if (setArtistId) {
+      _currentBooking.artistId = artistId;
+    } else if (setSelectedDate) {
+      String format =
+          DateFormat('dd-MM-yyyy').format(selectedDate ?? DateTime.now());
+      _currentBooking.selectedDate = format;
+      setBookingStartEndTime();
+    } else if (setSelectedTime) {
+      int indexOfStartTime = _artistAvailability.indexOf(startTime ?? 0);
+      int proposedIndexOfStartTime =
+          _initialAvailability.indexOf(startTime ?? 0);
+
+      if ((indexOfStartTime + _selectedServices.length * 2) >
+          (_artistAvailability.length - 1)) {
+        ReusableWidgets.showFlutterToast(
+            context, 'We do not have enough slots to process your order!');
+      } else if (_artistAvailability[
+              indexOfStartTime + _selectedServices.length * 2] !=
+          _initialAvailability[
+              proposedIndexOfStartTime + _selectedServices.length * 2]) {
+        ReusableWidgets.showFlutterToast(
+            context, 'Oops! Looks like the slots are filled for this timing!');
+      } else {
+        _currentBooking.startTime = startTime;
+        _currentBooking.endTime = _artistAvailability[
+            indexOfStartTime + _selectedServices.length * 2];
+      }
+    }
+    updateIsNextButtonActive();
+    notifyListeners();
+  }
+
+  void resetSlotInfo() {
+    _artistAvailability = [];
+    _initialAvailability = [];
+    _currentBooking.selectedDate = null;
+    _currentBooking.startTime = null;
+    _currentBooking.endTime = null;
+    _currentBooking.bookingCreatedFor = null;
+    notifyListeners();
+  }
+
+  void setSelectedDateAndTime(String artistId) {
+    _currentBooking.artistId = artistId;
+    notifyListeners();
+  }
+
+  void showDialogue(
+    BuildContext context,
+    Widget contentWidget,
+  ) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.45),
+      builder: (BuildContext context) {
+        return Dialog(
+          child: contentWidget,
+        );
+      },
+    );
+  }
+
+  void resetCurrentBooking() {
+    _currentBooking = Booking();
+    _selectedMultipleStaff = false;
+    _selectedSingleStaff = false;
+    _isOnSelectStaffType = true;
+    _isOnSelectSlot = false;
+    _isOnPaymentPage = false;
+    _isNextButtonActive = false;
+    _artistAvailability = [];
+    _initialAvailability = [];
+    _totalPrice = 0;
+    _selectedServices = [];
+    notifyListeners();
+  }
+
+  void setBookingStartEndTime() {
+    int startTime = 0;
+    int endTime = 0;
+    String day = DateFormat.E().format(
+        DateFormat('dd-MM-yyyy').parse(_currentBooking.selectedDate ?? ''));
+    Availability artistAvailability = _artistList
+            .firstWhere((element) => element.id == _currentBooking.artistId)
+            .availability ??
+        Availability();
+    switch (day) {
+      case 'Mon':
+        startTime = artistAvailability.monday?.start ?? 0;
+        endTime = artistAvailability.monday?.end ?? 0;
+        break;
+      case 'Tue':
+        startTime = artistAvailability.tuesday?.start ?? 0;
+        endTime = artistAvailability.tuesday?.end ?? 0;
+        break;
+      case 'Wed':
+        startTime = artistAvailability.wednesday?.start ?? 0;
+        endTime = artistAvailability.wednesday?.end ?? 0;
+        break;
+      case 'Thu':
+        startTime = artistAvailability.thursday?.start ?? 0;
+        endTime = artistAvailability.thursday?.end ?? 0;
+        break;
+      case 'Fri':
+        startTime = artistAvailability.friday?.start ?? 0;
+        endTime = artistAvailability.friday?.end ?? 0;
+        break;
+      case 'Sat':
+        startTime = artistAvailability.saturday?.start ?? 0;
+        endTime = artistAvailability.saturday?.end ?? 0;
+        break;
+      case 'Sun':
+        startTime = artistAvailability.sunday?.start ?? 0;
+        endTime = artistAvailability.sunday?.end ?? 0;
+        break;
+    }
+
+    _artistAvailability.clear();
+
+    for (int i = startTime; i <= endTime; i += 1800) {
+      _artistAvailability.add(i);
+    }
+
+    _initialAvailability.clear();
+    _initialAvailability.addAll(_artistAvailability);
+
+    notifyListeners();
+  }
+
+  Future<void> getArtistBooking(BuildContext context) async {
+    Loader.showLoader(context);
+    try {
+      String bookingDate = DateFormat('dd-MM-yyyy')
+          .parse(_currentBooking.selectedDate ?? '')
+          .toString();
+      Loader.hideLoader(context);
+      List<Booking> _bookingList = await DatabaseService().getArtistBookingList(
+        _currentBooking.artistId,
+        bookingDate,
+      );
+
+      _bookingList.forEach((booking) {
+        for (int i = booking.startTime ?? 0;
+            i <= (booking.endTime ?? 0);
+            i += 1800) {
+          _artistAvailability.removeWhere((availability) => availability == i);
+        }
+      });
+    } catch (e) {
+      Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  String convertSecondsToTimeString(int seconds) {
+    DateTime now = DateTime.now();
+
+    DateTime midnight = DateTime(now.year, now.month, now.day);
+    DateTime currentTime = midnight.add(Duration(seconds: seconds));
+
+    String timeString =
+        "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}";
+
+    return timeString;
+  }
+
+  void resetTime() {
+    _currentBooking.startTime = null;
+    _currentBooking.endTime = null;
+    notifyListeners();
+  }
+
+  void setSchedulingStatus({
+    bool onSelectStaff = false,
+    bool selectStaffFinished = false,
+    bool selectSlotFinished = false,
+  }) {
+    if (selectSlotFinished &&
+        _currentBooking.artistId != null &&
+        _currentBooking.startTime != null &&
+        _currentBooking.endTime != null) {
+      _isOnSelectStaffType = false;
+      _isOnSelectSlot = false;
+      _isOnPaymentPage = true;
+    } else if (selectStaffFinished && _currentBooking.artistId != null) {
+      _isOnSelectStaffType = false;
+      _isOnSelectSlot = true;
+      _isOnPaymentPage = false;
+    } else if (onSelectStaff) {
+      _isOnSelectStaffType = true;
+      _isOnSelectSlot = false;
+      _isOnPaymentPage = false;
+    }
+
+    updateIsNextButtonActive();
+    notifyListeners();
+  }
 
   /// Set the value of selected [SalonData] instance in [SalonDetailsProvider]
   void setSelectedSalonData(BuildContext context) {
@@ -68,15 +342,22 @@ class SalonDetailsProvider with ChangeNotifier {
     _filteredServiceList.addAll(_serviceList);
   }
 
-  void setSelectedService(String id) {
-    if (_selectedServices.contains(id)) {
-      _selectedServices.remove(id);
-      var service = _serviceList.firstWhere((element) => element.id == id);
+  void setSelectedService(
+    String id, {
+    bool removeService = false,
+  }) {
+    var service = _serviceList.firstWhere((element) => element.id == id);
+    if (removeService) {
+      _selectedServices.removeWhere((element) => element == id);
       _totalPrice -= service.price ?? 0;
     } else {
-      _selectedServices.add(id);
-      var service = _serviceList.firstWhere((element) => element.id == id);
-      _totalPrice += service.price ?? 0;
+      if (_selectedServices.contains(id)) {
+        _selectedServices.remove(id);
+        _totalPrice -= service.price ?? 0;
+      } else {
+        _selectedServices.add(id);
+        _totalPrice += service.price ?? 0;
+      }
     }
 
     notifyListeners();
@@ -110,6 +391,36 @@ class SalonDetailsProvider with ChangeNotifier {
       _salonReviewList =
           await DatabaseService().getSalonReviewsList(_selectedSalonData.id);
     } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> createBooking(BuildContext context) async {
+    Loader.showLoader(context);
+    _currentBooking.salonId = _selectedSalonData.id;
+    _currentBooking.userId = context.read<HomeProvider>().userData.id;
+    _currentBooking.bookingCreatedOn = DateTime.now().toString();
+    _currentBooking.bookingCreatedFor = DateFormat('dd-MM-yyyy')
+        .parse(_currentBooking.selectedDate ?? '')
+        .toString();
+    List<Booking> _bookingArray = [];
+
+    for (int i = 0; i < _selectedServices.length; i++) {
+      _currentBooking.serviceId = _selectedServices[i];
+      _bookingArray.add(_currentBooking);
+    }
+
+    List<Map<String, dynamic>> _finalData =
+        _bookingArray.map((e) => e.toJson()).toList();
+
+    try {
+      await DatabaseService().createBooking(bookingData: _finalData);
+      Loader.hideLoader(context);
+      resetCurrentBooking();
+      Navigator.pop(context);
+    } catch (e) {
+      Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
@@ -176,7 +487,7 @@ class SalonDetailsProvider with ChangeNotifier {
   /// Set the value of [_selectedServiceCategories] according to the service categories selected
   /// by the user
   void setSelectedServiceCategories(
-      {required ServiceEnum selectedServiceCategory}) {
+      {required Services selectedServiceCategory}) {
     _selectedServiceCategories.contains(selectedServiceCategory)
         ? _selectedServiceCategories.removeWhere(
             (serviceCategory) => serviceCategory == selectedServiceCategory)

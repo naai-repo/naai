@@ -8,6 +8,7 @@ class UserModel {
   String? gender;
   List<String>? preferredSalon;
   HomeLocation? homeLocation;
+  String? id;
 
   UserModel({
     this.name,
@@ -17,6 +18,7 @@ class UserModel {
     this.preferredSalon,
     this.gender,
     this.homeLocation,
+    this.id,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,7 +28,8 @@ class UserModel {
       'gmailId': gmailId,
       'appleId': appleId,
       'preferredSalon': preferredSalon,
-      'homeLocation': homeLocation?.toMap(),
+      'homeLocation': homeLocation == null ? null : homeLocation?.toMap(),
+      'id': id,
       'gender': gender,
     };
   }
@@ -41,9 +44,11 @@ class UserModel {
     appleId = map['appleId'];
     gender = map['gender'];
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
-    homeLocation = HomeLocation.fromFirestore(map['homeLocation'] ?? {});
+    homeLocation = map['homeLocation'] == null
+        ? null
+        : HomeLocation.fromFirestore(map['homeLocation'] ?? {});
+    id = map['id'];
   }
-
 }
 
 class HomeLocation {
@@ -63,10 +68,10 @@ class HomeLocation {
   }
 
   HomeLocation.fromFirestore(Map<String, dynamic> map) {
-    GeoPoint geoPoint = map['geoLocation'];
+    GeoPoint? geoPoint = map['geoLocation'];
 
     addressString = map['addressString'];
-    geoLocation = map['geoLocation'] != null
+    geoLocation = geoPoint != null
         ? GeoPoint(geoPoint.latitude, geoPoint.longitude)
         : null;
   }

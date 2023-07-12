@@ -4,10 +4,15 @@ enum Gender {
   OTHERS,
 }
 
-enum ServiceEnum {
+enum Services {
   HAIR,
   SPA,
   BEAUTY,
   MAKEUP,
   NAIL,
+}
+
+enum StaffType {
+  Single,
+  Multiple,
 }

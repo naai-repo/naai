@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naai/utils/enums.dart';
 
 class ServiceDetail {
-  ServiceEnum? category;
+  Services? category;
   String? serviceTitle;
   double? price;
   Gender? targetGender;
@@ -24,7 +24,7 @@ class ServiceDetail {
     return ServiceDetail(
       id: data['id'],
       salonId: data['salonId'],
-      category: ServiceEnum.values[(ServiceEnum.values.indexWhere(
+      category: Services.values[(Services.values.indexWhere(
           (category) => category.name.toLowerCase() == data['category']))],
       serviceTitle: data['serviceTitle'],
       price: data['price'].toDouble(),

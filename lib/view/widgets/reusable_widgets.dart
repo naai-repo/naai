@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
@@ -97,6 +98,7 @@ class ReusableWidgets {
     BuildContext context,
     String text,
   ) {
+    Logger().log(Level.wtf, text);
     FToast fToast = FToast();
     fToast.init(context);
     fToast.showToast(
@@ -302,15 +304,15 @@ class ReusableWidgets {
           children: <Widget>[
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.graphicFill,
+              color: ColorsConstant.appColor,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.graphicFill,
+              color: ColorsConstant.appColor,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.graphicFill,
+              color: ColorsConstant.appColor,
             ),
           ],
         ),
@@ -429,7 +431,6 @@ class ReusableWidgets {
                         provider.filteredServiceList[index];
                     bool isAdded =
                         provider.selectedServices.contains(serviceDetail.id);
-                    // print(isAdded);
                     return GestureDetector(
                       onTap: () =>
                           provider.setSelectedService(serviceDetail.id ?? ''),
@@ -472,8 +473,7 @@ class ReusableWidgets {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
                                       "Rs. ${serviceDetail.price}",
@@ -683,11 +683,11 @@ class ReusableWidgets {
           physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: ServiceEnum.values.length,
+          itemCount: Services.values.length,
           itemBuilder: (context, index) => GestureDetector(
             onTap: () {
               provider.setSelectedServiceCategories(
-                selectedServiceCategory: ServiceEnum.values[index],
+                selectedServiceCategory: Services.values[index],
               );
             },
             child: Container(
@@ -697,18 +697,18 @@ class ReusableWidgets {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3.h),
                 color: provider.selectedServiceCategories
-                        .contains(ServiceEnum.values[index])
+                        .contains(Services.values[index])
                     ? ColorsConstant.appColor
                     : Colors.white,
               ),
               child: Center(
                 child: Text(
-                  "${ServiceEnum.values[index].name}",
+                  "${Services.values[index].name}",
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w600,
                     color: provider.selectedServiceCategories
-                            .contains(ServiceEnum.values[index])
+                            .contains(Services.values[index])
                         ? Colors.white
                         : ColorsConstant.textDark,
                   ),

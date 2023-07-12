@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:naai/models/artist.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/models/user_location.dart';
@@ -14,6 +15,7 @@ import 'package:naai/utils/api_endpoint_constant.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/exception/exception_handling.dart';
 import 'package:naai/utils/loading_indicator.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
@@ -24,9 +26,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeProvider with ChangeNotifier {
+  bool _changedLocation = false;
+
   final _mapLocation = location.Location();
 
   List<SalonData> _salonData = [];
+  List<Artist> _artistList = [];
 
   late Symbol _symbol;
 
@@ -40,6 +45,7 @@ class HomeProvider with ChangeNotifier {
 
   //============= GETTERS =============//
   List<SalonData> get salonData => _salonData;
+  List<Artist> get artistList => _artistList;
 
   String get addressText => _addressText;
 
@@ -73,6 +79,7 @@ class HomeProvider with ChangeNotifier {
     await Future.wait([
       context.read<ExploreProvider>().getSalonList(context),
       getUserDetails(context),
+      getAllArtists(context),
     ]).onError(
       (error, stackTrace) =>
           ReusableWidgets.showFlutterToast(context, '$error'),
@@ -80,14 +87,32 @@ class HomeProvider with ChangeNotifier {
 
     _salonData = [...context.read<ExploreProvider>().salonData];
     Loader.hideLoader(context);
+
+    if (_userData.homeLocation?.geoLocation == null) {
+      Navigator.pushNamed(
+        context,
+        NamedRoutes.setHomeLocationRoute,
+      );
+    }
+
     notifyListeners();
   }
 
   /// Fetch the user details from [FirebaseFirestore]
   Future<void> getUserDetails(BuildContext context) async {
     try {
-      // await SharedPreferenceHelper.setUserId('Bkor6YYboRZZTQah45N6hVYqDuJ2');
       _userData = await DatabaseService().getUserDetails();
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  /// Fetch the user details from [FirebaseFirestore]
+  Future<void> getAllArtists(BuildContext context) async {
+    try {
+      _artistList = await DatabaseService().getAllArtists();
+      _artistList.sort((a, b) => ((a.rating ?? 0) - (b.rating ?? 0)).toInt());
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -234,6 +259,8 @@ class HomeProvider with ChangeNotifier {
   ) async {
     UserModel user = UserModel.fromMap(_userData.toMap());
 
+    user.homeLocation = HomeLocation();
+
     user.homeLocation?.addressString = _addressText;
     user.homeLocation?.geoLocation =
         GeoPoint(latLng.latitude, latLng.longitude);
@@ -244,6 +271,7 @@ class HomeProvider with ChangeNotifier {
       await DatabaseService().updateUserData(data: data).onError(
           (FirebaseException error, stackTrace) =>
               throw ExceptionHandling(message: error.message ?? ""));
+      _changedLocation = true;
       getUserDetails(context);
       Loader.hideLoader(context);
     } catch (e) {
@@ -274,13 +302,15 @@ class HomeProvider with ChangeNotifier {
 
     Loader.hideLoader(context);
 
-    showModalBottomSheet(
+    await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) => Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(2.h),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(2.h),
+          ),
         ),
         height: 20.h,
         child: Column(
@@ -300,12 +330,16 @@ class HomeProvider with ChangeNotifier {
                     MaterialStateProperty.all(ColorsConstant.appColor),
               ),
               onPressed: () => updateUserLocation(context, coordinates),
-              child: Text('Confirm Location'),
+              child: Text(StringConstant.confirmLocation),
             ),
           ],
         ),
       ),
     );
+    if (_changedLocation) {
+      Navigator.pop(context);
+      _changedLocation = false;
+    }
   }
 
   /// Method to fetch the current location of the user using [location] package

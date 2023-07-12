@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/rating_box.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
@@ -146,7 +147,9 @@ class _ExploreScreenState extends State<ExploreScreen>
                           Flexible(
                             child: GestureDetector(
                               onTap: () => Navigator.pushNamed(
-                                  context, NamedRoutes.setHomeLocationRoute),
+                                context,
+                                NamedRoutes.setHomeLocationRoute,
+                              ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -238,41 +241,23 @@ class _ExploreScreenState extends State<ExploreScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            provider.filteredSalonData[index].name ?? '',
-                            style: TextStyle(
-                              color: ColorsConstant.textDark,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                          Container(
+                            width: 60.w,
+                            child: Text(
+                              provider.filteredSalonData[index].name ?? '',
+                              style: TextStyle(
+                                color: ColorsConstant.textDark,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 3.w, vertical: 1.5.w),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2.h),
-                              color: ColorsConstant.graphicFill,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  '${provider.filteredSalonData[index].rating}',
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: ColorsConstant.textDark,
-                                  ),
-                                ),
-                                SizedBox(width: 1.w),
-                                SvgPicture.asset(
-                                  ImagePathConstant.starIcon,
-                                  height: 2.h,
-                                ),
-                              ],
-                            ),
+                          RatingBox(
+                            rating:
+                                provider.filteredSalonData[index].rating ?? 0.0,
                           ),
                         ],
                       ),

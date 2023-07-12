@@ -22,7 +22,6 @@ class SetHomeLocationScreen extends StatefulWidget {
 }
 
 class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -46,8 +45,15 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
             children: <Widget>[
               IconButton(
                 onPressed: () {
-                  provider.clearMapSearchText();
-                  Navigator.pop(context);
+                  if (provider.userData.homeLocation?.geoLocation == null) {
+                    ReusableWidgets.showFlutterToast(
+                      context,
+                      'Please set your home location before moving forward!',
+                    );
+                  } else {
+                    provider.clearMapSearchText();
+                    Navigator.pop(context);
+                  }
                 },
                 splashRadius: 0.1,
                 splashColor: Colors.transparent,
@@ -73,61 +79,57 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                   screenSubtitle(),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 2.h),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return TypeAheadField(
-                          debounceDuration: Duration(milliseconds: 300),
-                          hideSuggestionsOnKeyboardHide: false,
-                          suggestionsCallback: (pattern) async {
-                            return await provider
-                                .getPlaceSuggestions(context);
-                          },
-                          minCharsForSuggestions: 1,
-                          noItemsFoundBuilder: (context) => ListTile(
+                    child: SingleChildScrollView(
+                      child: TypeAheadField(
+                        debounceDuration: Duration(milliseconds: 300),
+                        hideSuggestionsOnKeyboardHide: false,
+                        suggestionsCallback: (pattern) async {
+                          return await provider.getPlaceSuggestions(context);
+                        },
+                        minCharsForSuggestions: 1,
+                        noItemsFoundBuilder: (context) => ListTile(
+                          tileColor: Colors.white,
+                          title: Text(
+                            StringConstant.cantFindAnyLocation,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: ColorsConstant.appColor,
+                            ),
+                          ),
+                        ),
+                        itemBuilder: (context, Feature suggestion) {
+                          return ListTile(
                             tileColor: Colors.white,
                             title: Text(
-                              StringConstant.cantFindAnyLocation,
+                              suggestion.placeName ?? "",
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: ColorsConstant.appColor,
                               ),
                             ),
+                          );
+                        },
+                        onSuggestionSelected: (Feature suggestion) {
+                          // DO NOT REMOVE THIS PRINT STATEMENT OTHERWISE THE FUNCTION
+                          // WILL NOT BE TRIGGERED
+                          print(
+                              "\t\tNOTE: Do not remove this print statement.");
+                          provider.handlePlaceSelectionEvent(
+                              suggestion, context);
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        textFieldConfiguration: TextFieldConfiguration(
+                          textInputAction: TextInputAction.done,
+                          cursorColor: ColorsConstant.appColor,
+                          style: StyleConstant.searchTextStyle,
+                          controller: provider.mapSearchController,
+                          decoration: StyleConstant.searchBoxInputDecoration(
+                            context,
+                            hintText: StringConstant.search,
+                            isExploreScreenSearchBar: false,
                           ),
-                          itemBuilder: (context, Feature suggestion) {
-                            return ListTile(
-                              tileColor: Colors.white,
-                              title: Text(
-                                suggestion.placeName ?? "",
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: ColorsConstant.appColor,
-                                ),
-                              ),
-                            );
-                          },
-                          onSuggestionSelected: (Feature suggestion) {
-                            // DO NOT REMOVE THIS PRINT STATEMENT OTHERWISE THE FUNCTION
-                            // WILL NOT BE TRIGGERED
-                            print(
-                                "\t\tNOTE: Do not remove this print statement.");
-                            provider.handlePlaceSelectionEvent(
-                                suggestion, context);
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          },
-                          textFieldConfiguration: TextFieldConfiguration(
-                            textInputAction: TextInputAction.done,
-                            cursorColor: ColorsConstant.appColor,
-                            style: StyleConstant.searchTextStyle,
-                            controller: provider.mapSearchController,
-                            decoration:
-                                StyleConstant.searchBoxInputDecoration(
-                              context,
-                              hintText: StringConstant.search,
-                              isExploreScreenSearchBar: false,
-                            ),
-                          ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 1.h),

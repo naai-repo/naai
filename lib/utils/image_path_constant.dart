@@ -97,4 +97,18 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'hair_color_image.png');
   static final String massageImage =
       UtilityFunctions.getImagePath(imageTitle: 'massage_image.png');
+  static final String singleStaffIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'single_staff_icon.svg');
+  static final String multipleStaffIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'multiple_staff_icon.svg');
+  static final String selectedOption =
+      UtilityFunctions.getImagePath(imageTitle: 'selected_option_icon.svg');
+  static final String unselectedOption =
+      UtilityFunctions.getImagePath(imageTitle: 'unselected_option_icon.svg');
+  static final String calendarIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'calendar_icon.svg');
+  static final String timeIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'time_icon.svg');
+  static final String deleteIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'delete_icon.svg');
 }
