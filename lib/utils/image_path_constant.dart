@@ -111,4 +111,6 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'time_icon.svg');
   static final String deleteIcon =
       UtilityFunctions.getImagePath(imageTitle: 'delete_icon.svg');
+  static final String currentLocationIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'current_location_icon.svg');
 }

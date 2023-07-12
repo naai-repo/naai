@@ -30,6 +30,7 @@ class StringConstant {
   static const String cantFindAnyLocation = 'Can\'t find anything!';
   static const String exploreSalonsSearchHint = 'explore salons';
   static const String salonData = 'screen-data';
+  static const String yourCurrentLocation = 'Your current location';
 
   // Home screen strings
   static const String home = 'Home';

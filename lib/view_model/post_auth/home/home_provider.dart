@@ -214,8 +214,14 @@ class HomeProvider with ChangeNotifier {
 
       UserLocationModel responseData =
           UserLocationModel.fromJson(jsonDecode(response.body));
-
       _data = responseData.features ?? [];
+
+      /// [Feature(id: StringConstant.yourCurrentLocation)] is added to show the current
+      /// location card
+      _data = [
+        Feature(id: StringConstant.yourCurrentLocation),
+        ..._data,
+      ];
     } catch (e) {
       Logger().d(e);
       ReusableWidgets.showFlutterToast(context, e.toString());

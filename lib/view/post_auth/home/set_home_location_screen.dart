@@ -6,6 +6,7 @@ import 'package:naai/models/user_location.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/keys.dart';
+import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -87,17 +88,81 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                           return await provider.getPlaceSuggestions(context);
                         },
                         minCharsForSuggestions: 1,
-                        noItemsFoundBuilder: (context) => ListTile(
-                          tileColor: Colors.white,
-                          title: Text(
-                            StringConstant.cantFindAnyLocation,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: ColorsConstant.appColor,
+                        noItemsFoundBuilder: (context) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              onTap: () async {
+                                provider.clearMapSearchText();
+                                FocusManager.instance.primaryFocus!.unfocus();
+                                Loader.showLoader(context);
+                                LatLng latLng = await provider
+                                    .fetchCurrentLocation(context);
+                                await provider.animateToPosition(latLng);
+                                Loader.hideLoader(context);
+                              },
+                              tileColor: Colors.grey.shade200,
+                              title: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    height: 2.5.h,
+                                    ImagePathConstant.currentLocationIcon,
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Text(
+                                    StringConstant.yourCurrentLocation,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: ColorsConstant.appColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            ListTile(
+                              tileColor: Colors.white,
+                              title: Text(
+                                StringConstant.cantFindAnyLocation,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: ColorsConstant.appColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         itemBuilder: (context, Feature suggestion) {
+                          if (suggestion.id ==
+                              StringConstant.yourCurrentLocation) {
+                            return ListTile(
+                              onTap: () async {
+                                provider.clearMapSearchText();
+                                FocusManager.instance.primaryFocus!.unfocus();
+                                Loader.showLoader(context);
+                                LatLng latLng = await provider
+                                    .fetchCurrentLocation(context);
+                                await provider.animateToPosition(latLng);
+                                Loader.hideLoader(context);
+                              },
+                              tileColor: Colors.grey.shade200,
+                              title: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    height: 2.5.h,
+                                    ImagePathConstant.currentLocationIcon,
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Text(
+                                    StringConstant.yourCurrentLocation,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: ColorsConstant.appColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                           return ListTile(
                             tileColor: Colors.white,
                             title: Text(
@@ -115,7 +180,9 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                           print(
                               "\t\tNOTE: Do not remove this print statement.");
                           provider.handlePlaceSelectionEvent(
-                              suggestion, context);
+                            suggestion,
+                            context,
+                          );
                           FocusManager.instance.primaryFocus?.unfocus();
                         },
                         textFieldConfiguration: TextFieldConfiguration(

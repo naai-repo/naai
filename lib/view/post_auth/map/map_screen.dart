@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/user_location.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/keys.dart';
+import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -58,24 +61,99 @@ class _MapScreenState extends State<MapScreen> {
                                 Padding(
                                   padding: EdgeInsets.symmetric(vertical: 2.h),
                                   child: TypeAheadField(
-                                    debounceDuration: Duration(milliseconds: 300),
+                                    debounceDuration:
+                                        Duration(milliseconds: 300),
                                     hideSuggestionsOnKeyboardHide: false,
                                     suggestionsCallback: (pattern) async {
                                       return await provider
                                           .getPlaceSuggestions(context);
                                     },
                                     minCharsForSuggestions: 1,
-                                    noItemsFoundBuilder: (context) => ListTile(
-                                      tileColor: Colors.white,
-                                      title: Text(
-                                        StringConstant.cantFindAnyLocation,
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: ColorsConstant.appColor,
+                                    noItemsFoundBuilder: (context) => Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          onTap: () async {
+                                            provider.clearMapSearchController();
+                                            FocusManager.instance.primaryFocus!
+                                                .unfocus();
+                                            Loader.showLoader(context);
+                                            LatLng latLng = await provider
+                                                .fetchCurrentLocation(context);
+                                            await provider
+                                                .animateToPosition(latLng);
+                                            Loader.hideLoader(context);
+                                          },
+                                          tileColor: Colors.grey.shade200,
+                                          title: Row(
+                                            children: <Widget>[
+                                              SvgPicture.asset(
+                                                height: 2.5.h,
+                                                ImagePathConstant
+                                                    .currentLocationIcon,
+                                              ),
+                                              SizedBox(width: 3.w),
+                                              Text(
+                                                StringConstant
+                                                    .yourCurrentLocation,
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color:
+                                                      ColorsConstant.appColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
+                                        ListTile(
+                                          tileColor: Colors.white,
+                                          title: Text(
+                                            StringConstant.cantFindAnyLocation,
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: ColorsConstant.appColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     itemBuilder: (context, Feature suggestion) {
+                                      if (suggestion.id ==
+                                          StringConstant.yourCurrentLocation) {
+                                        return ListTile(
+                                          onTap: () async {
+                                            provider.clearMapSearchController();
+                                            FocusManager.instance.primaryFocus!
+                                                .unfocus();
+                                            Loader.showLoader(context);
+                                            LatLng latLng = await provider
+                                                .fetchCurrentLocation(context);
+                                            await provider
+                                                .animateToPosition(latLng);
+                                            Loader.hideLoader(context);
+                                          },
+                                          tileColor: Colors.grey.shade200,
+                                          title: Row(
+                                            children: <Widget>[
+                                              SvgPicture.asset(
+                                                height: 2.5.h,
+                                                ImagePathConstant
+                                                    .currentLocationIcon,
+                                              ),
+                                              SizedBox(width: 3.w),
+                                              Text(
+                                                StringConstant
+                                                    .yourCurrentLocation,
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color:
+                                                      ColorsConstant.appColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
                                       return ListTile(
                                         tileColor: Colors.white,
                                         title: Text(
@@ -103,8 +181,8 @@ class _MapScreenState extends State<MapScreen> {
                                       cursorColor: ColorsConstant.appColor,
                                       style: StyleConstant.searchTextStyle,
                                       controller: provider.mapSearchController,
-                                      decoration:
-                                          StyleConstant.searchBoxInputDecoration(
+                                      decoration: StyleConstant
+                                          .searchBoxInputDecoration(
                                         hintText: StringConstant
                                             .exploreSalonsSearchHint,
                                         context,
