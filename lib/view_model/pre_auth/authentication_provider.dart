@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:http/http.dart' as http;
 
 class AuthenticationProvider with ChangeNotifier {
   bool _isGetOtpButtonActive = false;
@@ -28,6 +30,7 @@ class AuthenticationProvider with ChangeNotifier {
   String _enteredOtp = "000000";
   String? _phoneNumber;
   String? _userId;
+  String _selectedGender = '';
 
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _mobileNumberController = TextEditingController();
@@ -45,6 +48,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   String get verificationId => _verificationId;
   String get enteredOtp => _enteredOtp;
+  String get selectedGender => _selectedGender;
   String? get userId => _userId;
 
   TextEditingController get userNameController => _userNameController;
@@ -118,6 +122,20 @@ class AuthenticationProvider with ChangeNotifier {
       );
     }
     notifyListeners();
+  }
+
+  Future<String> getGender(GoogleSignInAccount googleSignIn) async {
+    final headers = await googleSignIn.authHeaders;
+    final r = await http.get(
+      Uri.parse(
+          "https://people.googleapis.com/v1/people/me?personFields=genders&key="),
+      headers: {
+        "Authorization": '${headers["Authorization"]}',
+      },
+    );
+    final response = jsonDecode(r.body);
+    print(response);
+    return response["genders"][0]["formattedValue"];
   }
 
   /// Triggers Apple authentication flow
@@ -228,6 +246,7 @@ class AuthenticationProvider with ChangeNotifier {
       userData: UserModel(
         name: _userNameController.text,
         phoneNumber: _phoneNumber,
+        gender: _selectedGender,
         homeLocation: HomeLocation(),
       ),
     );
@@ -260,13 +279,19 @@ class AuthenticationProvider with ChangeNotifier {
       return true;
     } catch (e) {
       Loader.hideLoader(context);
-      Logger().d(e);
       ReusableWidgets.showFlutterToast(
         context,
         '$e',
       );
     }
     return false;
+  }
+
+  /// Method to set user's gender
+  void setGender(String value) {
+    _selectedGender = value;
+    setUsernameButtonActive();
+    notifyListeners();
   }
 
   /// Method to check the validity of mobile number
@@ -286,8 +311,9 @@ class AuthenticationProvider with ChangeNotifier {
   }
 
   /// Check if the entered username is valid and set the value of [_isUsernameButtonActive]
-  void isUsernameValid() {
-    _isUsernameButtonActive = _userNameController.text.trim().length > 0;
+  void setUsernameButtonActive() {
+    _isUsernameButtonActive = _userNameController.text.trim().length > 0 &&
+        _selectedGender.isNotEmpty;
     notifyListeners();
   }
 
@@ -365,6 +391,7 @@ class AuthenticationProvider with ChangeNotifier {
   /// Clear the value of [_userNameController]
   void clearUsernameController() {
     _userNameController.clear();
+    _selectedGender = '';
     notifyListeners();
   }
 }
