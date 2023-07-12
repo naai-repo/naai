@@ -16,6 +16,11 @@ class StringConstant {
   static const String addName = 'Add Name';
   static const String enterYourName = 'Enter your name';
   static const String continueText = 'CONTINUE';
+  static const String male = 'Male';
+  static const String female = 'Female';
+  static const String addNameSubtext =
+      'We’ll require your personal name to set up your profile';
+  static const String chooseYourGender = 'Choose your gender';
 
   // Explore screen strings
   static const String explore = 'Explore';
