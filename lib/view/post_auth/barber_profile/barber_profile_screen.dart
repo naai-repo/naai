@@ -102,166 +102,14 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                               ),
                               SizedBox(height: 2.h),
                               Divider(
-                                thickness: 5,
+                                thickness: 2,
                                 height: 0,
                                 color: ColorsConstant.graphicFillDark,
                               ),
                               servicesAndReviewTabBar(),
                               selectedTab == 0
                                   ? ReusableWidgets.servicesTab()
-                                  : Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5.w, vertical: 2.h),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          AddReviewComponent(),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 2.h, bottom: 1.h),
-                                            child: Text(
-                                              StringConstant.userReviews,
-                                              style: TextStyle(
-                                                fontSize: 11.sp,
-                                                color: ColorsConstant
-                                                    .blackAvailableStaff,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                          provider.artistReviewList.isNotEmpty
-                                              ? ListView.builder(
-                                                  padding: EdgeInsets.zero,
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  shrinkWrap: true,
-                                                  itemCount: provider
-                                                      .artistReviewList.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    Review? reviewItem = provider
-                                                            .artistReviewList[
-                                                        index];
-
-                                                    return Container(
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 1.h),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                        horizontal: 3.w,
-                                                        vertical: 1.5.h,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(1.h),
-                                                        border: Border.all(
-                                                            color: ColorsConstant
-                                                                .reviewBoxBorderColor),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color:
-                                                                Color.fromARGB(
-                                                              255,
-                                                              229,
-                                                              229,
-                                                              229,
-                                                            ),
-                                                            spreadRadius: 0.1,
-                                                            blurRadius: 10,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          reviewerImageAndName(
-                                                            imageUrl: reviewItem
-                                                                .imagePath,
-                                                            userName: reviewItem
-                                                                    .userName ??
-                                                                "",
-                                                          ),
-                                                          SizedBox(width: 2.w),
-                                                          Expanded(
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: <
-                                                                  Widget>[
-                                                                Row(
-                                                                  children: <
-                                                                      Widget>[
-                                                                    ...List
-                                                                        .generate(
-                                                                      5,
-                                                                      (i) => SvgPicture
-                                                                          .asset(
-                                                                        ImagePathConstant
-                                                                            .starIcon,
-                                                                        color: i <
-                                                                                (int.parse(provider.artistReviewList[index].rating?.round().toString() ?? "0"))
-                                                                            ? ColorsConstant.appColor
-                                                                            : ColorsConstant.greyStar,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      top:
-                                                                          0.5.h,
-                                                                      bottom:
-                                                                          1.h),
-                                                                  child: Text(
-                                                                    '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          8.sp,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontStyle:
-                                                                          FontStyle
-                                                                              .italic,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Text(
-                                                                  reviewItem
-                                                                          .comment ??
-                                                                      "",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        10.sp,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  },
-                                                )
-                                              : SizedBox(),
-                                        ],
-                                      ),
-                                    ),
+                                  : reviewColumn(),
                             ],
                           ),
                         ),
@@ -270,6 +118,127 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   ),
                 ],
               ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget reviewColumn() {
+    return Consumer<BarberProvider>(
+      builder: (context, provider, child) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              AddReviewComponent(),
+              Padding(
+                padding: EdgeInsets.only(top: 2.h, bottom: 1.h),
+                child: Text(
+                  StringConstant.userReviews,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: ColorsConstant.blackAvailableStaff,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              provider.artistReviewList.isNotEmpty
+                  ? ListView.builder(
+                      padding: EdgeInsets.zero,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: provider.artistReviewList.length,
+                      itemBuilder: (context, index) {
+                        Review? reviewItem = provider.artistReviewList[index];
+
+                        return Container(
+                          margin: EdgeInsets.symmetric(vertical: 1.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 3.w,
+                            vertical: 1.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(1.h),
+                            border: Border.all(
+                                color: ColorsConstant.reviewBoxBorderColor),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(
+                                  255,
+                                  229,
+                                  229,
+                                  229,
+                                ),
+                                spreadRadius: 0.1,
+                                blurRadius: 10,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              reviewerImageAndName(
+                                imageUrl: reviewItem.imagePath,
+                                userName: reviewItem.userName ?? "",
+                              ),
+                              SizedBox(width: 2.w),
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        ...List.generate(
+                                          5,
+                                          (i) => SvgPicture.asset(
+                                            ImagePathConstant.starIcon,
+                                            color: i <
+                                                    (int.parse(provider
+                                                            .artistReviewList[
+                                                                index]
+                                                            .rating
+                                                            ?.round()
+                                                            .toString() ??
+                                                        "0"))
+                                                ? ColorsConstant.appColor
+                                                : ColorsConstant.greyStar,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 0.5.h, bottom: 1.h),
+                                      child: Text(
+                                        '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
+                                        style: TextStyle(
+                                          fontSize: 8.sp,
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      reviewItem.comment ?? "",
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : SizedBox(),
             ],
           ),
         );
@@ -483,6 +452,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
           bottomNavigationBar: Container(
             color: Colors.white,
             child: TabBar(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
               labelColor: ColorsConstant.appColor,
               indicatorColor: ColorsConstant.appColor,
               unselectedLabelColor: ColorsConstant.divider,
