@@ -50,8 +50,48 @@ class UsernameScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                Text(
+                  StringConstant.addNameSubtext,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: const Color(0xFF868686),
+                  ),
+                ),
                 SizedBox(height: 3.h),
                 userNameTextField(),
+                Padding(
+                  padding: EdgeInsets.only(top: 3.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        StringConstant.chooseYourGender,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: const Color(0xFF868686),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Row(
+                        children: <Widget>[
+                          genderSelector(
+                            text: StringConstant.male,
+                            isSelected:
+                                provider.selectedGender == StringConstant.male,
+                          ),
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          genderSelector(
+                            text: StringConstant.female,
+                            isSelected: provider.selectedGender ==
+                                StringConstant.female,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 Spacer(),
                 ReusableWidgets.redFullWidthButon(
                   buttonText: StringConstant.continueText,
@@ -66,6 +106,55 @@ class UsernameScreen extends StatelessWidget {
     });
   }
 
+  Widget genderSelector({
+    required String text,
+    bool isSelected = false,
+  }) {
+    return Consumer<AuthenticationProvider>(
+      builder: (context, provider, child) {
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => provider.setGender(text),
+          child: Row(
+            children: <Widget>[
+              Container(
+                height: 2.5.h,
+                width: 2.5.h,
+                margin: EdgeInsets.only(right: 5.w),
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(
+                    width: 1.5,
+                    color: const Color(0xFF344054),
+                  ),
+                ),
+                child: Visibility(
+                  visible: isSelected,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: ColorsConstant.appColor,
+                    ),
+                  ),
+                ),
+              ),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF344054),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget userNameTextField() {
     return Consumer<AuthenticationProvider>(
       builder: (context, provider, child) {
@@ -75,7 +164,7 @@ class UsernameScreen extends StatelessWidget {
           keyboardType: TextInputType.name,
           cursorColor: ColorsConstant.appColor,
           maxLength: 20,
-          onChanged: (value) => provider.isUsernameValid(),
+          onChanged: (value) => provider.setUsernameButtonActive(),
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.deny(RegExp('[0-9]'))
           ],

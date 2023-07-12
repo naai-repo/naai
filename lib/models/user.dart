@@ -3,6 +3,7 @@ class UserModel {
   String? phoneNumber;
   String? gmailId;
   String? appleId;
+  String? gender;
   List<String>? preferredSalon;
 
   UserModel({
@@ -11,6 +12,7 @@ class UserModel {
     this.gmailId,
     this.appleId,
     this.preferredSalon,
+    this.gender,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class UserModel {
     data['gmailId'] = this.gmailId;
     data['appleId'] = this.appleId;
     data['preferredSalon'] = this.preferredSalon;
+    data['gender'] = this.gender;
     return data;
   }
 }

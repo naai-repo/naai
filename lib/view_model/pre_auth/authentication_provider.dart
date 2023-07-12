@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,7 @@ import 'package:naai/view/utils/routing/exception/exception_handling.dart';
 import 'package:naai/view/utils/routing/named_routes.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:http/http.dart' as http;
 
 class AuthenticationProvider with ChangeNotifier {
   bool _isGetOtpButtonActive = false;
@@ -20,6 +22,7 @@ class AuthenticationProvider with ChangeNotifier {
   String _verificationId = "";
   String _enteredOtp = "000000";
   String? _phoneNumber;
+  String _selectedGender = '';
 
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _mobileNumberController = TextEditingController();
@@ -37,6 +40,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   String get verificationId => _verificationId;
   String get enteredOtp => _enteredOtp;
+  String get selectedGender => _selectedGender;
 
   TextEditingController get userNameController => _userNameController;
   TextEditingController get mobileNumberController => _mobileNumberController;
@@ -108,6 +112,20 @@ class AuthenticationProvider with ChangeNotifier {
       );
     }
     notifyListeners();
+  }
+
+  Future<String> getGender(GoogleSignInAccount googleSignIn) async {
+    final headers = await googleSignIn.authHeaders;
+    final r = await http.get(
+      Uri.parse(
+          "https://people.googleapis.com/v1/people/me?personFields=genders&key="),
+      headers: {
+        "Authorization": '${headers["Authorization"]}',
+      },
+    );
+    final response = jsonDecode(r.body);
+    print(response);
+    return response["genders"][0]["formattedValue"];
   }
 
   /// Triggers Apple authentication flow
@@ -212,6 +230,7 @@ class AuthenticationProvider with ChangeNotifier {
       userData: UserModel(
         name: _userNameController.text,
         phoneNumber: _phoneNumber,
+        gender: _selectedGender,
       ),
     );
     // Navigator.pushReplacementNamed(context, NamedRoutes.navigationScreenRoute);
@@ -239,6 +258,13 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
+  /// Method to set user's gender
+  void setGender(String value) {
+    _selectedGender = value;
+    setUsernameButtonActive();
+    notifyListeners();
+  }
+
   /// Method to check the validity of mobile number
   void setIsGetOtpButtonActive(String value) {
     _isGetOtpButtonActive = value.length == 10;
@@ -256,8 +282,9 @@ class AuthenticationProvider with ChangeNotifier {
   }
 
   /// Check if the entered username is valid and set the value of [_isUsernameButtonActive]
-  void isUsernameValid() {
-    _isUsernameButtonActive = _userNameController.text.trim().length > 0;
+  void setUsernameButtonActive() {
+    _isUsernameButtonActive = _userNameController.text.trim().length > 0 &&
+        _selectedGender.isNotEmpty;
     notifyListeners();
   }
 
