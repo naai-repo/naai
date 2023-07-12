@@ -6,11 +6,13 @@ import 'package:naai/utils/components/add_review_component.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BarberProfileScreen extends StatefulWidget {
   BarberProfileScreen({Key? key}) : super(key: key);
@@ -94,7 +96,6 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                     top: 1.h, right: 4.w, left: 4.w),
                                 padding: EdgeInsets.all(1.h),
                                 decoration: BoxDecoration(
-                                  color: ColorsConstant.lightAppColor,
                                   borderRadius: BorderRadius.circular(2.h),
                                 ),
                                 child: barberOverview(),
@@ -365,114 +366,106 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
             ],
           ),
           SizedBox(height: 3.h),
-          IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(
-                  width: 38.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        StringConstant.rating,
-                        style: TextStyle(
-                          color: ColorsConstant.textDark,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SizedBox(
+                width: 38.w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      StringConstant.rating,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
                       ),
-                      SizedBox(height: 1.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List<Widget>.generate(
-                          5,
-                          (i) => (i >
-                                  int.parse(provider.artist.rating
-                                              ?.floor()
-                                              .toString() ??
-                                          "0") -
-                                      1)
-                              ? SvgPicture.asset(
-                                  ImagePathConstant.starIcon,
-                                  color: ColorsConstant.greyStar,
-                                  height: 2.2.h,
-                                )
-                              : SvgPicture.asset(
-                                  ImagePathConstant.starIcon,
-                                  color: ColorsConstant.yellowStar,
-                                  height: 2.2.h,
-                                ),
-                        ),
+                    ),
+                    SizedBox(height: 1.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: List<Widget>.generate(
+                        5,
+                        (i) => (i >
+                                int.parse(provider.artist.rating
+                                            ?.floor()
+                                            .toString() ??
+                                        "0") -
+                                    1)
+                            ? SvgPicture.asset(
+                                ImagePathConstant.starIcon,
+                                color: ColorsConstant.greyStar,
+                                height: 2.2.h,
+                              )
+                            : SvgPicture.asset(
+                                ImagePathConstant.starIcon,
+                                color: ColorsConstant.yellowStar,
+                                height: 2.2.h,
+                              ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                VerticalDivider(
-                  color: Colors.white,
-                  thickness: 0.5.w,
-                ),
-                SizedBox(
-                  width: 38.w,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 1.2.h,
-                        horizontal: 5.w,
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1.h),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              blurRadius: 10,
-                              spreadRadius: 0.1,
-                            ),
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            StringConstant.viewSalon,
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w700,
-                              color: ColorsConstant.appColor,
-                            ),
+              ),
+              SizedBox(
+                width: 38.w,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 1.2.h,
+                      horizontal: 5.w,
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1.h),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade300,
+                            blurRadius: 10,
+                            spreadRadius: 0.1,
                           ),
-                          SizedBox(width: 2.w),
-                          SvgPicture.asset(
-                            ImagePathConstant.rightArrowIcon,
+                        ]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          StringConstant.viewSalon,
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w600,
                             color: ColorsConstant.appColor,
-                            height: 1.5.h,
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 2.w),
+                        SvgPicture.asset(
+                          ImagePathConstant.rightArrowIcon,
+                          color: ColorsConstant.appColor,
+                          height: 1.5.h,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          SizedBox(height: 3.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              ReusableWidgets.contactTypeWidget(
-                onTap: () => print('Hello'),
-                iconPath: ImagePathConstant.phoneIcon,
-              ),
-              ReusableWidgets.contactTypeWidget(
-                onTap: () => print('Hello'),
-                iconPath: ImagePathConstant.shareIcon,
-              ),
-              ReusableWidgets.contactTypeWidget(
-                onTap: () => print('Hello'),
-                iconPath: ImagePathConstant.saveIcon,
               ),
             ],
+          ),
+          SizedBox(height: 3.h),
+          ContactAndInteractionWidget(
+            iconOnePath: ImagePathConstant.phoneIcon,
+            iconTwoPath: ImagePathConstant.shareIcon,
+            iconThreePath: ImagePathConstant.saveIcon,
+            iconFourPath: ImagePathConstant.instagramIcon,
+            onTapIconOne: () => launchUrl(
+              Uri(
+                scheme: 'tel',
+                path: '+919717950608',
+              ),
+            ),
+            onTapIconTwo: () => print('Two'),
+            onTapIconThree: () => print('Three'),
+            onTapIconFour: () => print('Four'),
           ),
           SizedBox(height: 1.h),
         ],

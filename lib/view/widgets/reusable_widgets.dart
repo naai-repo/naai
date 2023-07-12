@@ -350,37 +350,6 @@ class ReusableWidgets {
     );
   }
 
-  /// Common contact type widget
-  static Widget contactTypeWidget({
-    required Function() onTap,
-    required String iconPath,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(6),
-        height: 5.h,
-        width: 5.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3.h),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 5),
-              color: Color(0xFF000000).withOpacity(0.14),
-              spreadRadius: 0.5,
-              blurRadius: 15,
-            ),
-          ],
-        ),
-        child: SvgPicture.asset(
-          iconPath,
-          fit: BoxFit.scaleDown,
-        ),
-      ),
-    );
-  }
-
   /// Salon services tab content
   static Widget servicesTab() {
     return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {

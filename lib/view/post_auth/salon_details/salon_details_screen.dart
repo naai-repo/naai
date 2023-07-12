@@ -5,11 +5,13 @@ import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SalonDetailsScreen extends StatefulWidget {
   const SalonDetailsScreen({Key? key}) : super(key: key);
@@ -373,10 +375,14 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   Widget salonDetailOverview() {
     return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 4.w),
-        margin: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+        padding: EdgeInsets.symmetric(
+          vertical: 1.h,
+          horizontal: 5.w,
+        ),
+        margin: EdgeInsets.symmetric(
+          vertical: 2.h,
+        ),
         decoration: BoxDecoration(
-          color: ColorsConstant.lightAppColor,
           borderRadius: BorderRadius.circular(1.h),
         ),
         child: Column(
@@ -449,7 +455,22 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 address:
                     provider.selectedSalonData.address?.addressString ?? ""),
             salonTiming(),
-            salonContactDetails(),
+            ContactAndInteractionWidget(
+              iconOnePath: ImagePathConstant.phoneIcon,
+              iconTwoPath: ImagePathConstant.shareIcon,
+              iconThreePath: ImagePathConstant.saveIcon,
+              iconFourPath: ImagePathConstant.instagramIcon,
+              onTapIconOne: () => launchUrl(
+                Uri(
+                  scheme: 'tel',
+                  path: '+919717950608',
+                ),
+              ),
+              onTapIconTwo: () => print('Two'),
+              onTapIconThree: () => print('Three'),
+              onTapIconFour: () => print('Four'),
+              backgroundColor: ColorsConstant.lightAppColor,
+            ),
             SizedBox(height: 2.h),
             availableStaffList(),
           ],
@@ -568,30 +589,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget salonContactDetails() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        ReusableWidgets.contactTypeWidget(
-          onTap: () => print('Hello'),
-          iconPath: ImagePathConstant.phoneIcon,
-        ),
-        ReusableWidgets.contactTypeWidget(
-          onTap: () => print('Hello'),
-          iconPath: ImagePathConstant.shareIcon,
-        ),
-        ReusableWidgets.contactTypeWidget(
-          onTap: () => print('Hello'),
-          iconPath: ImagePathConstant.saveIcon,
-        ),
-        ReusableWidgets.contactTypeWidget(
-          onTap: () => print('Hello'),
-          iconPath: ImagePathConstant.instagramIcon,
-        ),
-      ],
     );
   }
 }
