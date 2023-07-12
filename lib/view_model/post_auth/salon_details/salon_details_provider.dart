@@ -7,6 +7,7 @@ import 'package:naai/models/service_detail.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/loading_indicator.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
@@ -417,8 +418,11 @@ class SalonDetailsProvider with ChangeNotifier {
     try {
       await DatabaseService().createBooking(bookingData: _finalData);
       Loader.hideLoader(context);
-      resetCurrentBooking();
-      Navigator.pop(context);
+
+      Navigator.pushReplacementNamed(
+        context,
+        NamedRoutes.bookingConfirmedRoute,
+      );
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');

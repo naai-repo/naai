@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/post_auth/barber_profile/barber_profile_screen.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
+import 'package:naai/view/post_auth/create_booking/booking_confirmed_screen.dart';
 import 'package:naai/view/post_auth/create_booking/create_booking_screen.dart';
 import 'package:naai/view/post_auth/create_booking/payment_screen.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
@@ -80,6 +81,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.paymentRoute:
         target = PaymentScreen();
+        break;
+      case NamedRoutes.bookingConfirmedRoute:
+        target = BookingConfirmedSreen();
         break;
     }
 

@@ -117,4 +117,7 @@ class StringConstant {
   static const String grandTotal = 'GRAND TOTAL';
   static const String confirm = 'Confirm';
   static const String billTotal = 'Bill total';
+  static const String bookingConfirmed = 'Booking Confirmed!';
+  static const String bookingConfirmedSubtext = 'Now sit back and relax';
+  static const String timeSlot = 'Time Slot';
 }

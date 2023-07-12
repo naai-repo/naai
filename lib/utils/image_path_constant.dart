@@ -113,4 +113,6 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'delete_icon.svg');
   static final String currentLocationIcon =
       UtilityFunctions.getImagePath(imageTitle: 'current_location_icon.svg');
+  static final String bookingConfirmationImage = UtilityFunctions.getImagePath(
+      imageTitle: 'booking_confirmation_image.png');
 }
