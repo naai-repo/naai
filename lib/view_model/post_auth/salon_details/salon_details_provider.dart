@@ -29,7 +29,13 @@ class SalonDetailsProvider with ChangeNotifier {
   List<Artist> _artistList = [];
   List<String> _selectedServices = [];
 
-  List<int> _artistAvailability = [];
+  /// Used to display artist's availability
+  List<int> _artistAvailabilityToDisplay = [];
+
+  /// Used to calculate the start and end time of a service for a given artist
+  List<int> _artistAvailabilityForCalculation = [];
+
+  /// Used to store the total availability of the artist for a given day
   List<int> _initialAvailability = [];
 
   int _selectedSalonIndex = 0;
@@ -59,7 +65,9 @@ class SalonDetailsProvider with ChangeNotifier {
   List<Review> get salonReviewList => _salonReviewList;
   List<String> get selectedServices => _selectedServices;
 
-  List<int> get artistAvailability => _artistAvailability;
+  List<int> get artistAvailabilityToDisplay => _artistAvailabilityToDisplay;
+  List<int> get artistAvailabilityForCalculation =>
+      _artistAvailabilityForCalculation;
   List<int> get initialAvailability => _initialAvailability;
 
   int get selectedSalonIndex => _selectedSalonIndex;
@@ -82,6 +90,24 @@ class SalonDetailsProvider with ChangeNotifier {
   PageController get salonImageCarouselController =>
       _salonImageCarouselController;
 
+  /// Initialise the salon details screen
+  void initSalonDetailsData(BuildContext context) async {
+    Loader.showLoader(context);
+    setSelectedSalonData(context);
+
+    await Future.wait([
+      getServiceList(context),
+      getArtistList(context),
+      getSalonReviewsList(context),
+    ]).onError(
+      (error, stackTrace) =>
+          ReusableWidgets.showFlutterToast(context, '$error'),
+    );
+
+    Loader.hideLoader(context);
+  }
+
+  /// Get details related to a given service.
   dynamic getServiceDetails({
     required String serviceId,
     bool getServiceName = false,
@@ -101,6 +127,7 @@ class SalonDetailsProvider with ChangeNotifier {
     }
   }
 
+  /// Update the state of the next button on booking flow
   void updateIsNextButtonActive() {
     if ((_isOnSelectStaffType && _currentBooking.artistId != null) ||
         (_isOnSelectSlot &&
@@ -114,17 +141,20 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Set the type of staff selection method
   void setStaffSelectionMethod({required bool selectedSingleStaff}) {
     _selectedSingleStaff = selectedSingleStaff;
     _selectedMultipleStaff = !selectedSingleStaff;
     notifyListeners();
   }
 
+  /// Get the name of the artist whose [artistId] is given
   String getSelectedArtistName(String artistId) {
     return artistList.firstWhere((element) => element.id == artistId).name ??
         '';
   }
 
+  /// Set values of booking related data
   void setBookingData(
     BuildContext context, {
     bool setArtistId = false,
@@ -137,50 +167,22 @@ class SalonDetailsProvider with ChangeNotifier {
     if (setArtistId) {
       _currentBooking.artistId = artistId;
     } else if (setSelectedDate) {
-      String format =
+      String formattedDate =
           DateFormat('dd-MM-yyyy').format(selectedDate ?? DateTime.now());
-      _currentBooking.selectedDate = format;
-      setBookingStartEndTime();
+      _currentBooking.selectedDate = formattedDate;
+      setArtistStartEndTime();
     } else if (setSelectedTime) {
-      int indexOfStartTime = _artistAvailability.indexOf(startTime ?? 0);
-      int proposedIndexOfStartTime =
-          _initialAvailability.indexOf(startTime ?? 0);
-
-      if ((indexOfStartTime + _selectedServices.length * 2) >
-          (_artistAvailability.length - 1)) {
-        ReusableWidgets.showFlutterToast(
-            context, 'We do not have enough slots to process your order!');
-      } else if (_artistAvailability[
-              indexOfStartTime + _selectedServices.length * 2] !=
-          _initialAvailability[
-              proposedIndexOfStartTime + _selectedServices.length * 2]) {
-        ReusableWidgets.showFlutterToast(
-            context, 'Oops! Looks like the slots are filled for this timing!');
-      } else {
-        _currentBooking.startTime = startTime;
-        _currentBooking.endTime = _artistAvailability[
-            indexOfStartTime + _selectedServices.length * 2];
-      }
+      int indexOfStartTime =
+          _artistAvailabilityForCalculation.indexOf(startTime ?? 0);
+      _currentBooking.startTime = startTime;
+      _currentBooking.endTime = _artistAvailabilityForCalculation[
+          indexOfStartTime + _selectedServices.length * 2];
     }
     updateIsNextButtonActive();
     notifyListeners();
   }
 
-  void resetSlotInfo() {
-    _artistAvailability = [];
-    _initialAvailability = [];
-    _currentBooking.selectedDate = null;
-    _currentBooking.startTime = null;
-    _currentBooking.endTime = null;
-    _currentBooking.bookingCreatedFor = null;
-    notifyListeners();
-  }
-
-  void setSelectedDateAndTime(String artistId) {
-    _currentBooking.artistId = artistId;
-    notifyListeners();
-  }
-
+  /// Show the given [contentWidget] into a pre-styled dialogue box
   void showDialogue(
     BuildContext context,
     Widget contentWidget,
@@ -196,22 +198,8 @@ class SalonDetailsProvider with ChangeNotifier {
     );
   }
 
-  void resetCurrentBooking() {
-    _currentBooking = Booking();
-    _selectedMultipleStaff = false;
-    _selectedSingleStaff = false;
-    _isOnSelectStaffType = true;
-    _isOnSelectSlot = false;
-    _isOnPaymentPage = false;
-    _isNextButtonActive = false;
-    _artistAvailability = [];
-    _initialAvailability = [];
-    _totalPrice = 0;
-    _selectedServices = [];
-    notifyListeners();
-  }
-
-  void setBookingStartEndTime() {
+  /// Set the artist's availability i.e. start and end time of working for a given date
+  void setArtistStartEndTime() {
     int startTime = 0;
     int endTime = 0;
     String day = DateFormat.E().format(
@@ -251,18 +239,21 @@ class SalonDetailsProvider with ChangeNotifier {
         break;
     }
 
-    _artistAvailability.clear();
+    _artistAvailabilityForCalculation.clear();
+    _artistAvailabilityToDisplay.clear();
 
     for (int i = startTime; i <= endTime; i += 1800) {
-      _artistAvailability.add(i);
+      _artistAvailabilityToDisplay.add(i);
+      _artistAvailabilityForCalculation.add(i);
     }
 
     _initialAvailability.clear();
-    _initialAvailability.addAll(_artistAvailability);
+    _initialAvailability.addAll(_artistAvailabilityForCalculation);
 
     notifyListeners();
   }
 
+  /// Get the current bookings of a given artist
   Future<void> getArtistBooking(BuildContext context) async {
     Loader.showLoader(context);
     try {
@@ -277,9 +268,23 @@ class SalonDetailsProvider with ChangeNotifier {
 
       _bookingList.forEach((booking) {
         for (int i = booking.startTime ?? 0;
-            i <= (booking.endTime ?? 0);
+            i < (booking.endTime ?? 0);
             i += 1800) {
-          _artistAvailability.removeWhere((availability) => availability == i);
+          _artistAvailabilityForCalculation
+              .removeWhere((availability) => availability == i);
+          _artistAvailabilityToDisplay
+              .removeWhere((availability) => availability == i);
+        }
+      });
+
+      _initialAvailability.forEach((element) {
+        if (_artistAvailabilityToDisplay.contains(element)) {
+          bool accessibleSlot =
+              _artistAvailabilityToDisplay.contains(element + 1800) &&
+                  ((element + 3600) <= _initialAvailability.last);
+          if (!accessibleSlot) {
+            _artistAvailabilityToDisplay.removeWhere((e) => e == element);
+          }
         }
       });
     } catch (e) {
@@ -289,6 +294,12 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// For a given seconds data which signifies total seconds passed in a day till now,
+  /// get the corresponding time stamp of it.
+  /// Note: 12:00 AM is considered as 0 seconds
+  /// Example:
+  /// String timeStamp = convertSecondsToTimeString(7200);
+  /// print(timeStamp); // 02:00 AM
   String convertSecondsToTimeString(int seconds) {
     DateTime now = DateTime.now();
 
@@ -301,12 +312,7 @@ class SalonDetailsProvider with ChangeNotifier {
     return timeString;
   }
 
-  void resetTime() {
-    _currentBooking.startTime = null;
-    _currentBooking.endTime = null;
-    notifyListeners();
-  }
-
+  /// Set the current status of scheduling flow
   void setSchedulingStatus({
     bool onSelectStaff = false,
     bool selectStaffFinished = false,
@@ -361,15 +367,6 @@ class SalonDetailsProvider with ChangeNotifier {
     }
 
     notifyListeners();
-  }
-
-  void initSalonDetailsData(BuildContext context) async {
-    Loader.showLoader(context);
-    setSelectedSalonData(context);
-    await getServiceList(context);
-    await getArtistList(context);
-    await getSalonReviewsList(context);
-    Loader.hideLoader(context);
   }
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
@@ -513,6 +510,42 @@ class SalonDetailsProvider with ChangeNotifier {
   /// Set the index of selected artist in [BarberProvider]
   void setSelectedArtistIndex(BuildContext context, {required int index}) {
     context.read<BarberProvider>().setSelectedArtistIndex(index);
+  }
+
+  /// Reset values of slot related information
+  void resetSlotInfo() {
+    _artistAvailabilityToDisplay = [];
+    _artistAvailabilityForCalculation = [];
+    _initialAvailability = [];
+    _currentBooking.selectedDate = null;
+    _currentBooking.startTime = null;
+    _currentBooking.endTime = null;
+    _currentBooking.bookingCreatedFor = null;
+    notifyListeners();
+  }
+
+  /// Reset values of booking related data
+  void resetCurrentBooking() {
+    _currentBooking = Booking();
+    _selectedMultipleStaff = false;
+    _selectedSingleStaff = false;
+    _isOnSelectStaffType = true;
+    _isOnSelectSlot = false;
+    _isOnPaymentPage = false;
+    _isNextButtonActive = false;
+    _artistAvailabilityToDisplay = [];
+    _artistAvailabilityForCalculation = [];
+    _initialAvailability = [];
+    _totalPrice = 0;
+    _selectedServices = [];
+    notifyListeners();
+  }
+
+  /// Reset value of start and end time of current booking
+  void resetTime() {
+    _currentBooking.startTime = null;
+    _currentBooking.endTime = null;
+    notifyListeners();
   }
 
   /// Clear the value of [_selectedGendersFilter]
