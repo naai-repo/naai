@@ -168,6 +168,5 @@ class DatabaseService {
       batch.set(dbCollection, booking);
     }
     await batch.commit();
-    ;
   }
 }

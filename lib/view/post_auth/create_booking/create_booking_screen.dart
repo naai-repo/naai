@@ -555,7 +555,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                               children: provider.initialAvailability
                                   .map(
                                     (element) => GestureDetector(
-                                      onTap: () => provider.artistAvailability
+                                      onTap: () => provider.artistAvailabilityToDisplay
                                               .contains(element)
                                           ? provider.setBookingData(
                                               context,
@@ -578,18 +578,12 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                             width: 1,
                                             color: Color(0xFFF5F5F5),
                                           ),
-                                          color: provider.artistAvailability
+                                          color: provider.artistAvailabilityToDisplay
                                                   .contains(element)
-                                              ? (element >=
-                                                          (provider
-                                                                  .currentBooking
-                                                                  .startTime ??
-                                                              0) &&
-                                                      element <=
-                                                          (provider
-                                                                  .currentBooking
-                                                                  .endTime ??
-                                                              0))
+                                              ? element ==
+                                                      (provider.currentBooking
+                                                              .startTime ??
+                                                          0)
                                                   ? ColorsConstant.appColor
                                                   : Colors.white
                                               : Colors.grey.shade200,
@@ -600,18 +594,13 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                               element),
                                           style: TextStyle(
                                             fontSize: 9.sp,
-                                            color: provider.artistAvailability
+                                            color: provider.artistAvailabilityToDisplay
                                                     .contains(element)
-                                                ? (element >=
+                                                ? element ==
                                                             (provider
                                                                     .currentBooking
                                                                     .startTime ??
-                                                                0) &&
-                                                        element <=
-                                                            (provider
-                                                                    .currentBooking
-                                                                    .endTime ??
-                                                                0))
+                                                                0)
                                                     ? Colors.white
                                                     : ColorsConstant.textDark
                                                 : Colors.white,
