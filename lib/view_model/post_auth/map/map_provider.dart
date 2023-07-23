@@ -117,6 +117,10 @@ class MapProvider with ChangeNotifier {
           UserLocationModel.fromJson(jsonDecode(response.body));
 
       _data = responseData.features ?? [];
+      _data = [
+        Feature(id: StringConstant.yourCurrentLocation),
+        ..._data,
+      ];
     } catch (e) {
       Logger().d(e);
       ReusableWidgets.showFlutterToast(context, e.toString());

@@ -30,6 +30,7 @@ class StringConstant {
   static const String cantFindAnyLocation = 'Can\'t find anything!';
   static const String exploreSalonsSearchHint = 'explore salons';
   static const String salonData = 'screen-data';
+  static const String yourCurrentLocation = 'Your current location';
 
   // Home screen strings
   static const String home = 'Home';
@@ -116,4 +117,7 @@ class StringConstant {
   static const String grandTotal = 'GRAND TOTAL';
   static const String confirm = 'Confirm';
   static const String billTotal = 'Bill total';
+  static const String bookingConfirmed = 'Booking Confirmed!';
+  static const String bookingConfirmedSubtext = 'Now sit back and relax';
+  static const String timeSlot = 'Time Slot';
 }
