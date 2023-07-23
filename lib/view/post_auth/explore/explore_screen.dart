@@ -44,7 +44,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             ReusableWidgets.appScreenCommonBackground(),
             CustomScrollView(
               physics: BouncingScrollPhysics(),
-              slivers: [
+              slivers: <Widget>[
                 ReusableWidgets.transparentFlexibleSpace(),
                 titleSearchBarWithLocation(context),
                 provider.filteredSalonData.length == 0
@@ -56,17 +56,34 @@ class _ExploreScreenState extends State<ExploreScreen>
                         ),
                       )
                     : SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            return provider.filteredSalonData.length == 0
-                                ? Container(
-                                    width: 100.w,
-                                    height: 100.h,
-                                    color: Colors.white,
-                                  )
-                                : salonList(context, index);
-                          },
-                          childCount: provider.filteredSalonData.length,
+                        delegate: SliverChildListDelegate(
+                          <Widget>[
+                            Container(
+                              color: Colors.white,
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                      ImagePathConstant.scissorsIcon),
+                                  SizedBox(width: 3.w),
+                                  Text(
+                                    'Artist near me',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13.sp,
+                                      color: ColorsConstant.textLight,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ListView.builder(
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => salonCard(index),
+                              itemCount: provider.filteredSalonData.length,
+                            )
+                          ],
                         ),
                       ),
               ],
@@ -211,7 +228,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     );
   }
 
-  Widget salonList(BuildContext context, int index) {
+  Widget salonCard(int index) {
     return Consumer<ExploreProvider>(
       builder: (context, provider, child) {
         return Container(
