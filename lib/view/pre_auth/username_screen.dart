@@ -55,7 +55,7 @@ class UsernameScreen extends StatelessWidget {
                   StringConstant.addNameSubtext,
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: const Color(0xFF868686),
+                    color: ColorsConstant.textLight,
                   ),
                 ),
                 SizedBox(height: 3.h),
@@ -69,7 +69,7 @@ class UsernameScreen extends StatelessWidget {
                         StringConstant.chooseYourGender,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: const Color(0xFF868686),
+                          color: ColorsConstant.textLight,
                         ),
                       ),
                       SizedBox(height: 2.h),

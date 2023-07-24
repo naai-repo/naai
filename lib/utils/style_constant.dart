@@ -11,7 +11,7 @@ class StyleConstant {
   static TextStyle headingTextStyle = TextStyle(
     color: ColorsConstant.textDark,
     fontWeight: FontWeight.w600,
-    fontSize: 15.sp,
+    fontSize: 16.sp,
   );
 
   static TextStyle greySemiBoldTextStyle = TextStyle(
