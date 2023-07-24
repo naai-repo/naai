@@ -4,10 +4,12 @@ import 'package:marquee/marquee.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view/widgets/stacked_image_text.dart';
@@ -64,180 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 3.w),
                               child: Column(
                                 children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      SvgPicture.asset(
-                                        ImagePathConstant.inAppLogo,
-                                        height: 5.h,
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 5.h,
-                                            width: 30.w,
-                                            child: TextFormField(
-                                              cursorColor:
-                                                  ColorsConstant.appColor,
-                                              style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              onChanged: (searchText) =>
-                                                  print(searchText),
-                                              decoration: InputDecoration(
-                                                filled: true,
-                                                fillColor: ColorsConstant
-                                                    .graphicFillDark,
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 3.5.w),
-                                                prefixIcon: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 2.w),
-                                                  child: SvgPicture.asset(
-                                                    ImagePathConstant
-                                                        .searchIcon,
-                                                    height: 2.h,
-                                                  ),
-                                                ),
-                                                prefixIconConstraints:
-                                                    BoxConstraints(
-                                                        minWidth: 9.w),
-                                                hintText: StringConstant.search,
-                                                hintStyle: TextStyle(
-                                                  color:
-                                                      ColorsConstant.textLight,
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.h),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 2.w),
-                                          Container(
-                                            padding: EdgeInsets.all(1.h),
-                                            decoration: BoxDecoration(
-                                              color: ColorsConstant
-                                                  .graphicFillDark,
-                                              borderRadius:
-                                                  BorderRadius.circular(4.h),
-                                            ),
-                                            child: SvgPicture.asset(
-                                                ImagePathConstant
-                                                    .appointmentIcon),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
-                                      context,
-                                      NamedRoutes.setHomeLocationRoute,
-                                    ),
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: 4.h, bottom: 2.h),
-                                      padding: EdgeInsets.all(0.5.h),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(5.h),
-                                        color: ColorsConstant.graphicFillDark,
-                                      ),
-                                      child: LayoutBuilder(
-                                          builder: (context, constraints) {
-                                        bool _shouldScroll = (TextPainter(
-                                              text: TextSpan(
-                                                  text:
-                                                      Provider.of<HomeProvider>(
-                                                                  context,
-                                                                  listen: true)
-                                                              .userData
-                                                              .homeLocation
-                                                              ?.addressString ??
-                                                          "",
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                  )),
-                                              maxLines: 1,
-                                              textScaleFactor:
-                                                  MediaQuery.of(context)
-                                                      .textScaleFactor,
-                                              textDirection: TextDirection.ltr,
-                                            )..layout())
-                                                .size
-                                                .width >
-                                            constraints.maxWidth * 7 / 10;
-
-                                        return Row(
-                                          children: <Widget>[
-                                            Container(
-                                              padding: EdgeInsets.all(1.5.h),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                              child: SvgPicture.asset(
-                                                  ImagePathConstant
-                                                      .homeLocationIcon),
-                                            ),
-                                            Container(
-                                              margin:
-                                                  EdgeInsets.only(left: 2.w),
-                                              width: 73.w,
-                                              height: 4.h,
-                                              alignment: Alignment.centerLeft,
-                                              child: _shouldScroll
-                                                  ? Marquee(
-                                                      text:
-                                                          "${context.read<HomeProvider>().getHomeAddressText()}",
-                                                      velocity: 40.0,
-                                                      pauseAfterRound:
-                                                          const Duration(
-                                                              seconds: 1),
-                                                      blankSpace: 30.0,
-                                                      style: TextStyle(
-                                                        color: ColorsConstant
-                                                            .textLight,
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    )
-                                                  : Text(
-                                                      "${context.read<HomeProvider>().getHomeAddressText()}",
-                                                      style: TextStyle(
-                                                        color: ColorsConstant
-                                                            .textLight,
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                            ),
-                                            Spacer(),
-                                            SvgPicture.asset(
-                                              ImagePathConstant.downArrow,
-                                              color: ColorsConstant.textDark,
-                                              width: 2.5.w,
-                                            ),
-                                            SizedBox(width: 1.w),
-                                          ],
-                                        );
-                                      }),
-                                    ),
-                                  ),
+                                  logoAndNotifications(),
+                                  searchLocationBar(),
                                   dummyDeal(),
                                   Padding(
                                     padding:
@@ -265,6 +95,40 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             serviceCategories(),
+                            Visibility(
+                              visible: provider.lastOrNextBooking != null &&
+                                  DateTime.parse(provider.lastOrNextBooking
+                                              ?.bookingCreatedFor ??
+                                          '')
+                                      .isBefore(DateTime.now()),
+                              replacement: Container(
+                                width: 80.w,
+                                height: 30.h,
+                                color: Colors.red,
+                              ),
+                              child: CurvedBorderedCard(
+                                fillColor: const Color(0xFFFCF3F3),
+                                borderColor: const Color(0xFFF3D3DB),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        SvgPicture.asset(
+                                            ImagePathConstant.scissorIcon,
+                                            height: 4.h,
+                                            ),
+                                        SizedBox(width: 1.w),
+                                        Text(
+                                          'Previous Booking',
+                                          style: StyleConstant
+                                              .userProfileOptionsStyle,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                             salonNearMe(),
                             SizedBox(height: 5.h),
                             ourStylist(),
@@ -280,6 +144,151 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     });
+  }
+
+  Widget logoAndNotifications() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        SvgPicture.asset(
+          ImagePathConstant.inAppLogo,
+          height: 5.h,
+        ),
+        Row(
+          children: <Widget>[
+            SizedBox(
+              height: 5.h,
+              width: 30.w,
+              child: TextFormField(
+                cursorColor: ColorsConstant.appColor,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                textInputAction: TextInputAction.done,
+                onChanged: (searchText) => print(searchText),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: ColorsConstant.graphicFillDark,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.only(left: 2.w),
+                    child: SvgPicture.asset(
+                      ImagePathConstant.searchIcon,
+                      height: 2.h,
+                    ),
+                  ),
+                  prefixIconConstraints: BoxConstraints(minWidth: 9.w),
+                  hintText: StringConstant.search,
+                  hintStyle: TextStyle(
+                    color: ColorsConstant.textLight,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.h),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 2.w),
+            Container(
+              padding: EdgeInsets.all(1.h),
+              decoration: BoxDecoration(
+                color: ColorsConstant.graphicFillDark,
+                borderRadius: BorderRadius.circular(4.h),
+              ),
+              child: SvgPicture.asset(ImagePathConstant.appointmentIcon),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget searchLocationBar() {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(
+        context,
+        NamedRoutes.setHomeLocationRoute,
+      ),
+      child: Container(
+        margin: EdgeInsets.only(top: 4.h, bottom: 2.h),
+        padding: EdgeInsets.all(0.5.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.h),
+          color: ColorsConstant.graphicFillDark,
+        ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          bool _shouldScroll = (TextPainter(
+                text: TextSpan(
+                    text: Provider.of<HomeProvider>(context, listen: true)
+                            .userData
+                            .homeLocation
+                            ?.addressString ??
+                        "",
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w500,
+                    )),
+                maxLines: 1,
+                textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                textDirection: TextDirection.ltr,
+              )..layout())
+                  .size
+                  .width >
+              constraints.maxWidth * 7 / 10;
+
+          return Row(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(1.5.h),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: SvgPicture.asset(ImagePathConstant.homeLocationIcon),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 2.w),
+                width: 73.w,
+                height: 4.h,
+                alignment: Alignment.centerLeft,
+                child: _shouldScroll
+                    ? Marquee(
+                        text:
+                            "${context.read<HomeProvider>().getHomeAddressText()}",
+                        velocity: 40.0,
+                        pauseAfterRound: const Duration(seconds: 1),
+                        blankSpace: 30.0,
+                        style: TextStyle(
+                          color: ColorsConstant.textLight,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : Text(
+                        "${context.read<HomeProvider>().getHomeAddressText()}",
+                        style: TextStyle(
+                          color: ColorsConstant.textLight,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+              ),
+              Spacer(),
+              SvgPicture.asset(
+                ImagePathConstant.downArrow,
+                color: ColorsConstant.textDark,
+                width: 2.5.w,
+              ),
+              SizedBox(width: 1.w),
+            ],
+          );
+        }),
+      ),
+    );
   }
 
   Widget ourStylist() {
@@ -592,9 +601,6 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.symmetric(
         vertical: 1.5.h,
         horizontal: 3.w,
-      ),
-      decoration: BoxDecoration(
-        color: ColorsConstant.neutral,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

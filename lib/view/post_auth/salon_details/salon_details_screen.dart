@@ -468,7 +468,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               ),
               onTapIconTwo: () => print('Two'),
               onTapIconThree: () => print('Three'),
-              onTapIconFour: () => print('Four'),
+              onTapIconFour: () =>
+                  launchUrl(Uri.parse('https://www.instagram.com/naaiindia')),
               backgroundColor: ColorsConstant.lightAppColor,
             ),
             SizedBox(height: 2.h),

@@ -7,6 +7,7 @@ class CurvedBorderedCard extends StatelessWidget {
   final bool removeBottomPadding;
   final bool cardSelected;
   final Color? fillColor;
+  final Color? borderColor;
   final double? borderRadius;
 
   const CurvedBorderedCard({
@@ -16,6 +17,7 @@ class CurvedBorderedCard extends StatelessWidget {
     this.cardSelected = false,
     this.onTap,
     this.fillColor,
+    this.borderColor,
     this.borderRadius,
   });
 
@@ -39,7 +41,7 @@ class CurvedBorderedCard extends StatelessWidget {
           ],
           border: Border.all(
             width: 1,
-            color: Color(0xFFE7E7E7),
+            color: borderColor ?? Color(0xFFE7E7E7),
           ),
           color: fillColor ?? (cardSelected ? Color(0xFFEBEBEB) : Colors.white),
         ),

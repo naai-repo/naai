@@ -315,7 +315,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                       ),
                                       style: TextStyle(
                                         fontSize: 12.sp,
-                                        color: Color(0xFF373737),
+                                        color: ColorsConstant.textDark,
                                       ),
                                     ),
                                   ],

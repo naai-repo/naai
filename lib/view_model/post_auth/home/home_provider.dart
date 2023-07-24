@@ -6,6 +6,7 @@ import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/artist.dart';
+import 'package:naai/models/booking.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/user.dart';
 import 'package:naai/models/user_location.dart';
@@ -43,6 +44,8 @@ class HomeProvider with ChangeNotifier {
 
   UserModel _userData = UserModel();
 
+  Booking? _lastOrNextBooking;
+
   //============= GETTERS =============//
   List<SalonData> get salonData => _salonData;
   List<Artist> get artistList => _artistList;
@@ -52,6 +55,8 @@ class HomeProvider with ChangeNotifier {
   TextEditingController get mapSearchController => _mapSearchController;
 
   UserModel get userData => _userData;
+
+  Booking? get lastOrNextBooking => _lastOrNextBooking;
 
   /// Check if there is a [uid] stored in [SharedPreferences] or not.
   /// If no [uid] is found, then get the userId of the currently logged in
@@ -84,6 +89,7 @@ class HomeProvider with ChangeNotifier {
       (error, stackTrace) =>
           ReusableWidgets.showFlutterToast(context, '$error'),
     );
+    await getUserBookings(context);
 
     _salonData = [...context.read<ExploreProvider>().salonData];
     Loader.hideLoader(context);
@@ -113,6 +119,27 @@ class HomeProvider with ChangeNotifier {
     try {
       _artistList = await DatabaseService().getAllArtists();
       _artistList.sort((a, b) => ((a.rating ?? 0) - (b.rating ?? 0)).toInt());
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  /// Fetch the booking details of user from [FirebaseFirestore]
+  Future<void> getUserBookings(BuildContext context) async {
+    try {
+      List<Booking> response =
+          await DatabaseService().getUserBookings(userId: userData.id ?? '');
+
+      for (int i = 0; i < response.length; i++) {
+        if (DateTime.parse(response[i].bookingCreatedFor ?? '')
+            .isAfter(DateTime.now())) {
+          _lastOrNextBooking = response[i];
+          break;
+        } else if (i == response.length - 1) {
+          _lastOrNextBooking = response[i];
+        }
+      }
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }

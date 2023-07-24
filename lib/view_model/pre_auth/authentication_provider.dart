@@ -132,7 +132,6 @@ class AuthenticationProvider with ChangeNotifier {
       },
     );
     final response = jsonDecode(r.body);
-    print(response);
     return response["genders"][0]["formattedValue"];
   }
 
@@ -145,7 +144,6 @@ class AuthenticationProvider with ChangeNotifier {
           AppleIDAuthorizationScopes.fullName,
         ],
       ).onError((error, stackTrace) {
-        print(error);
         throw Exception('$error');
       });
 
@@ -168,7 +166,6 @@ class AuthenticationProvider with ChangeNotifier {
         verificationFailed: (FirebaseException e) {
           _isOtpLoaderActive = false;
           notifyListeners();
-          print("ERROR \t ${e.message}");
           if (e.message!
               .contains('format of the phone number provided is incorrect')) {
             ReusableWidgets.showFlutterToast(context, 'Invalid phone number!');
