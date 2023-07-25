@@ -464,7 +464,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 1.h),
                   child: Tab(
-                    child: Text(StringConstant.services),
+                    child: Text(StringConstant.services.toUpperCase()),
                   ),
                 ),
                 Padding(

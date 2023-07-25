@@ -116,5 +116,9 @@ class ImagePathConstant {
   static final String bookingConfirmationImage = UtilityFunctions.getImagePath(
       imageTitle: 'booking_confirmation_image.png');
   static final String scissorIcon =
-      UtilityFunctions.getImagePath(imageTitle: 'scissor.svg');
+      UtilityFunctions.getImagePath(imageTitle: 'scissor_icon.svg');
+  static final String salonChairIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'salon_chair_icon.svg');
+  static final String artistIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'artist_icon.svg');
 }

@@ -28,7 +28,7 @@ class SalonDetailsProvider with ChangeNotifier {
   List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
   List<Artist> _artistList = [];
-  List<String> _selectedServices = [];
+  // List<String> _currentBooking.serviceIds = [];
 
   /// Used to display artist's availability
   List<int> _artistAvailabilityToDisplay = [];
@@ -64,7 +64,7 @@ class SalonDetailsProvider with ChangeNotifier {
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
   List<Artist> get artistList => _artistList;
   List<Review> get salonReviewList => _salonReviewList;
-  List<String> get selectedServices => _selectedServices;
+  // List<String> get selectedServices => _currentBooking.serviceIds;
 
   List<int> get artistAvailabilityToDisplay => _artistAvailabilityToDisplay;
   List<int> get artistAvailabilityForCalculation =>
@@ -177,7 +177,7 @@ class SalonDetailsProvider with ChangeNotifier {
           _artistAvailabilityForCalculation.indexOf(startTime ?? 0);
       _currentBooking.startTime = startTime;
       _currentBooking.endTime = _artistAvailabilityForCalculation[
-          indexOfStartTime + _selectedServices.length * 2];
+          indexOfStartTime + (_currentBooking.serviceIds?.length ?? 0) * 2];
     }
     updateIsNextButtonActive();
     notifyListeners();
@@ -353,20 +353,23 @@ class SalonDetailsProvider with ChangeNotifier {
     String id, {
     bool removeService = false,
   }) {
+    if (_currentBooking.serviceIds == null) {
+      _currentBooking.serviceIds = [];
+    }
     var service = _serviceList.firstWhere((element) => element.id == id);
     if (removeService) {
-      _selectedServices.removeWhere((element) => element == id);
+      _currentBooking.serviceIds?.removeWhere((element) => element == id);
       _totalPrice -= service.price ?? 0;
     } else {
-      if (_selectedServices.contains(id)) {
-        _selectedServices.remove(id);
+      if (_currentBooking.serviceIds?.contains(id) == true) {
+        _currentBooking.serviceIds?.remove(id);
         _totalPrice -= service.price ?? 0;
       } else {
-        _selectedServices.add(id);
+        _currentBooking.serviceIds?.add(id);
         _totalPrice += service.price ?? 0;
       }
     }
-
+    print(_currentBooking.serviceIds);
     notifyListeners();
   }
 
@@ -402,15 +405,8 @@ class SalonDetailsProvider with ChangeNotifier {
     _currentBooking.bookingCreatedFor = DateFormat('dd-MM-yyyy')
         .parse(_currentBooking.selectedDate ?? '')
         .toString();
-    List<Booking> _bookingArray = [];
 
-    for (int i = 0; i < _selectedServices.length; i++) {
-      _currentBooking.serviceId = _selectedServices[i];
-      _bookingArray.add(_currentBooking);
-    }
-
-    List<Map<String, dynamic>> _finalData =
-        _bookingArray.map((e) => e.toJson()).toList();
+    Map<String, dynamic> _finalData = _currentBooking.toJson();
 
     try {
       await DatabaseService().createBooking(bookingData: _finalData);
@@ -431,7 +427,7 @@ class SalonDetailsProvider with ChangeNotifier {
   Future<void> getArtistList(BuildContext context) async {
     try {
       _artistList =
-          await DatabaseService().getArtistList(_selectedSalonData.id);
+          await DatabaseService().getArtistListOfSalon(_selectedSalonData.id);
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -541,7 +537,7 @@ class SalonDetailsProvider with ChangeNotifier {
     _artistAvailabilityForCalculation = [];
     _initialAvailability = [];
     _totalPrice = 0;
-    _selectedServices = [];
+    _currentBooking.serviceIds = [];
     notifyListeners();
   }
 

@@ -25,14 +25,16 @@ import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
 
 class HomeProvider with ChangeNotifier {
   bool _changedLocation = false;
 
   final _mapLocation = location.Location();
 
-  List<SalonData> _salonData = [];
+  List<SalonData> _salonList = [];
   List<Artist> _artistList = [];
+  List<String> _bookedServicesNames = [];
 
   late Symbol _symbol;
 
@@ -47,8 +49,9 @@ class HomeProvider with ChangeNotifier {
   Booking? _lastOrNextBooking;
 
   //============= GETTERS =============//
-  List<SalonData> get salonData => _salonData;
+  List<SalonData> get salonList => _salonList;
   List<Artist> get artistList => _artistList;
+  List<String> get bookedServicesNames => _bookedServicesNames;
 
   String get addressText => _addressText;
 
@@ -89,16 +92,19 @@ class HomeProvider with ChangeNotifier {
       (error, stackTrace) =>
           ReusableWidgets.showFlutterToast(context, '$error'),
     );
-    await getUserBookings(context);
 
-    _salonData = [...context.read<ExploreProvider>().salonData];
-    Loader.hideLoader(context);
+    _salonList = [...context.read<ExploreProvider>().salonData];
 
     if (_userData.homeLocation?.geoLocation == null) {
+      Loader.hideLoader(context);
       Navigator.pushNamed(
         context,
         NamedRoutes.setHomeLocationRoute,
       );
+    } else {
+      await getUserBookings(context);
+      await getServicesNames(context);
+      Loader.hideLoader(context);
     }
 
     notifyListeners();
@@ -140,6 +146,29 @@ class HomeProvider with ChangeNotifier {
           _lastOrNextBooking = response[i];
         }
       }
+
+      if (_salonList.isNotEmpty) {
+        _lastOrNextBooking?.salonName = _salonList
+            .firstWhere((element) => element.id == _lastOrNextBooking?.salonId)
+            .name;
+      }
+
+      if (_artistList.isNotEmpty) {
+        _lastOrNextBooking?.artistName = _artistList
+            .firstWhere((element) => element.id == _lastOrNextBooking?.artistId)
+            .name;
+      }
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  /// Fetch the service names from [FirebaseFirestore]
+  Future<void> getServicesNames(BuildContext context) async {
+    try {
+      _bookedServicesNames = await DatabaseService()
+          .getServicesNames(serviceIds: _lastOrNextBooking?.serviceIds ?? []);
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -403,6 +432,28 @@ class HomeProvider with ChangeNotifier {
         CameraPosition(target: latLng, zoom: 16),
       ),
     );
+  }
+
+  /// Get date in the format [Month Date]
+  String getFormattedDateOfBooking({
+    bool getFormattedDate = false,
+    bool getAbbreviatedDay = false,
+    bool getTimeScheduled = false,
+    String? dateTimeString,
+  }) {
+    DateTime dateTime =
+        DateTime.parse(dateTimeString ?? DateTime.now().toString());
+    _lastOrNextBooking?.bookingCreatedFor ?? DateTime.now().toString();
+    if (getFormattedDate) {
+      return DateFormat('MMM dd').format(dateTime);
+    } else if (getAbbreviatedDay) {
+      return DateFormat('EEE').format(dateTime);
+    } else {
+      String formattedTime = DateFormat('hh:mm a').format(dateTime);
+      String formattedTimePlusOneHour =
+          DateFormat('hh:mm a').format(dateTime.add(Duration(hours: 1)));
+      return '$formattedTime - $formattedTimePlusOneHour';
+    }
   }
 
   /// Get the address text from the user's home location

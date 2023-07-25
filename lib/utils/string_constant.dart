@@ -2,6 +2,7 @@ class StringConstant {
   // General strings
   static const String imageBaseDirectory = 'assets/images/';
   static const String splashScreenText = 'redefining your salon experience';
+  static const String artist = 'Artist';
 
   // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';
@@ -42,10 +43,16 @@ class StringConstant {
   static const String salonsNearMe = 'Salons near me';
   static const String ourStylist = 'Our stylist';
   static const String confirmLocation = 'Confirm Location';
+  static const String previousBooking = 'Previous Booking';
+  static const String bookAgain = 'Book Again';
+  static const String seeAllBookings = 'See all bookings';
+  static const String viewAllBookings = 'View all bookings';
+  static const String viewAllAppointments = 'View all appointments';
+  static const String appointment = 'Appointment';
 
   // Salon detail screen strings
   static const String availableStaff = 'AVAILABLE STAFF';
-  static const String services = "SERVICES";
+  static const String services = "Services";
   static const String reviews = "Reviews";
   static const String addYourReview = "Add your review";
   static const String summarizeYourReview = "Summarize your review";
@@ -56,7 +63,7 @@ class StringConstant {
   static const String selectCategory = 'SELECT CATEGORY';
   static const String total = 'TOTAL';
   static const String confirmBooking = 'Confirm Booking';
-  static const String salon = 'SALON';
+  static const String salon = 'Salon';
   static const String selectStaff = 'Select Staff';
   static const String selectSlot = 'Select Slot';
   static const String payment = 'Payment';

@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
+import 'package:naai/utils/components/red_button_with_text.dart';
+import 'package:naai/utils/components/text_with_prefix_icon.dart';
+import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/widgets/booked_salon_and_artist_name.dart';
 import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view/widgets/stacked_image_text.dart';
@@ -95,37 +100,274 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             serviceCategories(),
-                            Visibility(
-                              visible: provider.lastOrNextBooking != null &&
-                                  DateTime.parse(provider.lastOrNextBooking
-                                              ?.bookingCreatedFor ??
-                                          '')
-                                      .isBefore(DateTime.now()),
-                              replacement: Container(
-                                width: 80.w,
-                                height: 30.h,
-                                color: Colors.red,
-                              ),
-                              child: CurvedBorderedCard(
-                                fillColor: const Color(0xFFFCF3F3),
-                                borderColor: const Color(0xFFF3D3DB),
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        SvgPicture.asset(
-                                            ImagePathConstant.scissorIcon,
-                                            height: 4.h,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.w),
+                              child: Visibility(
+                                visible: provider.lastOrNextBooking != null &&
+                                    DateTime.parse(provider.lastOrNextBooking
+                                                ?.bookingCreatedFor ??
+                                            '')
+                                        .isBefore(DateTime.now()),
+                                replacement: Container(
+                                  padding: EdgeInsets.all(1.5.h),
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          'assets/images/upcoming_booking_card_bg.png'),
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.white,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                    color: ColorsConstant.appColor,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          TitleWithLine(
+                                            lineHeight: 2.5.h,
+                                            lineWidth: 0.6.w,
+                                            fontSize: 12.sp,
+                                            lineColor: Colors.white,
+                                            textColor: Colors.white,
+                                            text: StringConstant.viewAllAppointments
+                                                .toUpperCase(),
+                                          ),
+                                          Card(
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(1.h),
                                             ),
-                                        SizedBox(width: 1.w),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(1.2.w),
+                                              child: Icon(
+                                                Icons.arrow_forward_rounded,
+                                                size: 2.5.h,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 1.h),
+                                      Card(
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(0.5.h),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(1.5.h),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                provider.lastOrNextBooking
+                                                        ?.salonName ??
+                                                    '',
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color:
+                                                      ColorsConstant.textDark,
+                                                ),
+                                              ),
+                                              SizedBox(height: 1.h),
+                                              Text(
+                                                '${StringConstant.appointment} :',
+                                                style: TextStyle(
+                                                  fontSize: 11.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
+                                                      ColorsConstant.textDark,
+                                                ),
+                                              ),
+                                              SizedBox(height: 1.h),
+                                              Row(
+                                                children: <Widget>[
+                                                  TimeDateCard(
+                                                    fillColor:
+                                                        ColorsConstant.textDark,
+                                                    child: Text(
+                                                      provider
+                                                          .getFormattedDateOfBooking(
+                                                        getFormattedDate: true,
+                                                        dateTimeString: provider
+                                                            .lastOrNextBooking
+                                                            ?.bookingCreatedFor,
+                                                      ),
+                                                      style: StyleConstant
+                                                          .bookingDateTimeTextStyle,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 1.w),
+                                                  TimeDateCard(
+                                                    fillColor:
+                                                        ColorsConstant.textDark,
+                                                    child: Text(
+                                                      provider
+                                                          .getFormattedDateOfBooking(
+                                                        getAbbreviatedDay: true,
+                                                        dateTimeString: provider
+                                                            .lastOrNextBooking
+                                                            ?.bookingCreatedFor,
+                                                      ),
+                                                      style: StyleConstant
+                                                          .bookingDateTimeTextStyle,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 1.w),
+                                                  TimeDateCard(
+                                                    fillColor:
+                                                        ColorsConstant.textDark,
+                                                    child: Text(
+                                                      provider
+                                                          .getFormattedDateOfBooking(
+                                                        getTimeScheduled: true,
+                                                        dateTimeString: provider
+                                                            .lastOrNextBooking
+                                                            ?.bookingCreatedFor,
+                                                      ),
+                                                      style: StyleConstant
+                                                          .bookingDateTimeTextStyle,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                child: CurvedBorderedCard(
+                                  fillColor: const Color(0xFFFCF3F3),
+                                  borderColor: const Color(0xFFF3D3DB),
+                                  borderRadius: 2.h,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2.h),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        TextWithPrefixIcon(
+                                          iconPath:
+                                              ImagePathConstant.scissorIcon,
+                                          text: StringConstant.previousBooking,
+                                          textColor: ColorsConstant.textDark,
+                                          fontSize: 11.sp,
+                                          fontWeight: FontWeight.w500,
+                                          iconHeight: 3.h,
+                                        ),
+                                        SizedBox(height: 3.h),
+                                        Row(
+                                          children: <Widget>[
+                                            BookedSalonAndArtistName(
+                                              headerText: StringConstant.salon,
+                                              headerIconPath: ImagePathConstant
+                                                  .salonChairIcon,
+                                              nameText: provider
+                                                      .lastOrNextBooking
+                                                      ?.salonName ??
+                                                  '',
+                                            ),
+                                            Visibility(
+                                              visible: provider
+                                                  .artistList.isNotEmpty,
+                                              child: BookedSalonAndArtistName(
+                                                headerText:
+                                                    StringConstant.artist,
+                                                headerIconPath:
+                                                    ImagePathConstant
+                                                        .artistIcon,
+                                                nameText: provider
+                                                        .lastOrNextBooking
+                                                        ?.artistName ??
+                                                    '',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 2.h),
                                         Text(
-                                          'Previous Booking',
-                                          style: StyleConstant
-                                              .userProfileOptionsStyle,
-                                        )
+                                          StringConstant.services,
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: ColorsConstant.appColor,
+                                          ),
+                                        ),
+                                        ConstrainedBox(
+                                          constraints:
+                                              BoxConstraints(maxHeight: 5.h),
+                                          child: ListView.separated(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) =>
+                                                Text(
+                                              provider
+                                                  .bookedServicesNames[index],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 11.sp,
+                                                color: const Color(0xFF212121),
+                                              ),
+                                            ),
+                                            separatorBuilder:
+                                                (context, index) => Text(', '),
+                                            itemCount: provider
+                                                .bookedServicesNames.length,
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            RedButtonWithText(
+                                              buttonText:
+                                                  StringConstant.bookAgain,
+                                              onTap: () {},
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w,
+                                                vertical: 1.h,
+                                              ),
+                                              border: Border.all(
+                                                  color:
+                                                      ColorsConstant.appColor),
+                                              shouldShowBoxShadow: false,
+                                            ),
+                                            SizedBox(width: 5.w),
+                                            RedButtonWithText(
+                                              buttonText:
+                                                  StringConstant.seeAllBookings,
+                                              onTap: () {},
+                                              fillColor: Colors.white,
+                                              textColor:
+                                                  ColorsConstant.appColor,
+                                              border: Border.all(
+                                                  color:
+                                                      ColorsConstant.appColor),
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w,
+                                                vertical: 1.h,
+                                              ),
+                                              shouldShowBoxShadow: false,
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -303,6 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 15.sp,
               text: StringConstant.ourStylist.toUpperCase(),
             ),
+            SizedBox(height: 2.h),
             MediaQuery.removePadding(
               context: context,
               removeTop: true,
@@ -487,12 +730,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Container(
               height: 17.h,
+              padding: EdgeInsets.only(top: 2.h),
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: provider.salonData.length,
+                itemCount: provider.salonList.length,
                 itemBuilder: (context, index) {
-                  SalonData salon = provider.salonData[index];
+                  SalonData salon = provider.salonList[index];
 
                   return GestureDetector(
                     onTap: () {
@@ -613,7 +857,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Container(
             constraints: BoxConstraints(maxHeight: 15.h),
-            margin: EdgeInsets.only(bottom: 3.h),
+            margin: EdgeInsets.symmetric(vertical: 2.h),
             child: ListView(
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
@@ -231,11 +232,11 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               onTap: (tabIndex) => setState(() {
                 selectedTab = tabIndex;
               }),
-              tabs: [
+              tabs: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 1.h),
                   child: Tab(
-                    child: Text(StringConstant.services),
+                    child: Text(StringConstant.services.toUpperCase()),
                   ),
                 ),
                 Padding(
@@ -485,12 +486,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
       padding: EdgeInsets.only(bottom: 3.h),
       child: Row(
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.5.h, horizontal: 2.w),
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(2.h),
-            ),
+          TimeDateCard(
             child: Text.rich(
               TextSpan(
                 children: [
@@ -523,12 +519,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
             ),
           ),
           SizedBox(width: 2.w),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.5.h, horizontal: 2.w),
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(2.h),
-            ),
+          TimeDateCard(
             child: Text.rich(
               TextSpan(
                 children: [

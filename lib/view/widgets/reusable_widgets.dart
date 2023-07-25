@@ -399,7 +399,7 @@ class ReusableWidgets {
                     ServiceDetail? serviceDetail =
                         provider.filteredServiceList[index];
                     bool isAdded =
-                        provider.selectedServices.contains(serviceDetail.id);
+                        provider.currentBooking.serviceIds?.contains(serviceDetail.id) ?? false;
                     return GestureDetector(
                       onTap: () =>
                           provider.setSelectedService(serviceDetail.id ?? ''),

@@ -30,6 +30,12 @@ class StyleConstant {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle bookingDateTimeTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle userProfileOptionsStyle = TextStyle(
     color: ColorsConstant.textDark,
     fontSize: 11.sp,
