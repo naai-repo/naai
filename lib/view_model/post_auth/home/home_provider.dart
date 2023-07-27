@@ -22,6 +22,7 @@ import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -34,7 +35,6 @@ class HomeProvider with ChangeNotifier {
 
   List<SalonData> _salonList = [];
   List<Artist> _artistList = [];
-  List<String> _bookedServicesNames = [];
 
   late Symbol _symbol;
 
@@ -51,7 +51,6 @@ class HomeProvider with ChangeNotifier {
   //============= GETTERS =============//
   List<SalonData> get salonList => _salonList;
   List<Artist> get artistList => _artistList;
-  List<String> get bookedServicesNames => _bookedServicesNames;
 
   String get addressText => _addressText;
 
@@ -81,7 +80,7 @@ class HomeProvider with ChangeNotifier {
     );
   }
 
-  /// Method to trigger all the API functions
+  /// Method to trigger all the API functions of home screen
   Future<void> initHome(BuildContext context) async {
     Loader.showLoader(context);
     await Future.wait([
@@ -103,7 +102,7 @@ class HomeProvider with ChangeNotifier {
       );
     } else {
       await getUserBookings(context);
-      await getServicesNames(context);
+      await getServicesNamesAndPrice(context);
       Loader.hideLoader(context);
     }
 
@@ -158,17 +157,52 @@ class HomeProvider with ChangeNotifier {
             .firstWhere((element) => element.id == _lastOrNextBooking?.artistId)
             .name;
       }
+
+      _lastOrNextBooking?.createdOnString =
+          getTimeAgoString(_lastOrNextBooking?.bookingCreatedOn);
+
+      _lastOrNextBooking?.isUpcoming = DateTime.now().isBefore(
+          DateTime.parse(_lastOrNextBooking?.bookingCreatedFor ?? ''));
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }
 
+  String getTimeAgoString(String? dateTimeString) {
+    DateTime dateTime =
+        DateTime.parse(dateTimeString ?? DateTime.now().toString());
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    final daysAgo = difference.inDays;
+    final weeksAgo = daysAgo ~/ 7;
+    final monthsAgo =
+        (now.year * 12 + now.month) - (dateTime.year * 12 + dateTime.month);
+
+    if (monthsAgo >= 1) {
+      return '$monthsAgo Month${monthsAgo > 1 ? 's' : ''} Ago';
+    } else if (weeksAgo >= 1) {
+      return '$weeksAgo Week${weeksAgo > 1 ? 's' : ''} Ago';
+    } else if (daysAgo >= 1) {
+      return '$daysAgo Day${daysAgo > 1 ? 's' : ''} Ago';
+    } else {
+      return 'Today';
+    }
+  }
+
   /// Fetch the service names from [FirebaseFirestore]
-  Future<void> getServicesNames(BuildContext context) async {
+  Future<void> getServicesNamesAndPrice(BuildContext context) async {
     try {
-      _bookedServicesNames = await DatabaseService()
-          .getServicesNames(serviceIds: _lastOrNextBooking?.serviceIds ?? []);
+      var response = await DatabaseService().getAllServices();
+      _lastOrNextBooking?.bookedServiceNames = [];
+      response.forEach((element) {
+        if (_lastOrNextBooking?.serviceIds?.contains(element.id) == true) {
+          _lastOrNextBooking?.bookedServiceNames
+              ?.add(element.serviceTitle ?? '');
+          _lastOrNextBooking?.totalPrice += element.price ?? 0;
+        }
+      });
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -434,11 +468,46 @@ class HomeProvider with ChangeNotifier {
     );
   }
 
-  /// Get date in the format [Month Date]
+  void populateBookingData(BuildContext context) async {
+    await context.read<SalonDetailsProvider>().getSalonData(
+          context,
+          salonId: _lastOrNextBooking!.salonId!,
+        );
+
+    await context.read<SalonDetailsProvider>().getArtistList(context);
+    await context.read<SalonDetailsProvider>().getServiceList(
+          context,
+          salonIdFromOutside: _lastOrNextBooking!.salonId,
+        );
+
+    context.read<SalonDetailsProvider>().setServiceIds(
+          ids: _lastOrNextBooking!.serviceIds!,
+          totalPrice: _lastOrNextBooking!.totalPrice,
+        );
+
+    context
+        .read<SalonDetailsProvider>()
+        .setStaffSelectionMethod(selectedSingleStaff: true);
+
+    context.read<SalonDetailsProvider>().setBookingData(
+          context,
+          setArtistId: true,
+          artistId: _lastOrNextBooking?.artistId,
+        );
+    Navigator.pushNamed(
+      context,
+      NamedRoutes.createBookingRoute,
+    );
+  }
+
+  /// Get date in the format [Month Date], abbreviated day of week or time schedule
+  /// of the booking.
   String getFormattedDateOfBooking({
     bool getFormattedDate = false,
     bool getAbbreviatedDay = false,
     bool getTimeScheduled = false,
+    bool getFullDate = false,
+    bool secondaryDateFormat = false,
     String? dateTimeString,
   }) {
     DateTime dateTime =
@@ -448,11 +517,15 @@ class HomeProvider with ChangeNotifier {
       return DateFormat('MMM dd').format(dateTime);
     } else if (getAbbreviatedDay) {
       return DateFormat('EEE').format(dateTime);
-    } else {
+    } else if (getTimeScheduled) {
       String formattedTime = DateFormat('hh:mm a').format(dateTime);
       String formattedTimePlusOneHour =
           DateFormat('hh:mm a').format(dateTime.add(Duration(hours: 1)));
       return '$formattedTime - $formattedTimePlusOneHour';
+    } else if (getFullDate) {
+      return DateFormat('dd-MM-yyyy').format(dateTime);
+    } else {
+      return DateFormat('dd MMMM yyyy').format(dateTime);
     }
   }
 

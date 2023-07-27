@@ -113,12 +113,12 @@ class StringConstant {
   static const String morning = 'MORNING';
   static const String afternoon = 'AFTERNOON';
   static const String evening = 'EVENING';
-  static const String cancel = 'CANCEL';
+  static const String cancel = 'Cancel';
   static const String ok = 'OK';
   static const String serviceDate = 'SERVICE DATE';
   static const String serviceTime = 'SERVICE TIME';
   static const String bookingFor = 'BOOKING FOR';
-  static const String subtotal = 'SUBTOTAL';
+  static const String subtotal = 'Subtotal';
   static const String tax = 'TAX';
   static const String gst = 'GST';
   static const String grandTotal = 'GRAND TOTAL';
@@ -127,4 +127,20 @@ class StringConstant {
   static const String bookingConfirmed = 'Booking Confirmed!';
   static const String bookingConfirmedSubtext = 'Now sit back and relax';
   static const String timeSlot = 'Time Slot';
+
+  // Appointment details screen strings
+  static const String appointmentDetails = 'Appointment details';
+  static const String upcoming = 'Upcoming';
+  static const String completed = 'Completed';
+  static const String booked = 'Booked';
+  static const String customerName = 'Customer Name';
+  static const String mobileNumber = 'Mobile Number';
+  static const String email = 'Email';
+  static const String callCustomer = 'Call Customer';
+  static const String addToFavourites = 'Add to Favourites';
+  static const String invoice = 'Invoice';
+  static const String askForReview = 'Ask for review';
+  static const String startAppointment = 'Start Appointment';
+  static const String barber = 'Barber';
+  static const String appointmentDateAndTime = 'Appointment Date & Time';
 }

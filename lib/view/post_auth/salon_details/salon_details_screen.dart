@@ -6,6 +6,7 @@ import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -115,11 +116,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               ),
                               Text(
                                 'Rs. ${provider.totalPrice}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15.sp,
-                                  color: ColorsConstant.textDark,
-                                ),
+                                style: StyleConstant.textDark15sp600Style
                               ),
                             ],
                           ),

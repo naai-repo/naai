@@ -167,12 +167,14 @@ class SalonDetailsProvider with ChangeNotifier {
   }) {
     if (setArtistId) {
       _currentBooking.artistId = artistId;
-    } else if (setSelectedDate) {
+    }
+    if (setSelectedDate) {
       String formattedDate =
           DateFormat('dd-MM-yyyy').format(selectedDate ?? DateTime.now());
       _currentBooking.selectedDate = formattedDate;
       setArtistStartEndTime();
-    } else if (setSelectedTime) {
+    }
+    if (setSelectedTime) {
       int indexOfStartTime =
           _artistAvailabilityForCalculation.indexOf(startTime ?? 0);
       _currentBooking.startTime = startTime;
@@ -261,11 +263,11 @@ class SalonDetailsProvider with ChangeNotifier {
       String bookingDate = DateFormat('dd-MM-yyyy')
           .parse(_currentBooking.selectedDate ?? '')
           .toString();
-      Loader.hideLoader(context);
       List<Booking> _bookingList = await DatabaseService().getArtistBookingList(
         _currentBooking.artistId,
         bookingDate,
       );
+      Loader.hideLoader(context);
 
       _bookingList.forEach((booking) {
         for (int i = booking.startTime ?? 0;
@@ -292,6 +294,22 @@ class SalonDetailsProvider with ChangeNotifier {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');
     }
+    notifyListeners();
+  }
+
+  Future<void> getSalonData(
+    BuildContext context, {
+    required String salonId,
+  }) async {
+    Loader.showLoader(context);
+    try {
+      _selectedSalonData = await DatabaseService().getSalonData(salonId);
+      Loader.hideLoader(context);
+    } catch (e) {
+      Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+
     notifyListeners();
   }
 
@@ -349,6 +367,7 @@ class SalonDetailsProvider with ChangeNotifier {
     _filteredServiceList.addAll(_serviceList);
   }
 
+  /// Add selected service's id into [_currentBooking]
   void setSelectedService(
     String id, {
     bool removeService = false,
@@ -369,15 +388,28 @@ class SalonDetailsProvider with ChangeNotifier {
         _totalPrice += service.price ?? 0;
       }
     }
-    print(_currentBooking.serviceIds);
+
+    notifyListeners();
+  }
+
+  void setServiceIds({
+    required List<String> ids,
+    required double totalPrice,
+  }) {
+    _currentBooking.serviceIds = [];
+    _currentBooking.serviceIds?.addAll(ids);
+    _totalPrice = totalPrice;
     notifyListeners();
   }
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
-  Future<void> getServiceList(BuildContext context) async {
+  Future<void> getServiceList(
+    BuildContext context, {
+    String? salonIdFromOutside,
+  }) async {
     try {
-      _serviceList =
-          await DatabaseService().getServiceList(_selectedSalonData.id);
+      _serviceList = await DatabaseService()
+          .getServiceList(salonIdFromOutside ?? _selectedSalonData.id);
       _filteredServiceList.clear();
       _filteredServiceList.addAll(_serviceList);
     } catch (e) {

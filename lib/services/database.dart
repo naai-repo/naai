@@ -63,6 +63,16 @@ class DatabaseService {
         .toList();
   }
 
+  Future<SalonData> getSalonData(String salonId) async {
+    QuerySnapshot querySnapshot =
+        await salonCollection.where('id', isEqualTo: salonId).get().onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+    return SalonData.fromDocumentSnapshot(querySnapshot.docs.first);
+  }
+
   /// Fetch the services list for a given salon from [FirebaseFirestore]
   Future<List<ServiceDetail>> getServiceList(String? salonId) async {
     QuerySnapshot querySnapshot = await servicesCollection
@@ -139,22 +149,13 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the names of all services whose service id is being provided from [FirebaseFirestore]
-  Future<List<String>> getServicesNames(
-      {required List<String> serviceIds}) async {
+  /// Fetch all the services from [FirebaseFirestore]
+  Future<List<ServiceDetail>> getAllServices() async {
     QuerySnapshot querySnapshot = await servicesCollection.get();
 
-    final response = querySnapshot.docs
+    return querySnapshot.docs
         .map((docData) => ServiceDetail.fromDocumentSnapshot(docData))
         .toList();
-    List<String> servicesNames = [];
-    response.forEach((element) {
-      if (serviceIds.contains(element.id)) {
-        servicesNames.add(element.serviceTitle ?? '');
-      }
-    });
-
-    return servicesNames;
   }
 
   /// Fetch the artist's booking list from [FirebaseFirestore]

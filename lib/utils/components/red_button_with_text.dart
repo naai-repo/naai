@@ -12,6 +12,7 @@ class RedButtonWithText extends StatelessWidget {
   final EdgeInsets? padding;
   final Border? border;
   final bool shouldShowBoxShadow;
+  final Widget? icon;
 
   const RedButtonWithText({
     super.key,
@@ -24,6 +25,7 @@ class RedButtonWithText extends StatelessWidget {
     this.padding,
     this.border,
     this.shouldShowBoxShadow = true,
+    this.icon,
   });
 
   @override
@@ -49,6 +51,11 @@ class RedButtonWithText extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            icon ?? SizedBox(),
+            Visibility(
+              visible: icon != null,
+              child: SizedBox(width: 2.w),
+            ),
             Text(
               buttonText,
               style: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/post_auth/barber_profile/barber_profile_screen.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
+import 'package:naai/view/post_auth/create_booking/appointment_details.dart';
 import 'package:naai/view/post_auth/create_booking/booking_confirmed_screen.dart';
 import 'package:naai/view/post_auth/create_booking/create_booking_screen.dart';
 import 'package:naai/view/post_auth/create_booking/payment_screen.dart';
@@ -17,7 +18,6 @@ import 'package:naai/utils/routing/named_routes.dart';
 
 /// Class that contains string constants for all routes used in the app
 class RoutingFunctions {
-
   /// Handles routes that can't be handled using simple named routes map.
   static Route<dynamic>? generateRoutes(RouteSettings settings) {
     print("generateRoutes($settings)");
@@ -67,6 +67,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.bookingConfirmedRoute:
         target = BookingConfirmedSreen();
+        break;
+      case NamedRoutes.appointmentDetailsRoute:
+        target = AppointmentDetails();
         break;
     }
 

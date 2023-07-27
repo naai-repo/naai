@@ -16,7 +16,10 @@ class Booking {
   /// This is being used to display the booking related data on the app only.
   String? salonName;
   String? artistName;
-  String? serviceTitle;
+  List<String>? bookedServiceNames;
+  double totalPrice;
+  bool isUpcoming;
+  String? createdOnString;
 
   Booking({
     this.id,
@@ -30,7 +33,10 @@ class Booking {
     this.bookingCreatedOn,
     this.salonName,
     this.artistName,
-    this.serviceTitle,
+    this.bookedServiceNames,
+    this.totalPrice = 0,
+    this.isUpcoming = false,
+    this.createdOnString,
   });
 
   factory Booking.fromDocumentSnapshot(DocumentSnapshot docData) {

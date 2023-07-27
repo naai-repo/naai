@@ -177,11 +177,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                               ),
                               Text(
                                 'Rs. ${provider.totalPrice}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15.sp,
-                                  color: ColorsConstant.textDark,
-                                ),
+                                style: StyleConstant.appColorBoldTextStyle
                               ),
                             ],
                           ),
@@ -381,7 +377,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            StringConstant.subtotal,
+                            StringConstant.subtotal.toUpperCase(),
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
@@ -535,13 +531,6 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                // SvgPicture.asset(
-                                //   ImagePathConstant
-                                //       .leftArrowIcon,
-                                //   color:
-                                //       ColorsConstant.textDark,
-                                //   height: 1.2.h,
-                                // ),
                                 Text(
                                   '${DateFormat.E().format(DateFormat('dd-MM-yyyy').parse(provider.currentBooking.selectedDate ?? ''))}, ${DateFormat.yMMMMd().format(DateFormat('dd-MM-yyyy').parse(provider.currentBooking.selectedDate ?? ''))}',
                                   style: TextStyle(
@@ -549,12 +538,6 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     color: ColorsConstant.textDark,
                                   ),
                                 ),
-                                // SvgPicture.asset(
-                                //   ImagePathConstant
-                                //       .rightArrowIcon,
-                                //   color:
-                                //       ColorsConstant.textDark,
-                                // ),
                               ],
                             ),
                             SizedBox(height: 1.h),
@@ -629,7 +612,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     showArtistSlotDialogue = false;
                                   }),
                                   child: Text(
-                                    StringConstant.cancel,
+                                    StringConstant.cancel.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.w500,

@@ -23,15 +23,17 @@ class ReusableWidgets {
     required String buttonText,
     required VoidCallback onTap,
     required bool isActive,
+    Color? fillColor,
   }) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: isActive ? onTap : null,
       child: Container(
-        alignment: Alignment.center,
+        width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 1.7.h),
         decoration: BoxDecoration(
-          color: isActive ? ColorsConstant.appColor : Colors.grey.shade300,
+          color: fillColor ??
+              (isActive ? ColorsConstant.appColor : Colors.grey.shade300),
           borderRadius: BorderRadius.circular(10),
           boxShadow: isActive
               ? <BoxShadow>[
@@ -46,6 +48,7 @@ class ReusableWidgets {
         ),
         child: Text(
           buttonText,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
             fontSize: 11.sp,
@@ -398,8 +401,9 @@ class ReusableWidgets {
                   itemBuilder: (context, index) {
                     ServiceDetail? serviceDetail =
                         provider.filteredServiceList[index];
-                    bool isAdded =
-                        provider.currentBooking.serviceIds?.contains(serviceDetail.id) ?? false;
+                    bool isAdded = provider.currentBooking.serviceIds
+                            ?.contains(serviceDetail.id) ??
+                        false;
                     return GestureDetector(
                       onTap: () =>
                           provider.setSelectedService(serviceDetail.id ?? ''),
