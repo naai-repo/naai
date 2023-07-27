@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naai/models/artist.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
 import 'package:naai/services/database.dart';
@@ -14,6 +15,7 @@ class ExploreProvider with ChangeNotifier {
   List<SalonData> _salonData = [];
   List<SalonData> _filteredSalonData = [];
   List<ServiceDetail> _currentSalonServices = [];
+  List<Artist> _artistList = [];
 
   bool _applyServiceFilter = false;
   Services _appliedServiceFilter = Services.HAIR;
@@ -23,6 +25,7 @@ class ExploreProvider with ChangeNotifier {
 
   List<SalonData> get salonData => _salonData;
   List<SalonData> get filteredSalonData => _filteredSalonData;
+  List<Artist> get artistList => _artistList;
 
   /// Method to initialize values of Explore screen viz. [_salonData] and [_userCurrentLatLng]
   void initExploreScreen(BuildContext context) async {
@@ -36,6 +39,13 @@ class ExploreProvider with ChangeNotifier {
     setApplyServiceFilter(value: false);
 
     Loader.hideLoader(context);
+    notifyListeners();
+  }
+
+  /// Get all artist list from home screen
+  void setArtistList(List<Artist> artists) {
+    _artistList = artists;
+    print(_artistList.length);
     notifyListeners();
   }
 

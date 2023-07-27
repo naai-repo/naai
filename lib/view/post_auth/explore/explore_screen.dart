@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
+import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/rating_box.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
@@ -60,17 +62,69 @@ class _ExploreScreenState extends State<ExploreScreen>
                           <Widget>[
                             Container(
                               color: Colors.white,
-                              child: Row(
+                              child: Column(
                                 children: <Widget>[
-                                  SvgPicture.asset(
-                                      ImagePathConstant.scissorIcon),
-                                  SizedBox(width: 3.w),
-                                  Text(
-                                    'Artist near me',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13.sp,
-                                      color: ColorsConstant.textLight,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text.rich(
+                                        TextSpan(
+                                          children: <InlineSpan>[
+                                            WidgetSpan(
+                                              child: SvgPicture.asset(
+                                                  ImagePathConstant
+                                                      .scissorIcon),
+                                            ),
+                                            WidgetSpan(
+                                              child: SizedBox(width: 3.w),
+                                            ),
+                                            TextSpan(
+                                              text: StringConstant.artistNearMe,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13.sp,
+                                                color: ColorsConstant.textLight,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        'more >>',
+                                        style: TextStyle(
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorsConstant.appColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ConstrainedBox(
+                                    constraints:
+                                        BoxConstraints(maxHeight: 10.h),
+                                    child: ListView.builder(
+                                      // shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: provider.artistList.length,
+                                      itemBuilder: (context, index) {
+                                        print(index);
+                                        Artist artist =
+                                            provider.artistList[index];
+                                        return CurvedBorderedCard(
+                                          fillColor: index.isEven
+                                              ? const Color(0xFF212121)
+                                              : Colors.white,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              SvgPicture.asset(
+                                                  ImagePathConstant.saveIcon),
+
+                                              
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],

@@ -119,6 +119,8 @@ class HomeProvider with ChangeNotifier {
     try {
       _artistList = await DatabaseService().getAllArtists();
       _artistList.sort((a, b) => ((a.rating ?? 0) - (b.rating ?? 0)).toInt());
+      print(_artistList.length);
+      context.read<ExploreProvider>().setArtistList(_artistList);
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
