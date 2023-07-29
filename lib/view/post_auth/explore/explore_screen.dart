@@ -102,13 +102,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                                   ),
                                   ConstrainedBox(
                                     constraints:
-                                        BoxConstraints(maxHeight: 10.h),
+                                        BoxConstraints(maxHeight: 25.h),
                                     child: ListView.builder(
-                                      // shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: provider.artistList.length,
                                       itemBuilder: (context, index) {
-                                        print(index);
                                         Artist artist =
                                             provider.artistList[index];
                                         return CurvedBorderedCard(
@@ -118,9 +116,46 @@ class _ExploreScreenState extends State<ExploreScreen>
                                           child: Stack(
                                             children: <Widget>[
                                               SvgPicture.asset(
-                                                  ImagePathConstant.saveIcon),
-
-                                              
+                                                ImagePathConstant.saveIcon,
+                                                color: index.isOdd
+                                                    ? const Color(0xFF212121)
+                                                    : Colors.white,
+                                              ),
+                                              Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Container(
+                                                    padding:
+                                                        EdgeInsets.all(0.5.h),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              9.5.h),
+                                                      boxShadow: <BoxShadow>[
+                                                        BoxShadow(
+                                                          offset: Offset(2, 2),
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          spreadRadius: 0.5,
+                                                          blurRadius: 15,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: CircleAvatar(
+                                                      radius: 4.h,
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        'assets/images/salon_dummy_image.png',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    artist.name ?? '',
+                                                    style: TextStyle(),
+                                                  ),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         );
