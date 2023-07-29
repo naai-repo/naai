@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naai/view/post_auth/barber_profile/barber_profile_screen.dart';
 import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
+import 'package:naai/view/post_auth/create_booking/appointment_details.dart';
 import 'package:naai/view/post_auth/create_booking/booking_confirmed_screen.dart';
 import 'package:naai/view/post_auth/create_booking/create_booking_screen.dart';
 import 'package:naai/view/post_auth/create_booking/payment_screen.dart';
@@ -17,24 +18,6 @@ import 'package:naai/utils/routing/named_routes.dart';
 
 /// Class that contains string constants for all routes used in the app
 class RoutingFunctions {
-  /// Maps route names to [WidgetBuilder]s for corresponding [Widget]s,
-  /// passed as the 'routes' param of [MaterialApp].
-  static final Map<String, WidgetBuilder> routesMap = <String, WidgetBuilder>{
-    NamedRoutes.splashRoute: (context) => SplashScreen(),
-    NamedRoutes.authenticationRoute: (context) => AuthenticationScreen(),
-    NamedRoutes.verifyOtpRoute: (context) => VerifyOtpScreen(),
-    NamedRoutes.addUserNameRoute: (context) => UsernameScreen(),
-    NamedRoutes.bottomNavigationRoute: (context) => BottomNavigationScreen(),
-    NamedRoutes.exploreRoute: (context) => ExploreScreen(),
-    NamedRoutes.homeRoute: (context) => HomeScreen(),
-    NamedRoutes.salonDetailsRoute: (context) => SalonDetailsScreen(),
-    NamedRoutes.setHomeLocationRoute: (context) => SetHomeLocationScreen(),
-    NamedRoutes.mapRoute: (context) => MapScreen(),
-    NamedRoutes.barberProfileRoute: (context) => BarberProfileScreen(),
-    NamedRoutes.createBookingRoute: (context) => CreateBookingScreen(),
-    NamedRoutes.paymentRoute: (context) => PaymentScreen(),
-  };
-
   /// Handles routes that can't be handled using simple named routes map.
   static Route<dynamic>? generateRoutes(RouteSettings settings) {
     print("generateRoutes($settings)");
@@ -84,6 +67,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.bookingConfirmedRoute:
         target = BookingConfirmedSreen();
+        break;
+      case NamedRoutes.appointmentDetailsRoute:
+        target = AppointmentDetails();
         break;
     }
 

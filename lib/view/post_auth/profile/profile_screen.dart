@@ -193,11 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: <Widget>[
                   Text(
                     provider.userData.name ?? '',
-                    style: TextStyle(
-                      color: ColorsConstant.textDark,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.sp,
-                    ),
+                    style: StyleConstant.textDark15sp600Style
                   ),
                   Text(
                     provider.userData.phoneNumber ?? '',

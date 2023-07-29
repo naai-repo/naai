@@ -30,6 +30,41 @@ class StyleConstant {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle textLight11sp400Style = TextStyle(
+    fontSize: 11.sp,
+    color: ColorsConstant.textLight,
+  );
+
+  static TextStyle textDark12sp600Style = TextStyle(
+    fontSize: 12.sp,
+    color: ColorsConstant.textDark,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle textDark11sp600Style = TextStyle(
+    fontSize: 11.sp,
+    color: ColorsConstant.textDark,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle textDark12sp500Style = TextStyle(
+    fontSize: 12.sp,
+    color: ColorsConstant.textDark,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle textDark15sp600Style = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 15.sp,
+    color: ColorsConstant.textDark,
+  );
+
+  static TextStyle bookingDateTimeTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle userProfileOptionsStyle = TextStyle(
     color: ColorsConstant.textDark,
     fontSize: 11.sp,

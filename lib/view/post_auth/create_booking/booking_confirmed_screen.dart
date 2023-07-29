@@ -89,7 +89,7 @@ class BookingConfirmedSreen extends StatelessWidget {
                     padding: EdgeInsets.all(1.h),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(1.h),
-                      boxShadow: [
+                      boxShadow: <BoxShadow>[
                         BoxShadow(
                           blurRadius: 5,
                           spreadRadius: 1,

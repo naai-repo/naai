@@ -65,7 +65,6 @@ class MyApp extends StatelessWidget {
             title: 'Naai',
             theme: ThemeData(fontFamily: 'Poppins'),
             onGenerateRoute: RoutingFunctions.generateRoutes,
-            routes: RoutingFunctions.routesMap,
             initialRoute: NamedRoutes.splashRoute,
           );
         });

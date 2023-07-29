@@ -52,7 +52,7 @@ class DatabaseService {
   }
 
   /// Fetch the salon list from [FirebaseFirestore]
-  Future<List<SalonData>> getSalonData() async {
+  Future<List<SalonData>> getSalonList() async {
     QuerySnapshot querySnapshot = await salonCollection.get().onError(
       (error, stackTrace) {
         throw Exception(error);
@@ -63,7 +63,17 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  Future<SalonData> getSalonData(String salonId) async {
+    QuerySnapshot querySnapshot =
+        await salonCollection.where('id', isEqualTo: salonId).get().onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+    return SalonData.fromDocumentSnapshot(querySnapshot.docs.first);
+  }
+
+  /// Fetch the services list for a given salon from [FirebaseFirestore]
   Future<List<ServiceDetail>> getServiceList(String? salonId) async {
     QuerySnapshot querySnapshot = await servicesCollection
         .where('salonId', isEqualTo: salonId)
@@ -78,7 +88,7 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  /// Fetch the artist's reviews from [FirebaseFirestore]
   Future<List<Review>> getArtistReviewList(String? artistId) async {
     QuerySnapshot querySnapshot = await reviewsCollection
         .where('artistId', isEqualTo: artistId)
@@ -93,8 +103,8 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
-  Future<List<Artist>> getArtistList(String? salonId) async {
+  /// Fetch the artist list of a given salon from [FirebaseFirestore]
+  Future<List<Artist>> getArtistListOfSalon(String? salonId) async {
     QuerySnapshot querySnapshot = await artistCollection
         .where('salonId', isEqualTo: salonId)
         .get()
@@ -122,7 +132,7 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch all artists from [FirebaseFirestore]
+  /// Fetch all bookings made by user from [FirebaseFirestore]
   Future<List<Booking>> getUserBookings({required String userId}) async {
     QuerySnapshot querySnapshot = await bookingCollection
         .where('userId', isEqualTo: userId)
@@ -139,7 +149,16 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  /// Fetch all the services from [FirebaseFirestore]
+  Future<List<ServiceDetail>> getAllServices() async {
+    QuerySnapshot querySnapshot = await servicesCollection.get();
+
+    return querySnapshot.docs
+        .map((docData) => ServiceDetail.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the artist's booking list from [FirebaseFirestore]
   Future<List<Booking>> getArtistBookingList(
     String? artistId,
     String bookingDate,
@@ -159,7 +178,7 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  /// Fetch the salon's reviews list from [FirebaseFirestore]
   Future<List<Review>> getSalonReviewsList(String? salonId) async {
     QuerySnapshot querySnapshot = await reviewsCollection
         .where('salonId', isEqualTo: salonId)
@@ -189,14 +208,11 @@ class DatabaseService {
     );
   }
 
+  /// Create a booking
   Future<void> createBooking(
-      {required List<Map<String, dynamic>> bookingData}) async {
-    final batch = FirebaseFirestore.instance.batch();
-    for (var booking in bookingData) {
-      DocumentReference dbCollection = bookingCollection.doc();
-
-      batch.set(dbCollection, booking);
-    }
-    await batch.commit();
+      {required Map<String, dynamic> bookingData}) async {
+    await bookingCollection.add(bookingData).onError(
+          (error, stackTrace) => throw Exception(error),
+        );
   }
 }
