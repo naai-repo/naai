@@ -9,12 +9,16 @@ import 'package:naai/utils/components/rating_box.dart';
 import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/keys.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
@@ -29,6 +33,39 @@ class CreateBookingScreen extends StatefulWidget {
 class _CreateBookingScreenState extends State<CreateBookingScreen> {
   bool singleStaffListExpanded = false;
   bool showArtistSlotDialogue = false;
+  Razorpay _razorpay = Razorpay();
+
+  @override
+  void initState() {
+    context.read<ProfileProvider>().getUserDataFromUserProvider(context);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    super.initState();
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    context.read<SalonDetailsProvider>().createBooking(
+          context,
+          "success",
+          paymentId: response.paymentId,
+          orderId: response.orderId,
+        );
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    context.read<SalonDetailsProvider>().createBooking(
+          context,
+          "error",
+          errorMessage: response.message,
+        );
+    ReusableWidgets.showFlutterToast(context, '${response.message}');
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    String? walletName = response.walletName;
+    ReusableWidgets.showFlutterToast(context, 'External Wallet: $walletName');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,11 +245,30 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     left: 2.h,
                     child: ReusableWidgets.redFullWidthButton(
                       buttonText: StringConstant.confirm,
-                      onTap: () => provider.createBooking(context),
-                      // onTap: () => Navigator.pushNamed(
-                      //   context,
-                      //   NamedRoutes.paymentRoute,
-                      // ),
+                      onTap: () {
+                        var options = {
+                          'key': Keys.razorpay_api_key,
+                          'amount':
+                              context.read<SalonDetailsProvider>().totalPrice *
+                                  100,
+                          'name': 'NAAI',
+                          'description': context
+                              .read<SalonDetailsProvider>()
+                              .selectedSalonData
+                              .name,
+                          'prefill': {
+                            'contact': context
+                                .read<ProfileProvider>()
+                                .userData
+                                .phoneNumber,
+                            'email': context
+                                .read<ProfileProvider>()
+                                .userData
+                                .gmailId,
+                          }
+                        };
+                        _razorpay.open(options);
+                      },
                       isActive: true,
                     ),
                   ),

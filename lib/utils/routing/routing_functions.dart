@@ -32,7 +32,7 @@ class RoutingFunctions {
     NamedRoutes.mapRoute: (context) => MapScreen(),
     NamedRoutes.barberProfileRoute: (context) => BarberProfileScreen(),
     NamedRoutes.createBookingRoute: (context) => CreateBookingScreen(),
-    NamedRoutes.paymentRoute: (context) => PaymentScreen(),
+    // NamedRoutes.paymentRoute: (context) => PaymentScreen(),
   };
 
   /// Handles routes that can't be handled using simple named routes map.
@@ -79,9 +79,9 @@ class RoutingFunctions {
       case NamedRoutes.createBookingRoute:
         target = CreateBookingScreen();
         break;
-      case NamedRoutes.paymentRoute:
-        target = PaymentScreen();
-        break;
+      // case NamedRoutes.paymentRoute:
+      //   target = PaymentScreen();
+      //   break;
       case NamedRoutes.bookingConfirmedRoute:
         target = BookingConfirmedSreen();
         break;

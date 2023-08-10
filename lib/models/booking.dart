@@ -12,6 +12,11 @@ class Booking {
   String? selectedDate;
   String? bookingCreatedOn;
   String? bookingCreatedFor;
+  double? price;
+  String? transactionStatus;
+  String? paymentId;
+  String? orderId;
+  String? errorMessage;
 
   Booking({
     this.id,
@@ -23,6 +28,11 @@ class Booking {
     this.serviceId,
     this.bookingCreatedFor,
     this.bookingCreatedOn,
+    this.price,
+    this.transactionStatus,
+    this.paymentId,
+    this.orderId,
+    this.errorMessage,
   });
 
   factory Booking.fromDocumentSnapshot(DocumentSnapshot docData) {
@@ -39,6 +49,11 @@ class Booking {
       serviceId: data['serviceId'],
       bookingCreatedOn: data['bookingCreatedOn'],
       bookingCreatedFor: data['bookingCreatedFor'],
+      price: data['price'],
+      transactionStatus: data['transactionStatus'],
+      paymentId: data['paymentId'],
+      orderId: data['orderId'],
+      errorMessage: data['errorMessage'],
     );
   }
 
@@ -52,6 +67,11 @@ class Booking {
       'serviceId': serviceId,
       'bookingCreatedOn': bookingCreatedOn,
       'bookingCreatedFor': bookingCreatedFor,
+      'price': price,
+      'transactionStatus': transactionStatus,
+      'paymentId': paymentId,
+      'orderId': orderId,
+      'errorMessage': errorMessage,
     };
   }
 }

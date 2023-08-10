@@ -14,6 +14,7 @@ import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
   List<String> imagePaths = [
@@ -397,7 +398,13 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createBooking(BuildContext context) async {
+  Future<void> createBooking(
+    BuildContext context,
+    String transactionStatus, {
+    String? paymentId,
+    String? orderId,
+    String? errorMessage,
+  }) async {
     Loader.showLoader(context);
     _currentBooking.salonId = _selectedSalonData.id;
     _currentBooking.userId = context.read<HomeProvider>().userData.id;
@@ -405,6 +412,9 @@ class SalonDetailsProvider with ChangeNotifier {
     _currentBooking.bookingCreatedFor = DateFormat('dd-MM-yyyy')
         .parse(_currentBooking.selectedDate ?? '')
         .toString();
+    _currentBooking.price = context.read<SalonDetailsProvider>().totalPrice;
+    _currentBooking.transactionStatus = transactionStatus;
+    _currentBooking.errorMessage = errorMessage;
     List<Booking> _bookingArray = [];
 
     for (int i = 0; i < _selectedServices.length; i++) {
@@ -418,11 +428,12 @@ class SalonDetailsProvider with ChangeNotifier {
     try {
       await DatabaseService().createBooking(bookingData: _finalData);
       Loader.hideLoader(context);
-
-      Navigator.pushReplacementNamed(
-        context,
-        NamedRoutes.bookingConfirmedRoute,
-      );
+      if (transactionStatus == "success") {
+        Navigator.pushReplacementNamed(
+          context,
+          NamedRoutes.bookingConfirmedRoute,
+        );
+      }
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');
