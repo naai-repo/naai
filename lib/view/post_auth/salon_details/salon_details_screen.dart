@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/components/variable_width_cta.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -114,11 +116,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               ),
                               Text(
                                 'Rs. ${provider.totalPrice}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15.sp,
-                                  color: ColorsConstant.textDark,
-                                ),
+                                style: StyleConstant.textDark15sp600Style
                               ),
                             ],
                           ),
@@ -231,11 +229,11 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               onTap: (tabIndex) => setState(() {
                 selectedTab = tabIndex;
               }),
-              tabs: [
+              tabs: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 1.h),
                   child: Tab(
-                    child: Text(StringConstant.services),
+                    child: Text(StringConstant.services.toUpperCase()),
                   ),
                 ),
                 Padding(
@@ -468,7 +466,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               ),
               onTapIconTwo: () => print('Two'),
               onTapIconThree: () => print('Three'),
-              onTapIconFour: () => print('Four'),
+              onTapIconFour: () =>
+                  launchUrl(Uri.parse('https://www.instagram.com/naaiindia')),
               backgroundColor: ColorsConstant.lightAppColor,
             ),
             SizedBox(height: 2.h),
@@ -484,12 +483,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
       padding: EdgeInsets.only(bottom: 3.h),
       child: Row(
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.5.h, horizontal: 2.w),
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(2.h),
-            ),
+          TimeDateCard(
             child: Text.rich(
               TextSpan(
                 children: [
@@ -522,12 +516,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
             ),
           ),
           SizedBox(width: 2.w),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.5.h, horizontal: 2.w),
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(2.h),
-            ),
+          TimeDateCard(
             child: Text.rich(
               TextSpan(
                 children: [

@@ -42,7 +42,7 @@ class ExploreProvider with ChangeNotifier {
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   Future<void> getSalonList(BuildContext context) async {
     try {
-      _salonData = await DatabaseService().getSalonData();
+      _salonData = await DatabaseService().getSalonList();
       _filteredSalonData.clear();
       _filteredSalonData.addAll(_salonData);
     } catch (e) {

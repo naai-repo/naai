@@ -6,16 +6,20 @@ class CurvedBorderedCard extends StatelessWidget {
   final Widget child;
   final bool removeBottomPadding;
   final bool cardSelected;
+  final bool removeTopPadding;
   final Color? fillColor;
+  final Color? borderColor;
   final double? borderRadius;
 
   const CurvedBorderedCard({
     super.key,
     required this.child,
     this.removeBottomPadding = true,
+    this.removeTopPadding = true,
     this.cardSelected = false,
     this.onTap,
     this.fillColor,
+    this.borderColor,
     this.borderRadius,
   });
 
@@ -25,7 +29,7 @@ class CurvedBorderedCard extends StatelessWidget {
       onTap: onTap ?? () {},
       child: Container(
         padding: removeBottomPadding
-            ? EdgeInsets.only(top: 1.5.h)
+            ? EdgeInsets.only(top: removeBottomPadding ? 0 : 1.5.h)
             : EdgeInsets.symmetric(vertical: 1.5.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius ?? 1.h),
@@ -39,7 +43,7 @@ class CurvedBorderedCard extends StatelessWidget {
           ],
           border: Border.all(
             width: 1,
-            color: Color(0xFFE7E7E7),
+            color: borderColor ?? Color(0xFFE7E7E7),
           ),
           color: fillColor ?? (cardSelected ? Color(0xFFEBEBEB) : Colors.white),
         ),

@@ -10,9 +10,16 @@ import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 class DatabaseService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
-
   final CollectionReference salonCollection =
       FirebaseFirestore.instance.collection('salon');
+  final CollectionReference artistCollection =
+      FirebaseFirestore.instance.collection('artist');
+  final CollectionReference bookingCollection =
+      FirebaseFirestore.instance.collection('booking');
+  final CollectionReference servicesCollection =
+      FirebaseFirestore.instance.collection('services');
+  final CollectionReference reviewsCollection =
+      FirebaseFirestore.instance.collection('reviews');
 
   /// Set the user data to the [FirebaseFirestore] as a new entry
   Future<void> setUserData({
@@ -45,7 +52,7 @@ class DatabaseService {
   }
 
   /// Fetch the salon list from [FirebaseFirestore]
-  Future<List<SalonData>> getSalonData() async {
+  Future<List<SalonData>> getSalonList() async {
     QuerySnapshot querySnapshot = await salonCollection.get().onError(
       (error, stackTrace) {
         throw Exception(error);
@@ -56,10 +63,19 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  Future<SalonData> getSalonData(String salonId) async {
+    QuerySnapshot querySnapshot =
+        await salonCollection.where('id', isEqualTo: salonId).get().onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+    return SalonData.fromDocumentSnapshot(querySnapshot.docs.first);
+  }
+
+  /// Fetch the services list for a given salon from [FirebaseFirestore]
   Future<List<ServiceDetail>> getServiceList(String? salonId) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('services')
+    QuerySnapshot querySnapshot = await servicesCollection
         .where('salonId', isEqualTo: salonId)
         .get()
         .onError(
@@ -72,11 +88,9 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  /// Fetch the artist's reviews from [FirebaseFirestore]
   Future<List<Review>> getArtistReviewList(String? artistId) async {
-    print(artistId);
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('reviews')
+    QuerySnapshot querySnapshot = await reviewsCollection
         .where('artistId', isEqualTo: artistId)
         .get()
         .onError(
@@ -89,10 +103,9 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
-  Future<List<Artist>> getArtistList(String? salonId) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('artist')
+  /// Fetch the artist list of a given salon from [FirebaseFirestore]
+  Future<List<Artist>> getArtistListOfSalon(String? salonId) async {
+    QuerySnapshot querySnapshot = await artistCollection
         .where('salonId', isEqualTo: salonId)
         .get()
         .onError(
@@ -108,8 +121,7 @@ class DatabaseService {
 
   /// Fetch all artists from [FirebaseFirestore]
   Future<List<Artist>> getAllArtists() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('artist').get().onError(
+    QuerySnapshot querySnapshot = await artistCollection.get().onError(
       (error, stackTrace) {
         throw Exception(error);
       },
@@ -120,13 +132,38 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  /// Fetch all bookings made by user from [FirebaseFirestore]
+  Future<List<Booking>> getUserBookings({required String userId}) async {
+    QuerySnapshot querySnapshot = await bookingCollection
+        .where('userId', isEqualTo: userId)
+        .orderBy('bookingCreatedFor')
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    return querySnapshot.docs
+        .map((docData) => Booking.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch all the services from [FirebaseFirestore]
+  Future<List<ServiceDetail>> getAllServices() async {
+    QuerySnapshot querySnapshot = await servicesCollection.get();
+
+    return querySnapshot.docs
+        .map((docData) => ServiceDetail.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the artist's booking list from [FirebaseFirestore]
   Future<List<Booking>> getArtistBookingList(
     String? artistId,
     String bookingDate,
   ) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('booking')
+    QuerySnapshot querySnapshot = await bookingCollection
         .where('artistId', isEqualTo: artistId)
         .where('bookingCreatedFor', isEqualTo: bookingDate)
         .get()
@@ -141,10 +178,9 @@ class DatabaseService {
         .toList();
   }
 
-  /// Fetch the salon list from [FirebaseFirestore]
+  /// Fetch the salon's reviews list from [FirebaseFirestore]
   Future<List<Review>> getSalonReviewsList(String? salonId) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('reviews')
+    QuerySnapshot querySnapshot = await reviewsCollection
         .where('salonId', isEqualTo: salonId)
         .get()
         .onError(
@@ -167,21 +203,16 @@ class DatabaseService {
     );
 
     String uid = await SharedPreferenceHelper.getUserId();
-    print(uid);
     return UserModel.fromSnapshot(
       querySnapshot.docs.firstWhere((docData) => docData.id == uid),
     );
   }
 
+  /// Create a booking
   Future<void> createBooking(
-      {required List<Map<String, dynamic>> bookingData}) async {
-    final batch = FirebaseFirestore.instance.batch();
-    for (var booking in bookingData) {
-      DocumentReference dbCollection =
-          FirebaseFirestore.instance.collection('booking').doc();
-
-      batch.set(dbCollection, booking);
-    }
-    await batch.commit();
+      {required Map<String, dynamic> bookingData}) async {
+    await bookingCollection.add(bookingData).onError(
+          (error, stackTrace) => throw Exception(error),
+        );
   }
 }

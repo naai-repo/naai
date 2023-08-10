@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/models/artist.dart';
@@ -44,6 +46,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    log("success");
     context.read<SalonDetailsProvider>().createBooking(
           context,
           "success",
@@ -133,6 +136,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             provider.isOnPaymentPage
                                 ? paymentComponent()
                                 : CurvedBorderedCard(
+                                    removeBottomPadding: false,
                                     child: Column(
                                       children: <Widget>[
                                         schedulingStatus(),
@@ -210,14 +214,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                   color: ColorsConstant.textDark,
                                 ),
                               ),
-                              Text(
-                                'Rs. ${provider.totalPrice}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15.sp,
-                                  color: ColorsConstant.textDark,
-                                ),
-                              ),
+                              Text('Rs. ${provider.totalPrice}',
+                                  style: StyleConstant.appColorBoldTextStyle),
                             ],
                           ),
                           VariableWidthCta(
@@ -248,7 +246,11 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         var options = {
                           'key': Keys.razorpay_api_key,
                           'amount':
-                              context.read<SalonDetailsProvider>().totalPrice *
+                              (context.read<SalonDetailsProvider>().totalPrice *
+                                          0.18 +
+                                      context
+                                          .read<SalonDetailsProvider>()
+                                          .totalPrice) *
                                   100,
                           'name': 'NAAI',
                           'description': context
@@ -340,88 +342,90 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       ),
                     ),
                     SizedBox(height: 1.h),
-                    ...provider.selectedServices.map(
-                      (element) => Container(
-                        margin: EdgeInsets.symmetric(vertical: 2.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Column(
+                    ...(provider.currentBooking.serviceIds?.map(
+                          (element) => Container(
+                            margin: EdgeInsets.symmetric(vertical: 2.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Row(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    SvgPicture.asset(
-                                      provider.getServiceDetails(
-                                                serviceId: element,
-                                                getGender: true,
-                                              ) ==
-                                              Gender.MEN
-                                          ? ImagePathConstant.manIcon
-                                          : ImagePathConstant.womanIcon,
-                                      height: 3.h,
+                                    Row(
+                                      children: <Widget>[
+                                        SvgPicture.asset(
+                                          provider.getServiceDetails(
+                                                    serviceId: element,
+                                                    getGender: true,
+                                                  ) ==
+                                                  Gender.MEN
+                                              ? ImagePathConstant.manIcon
+                                              : ImagePathConstant.womanIcon,
+                                          height: 3.h,
+                                        ),
+                                        SizedBox(width: 2.w),
+                                        Text(
+                                          provider.getServiceDetails(
+                                            serviceId: element,
+                                            getServiceName: true,
+                                          ),
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: ColorsConstant.textDark,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(width: 2.w),
+                                    SizedBox(height: 1.w),
                                     Text(
-                                      provider.getServiceDetails(
-                                        serviceId: element,
-                                        getServiceName: true,
-                                      ),
+                                      provider.getSelectedArtistName(
+                                          provider.currentBooking.artistId ??
+                                              ''),
                                       style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Color(0xFF373737),
+                                        fontSize: 10.sp,
+                                        color: ColorsConstant.textDark,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 1.w),
-                                Text(
-                                  provider.getSelectedArtistName(
-                                      provider.currentBooking.artistId ?? ''),
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: ColorsConstant.textDark,
-                                  ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '+',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: ColorsConstant.textLight,
+                                      ),
+                                    ),
+                                    Text(
+                                      ' ₹ ${provider.getServiceDetails(
+                                        serviceId: element,
+                                        getServiceCharge: true,
+                                      )}',
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: ColorsConstant.textDark,
+                                      ),
+                                    ),
+                                    SizedBox(width: 2.w),
+                                    GestureDetector(
+                                      onTap: () => provider.setSelectedService(
+                                        element,
+                                        removeService: true,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        ImagePathConstant.deleteIcon,
+                                        height: 2.5.h,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  '+',
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: ColorsConstant.textLight,
-                                  ),
-                                ),
-                                Text(
-                                  ' ₹ ${provider.getServiceDetails(
-                                    serviceId: element,
-                                    getServiceCharge: true,
-                                  )}',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: ColorsConstant.textDark,
-                                  ),
-                                ),
-                                SizedBox(width: 2.w),
-                                GestureDetector(
-                                  onTap: () => provider.setSelectedService(
-                                    element,
-                                    removeService: true,
-                                  ),
-                                  child: SvgPicture.asset(
-                                    ImagePathConstant.deleteIcon,
-                                    height: 2.5.h,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          ),
+                        ) ??
+                        []),
                     Divider(
                       thickness: 1,
                       color: Color(0xFFD3D3D3),
@@ -433,7 +437,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            StringConstant.subtotal,
+                            StringConstant.subtotal.toUpperCase(),
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
@@ -587,13 +591,6 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                // SvgPicture.asset(
-                                //   ImagePathConstant
-                                //       .leftArrowIcon,
-                                //   color:
-                                //       ColorsConstant.textDark,
-                                //   height: 1.2.h,
-                                // ),
                                 Text(
                                   '${DateFormat.E().format(DateFormat('dd-MM-yyyy').parse(provider.currentBooking.selectedDate ?? ''))}, ${DateFormat.yMMMMd().format(DateFormat('dd-MM-yyyy').parse(provider.currentBooking.selectedDate ?? ''))}',
                                   style: TextStyle(
@@ -601,12 +598,6 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     color: ColorsConstant.textDark,
                                   ),
                                 ),
-                                // SvgPicture.asset(
-                                //   ImagePathConstant
-                                //       .rightArrowIcon,
-                                //   color:
-                                //       ColorsConstant.textDark,
-                                // ),
                               ],
                             ),
                             SizedBox(height: 1.h),
@@ -614,7 +605,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                               children: provider.initialAvailability
                                   .map(
                                     (element) => GestureDetector(
-                                      onTap: () => provider.artistAvailability
+                                      onTap: () => provider
+                                              .artistAvailabilityToDisplay
                                               .contains(element)
                                           ? provider.setBookingData(
                                               context,
@@ -637,18 +629,13 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                             width: 1,
                                             color: Color(0xFFF5F5F5),
                                           ),
-                                          color: provider.artistAvailability
+                                          color: provider
+                                                  .artistAvailabilityToDisplay
                                                   .contains(element)
-                                              ? (element >=
-                                                          (provider
-                                                                  .currentBooking
-                                                                  .startTime ??
-                                                              0) &&
-                                                      element <=
-                                                          (provider
-                                                                  .currentBooking
-                                                                  .endTime ??
-                                                              0))
+                                              ? element ==
+                                                      (provider.currentBooking
+                                                              .startTime ??
+                                                          0)
                                                   ? ColorsConstant.appColor
                                                   : Colors.white
                                               : Colors.grey.shade200,
@@ -659,18 +646,13 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                               element),
                                           style: TextStyle(
                                             fontSize: 9.sp,
-                                            color: provider.artistAvailability
+                                            color: provider
+                                                    .artistAvailabilityToDisplay
                                                     .contains(element)
-                                                ? (element >=
-                                                            (provider
-                                                                    .currentBooking
-                                                                    .startTime ??
-                                                                0) &&
-                                                        element <=
-                                                            (provider
-                                                                    .currentBooking
-                                                                    .endTime ??
-                                                                0))
+                                                ? element ==
+                                                        (provider.currentBooking
+                                                                .startTime ??
+                                                            0)
                                                     ? Colors.white
                                                     : ColorsConstant.textDark
                                                 : Colors.white,
@@ -690,7 +672,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     showArtistSlotDialogue = false;
                                   }),
                                   child: Text(
-                                    StringConstant.cancel,
+                                    StringConstant.cancel.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.w500,
@@ -954,6 +936,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
     return Consumer<SalonDetailsProvider>(
       builder: (context, provider, child) {
         return CurvedBorderedCard(
+          removeBottomPadding: false,
           onTap: () =>
               provider.setStaffSelectionMethod(selectedSingleStaff: false),
           cardSelected: provider.selectedMultipleStaff,
@@ -974,6 +957,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
     return Consumer<SalonDetailsProvider>(
       builder: (context, provider, child) {
         return CurvedBorderedCard(
+          removeBottomPadding: false,
           onTap: () =>
               provider.setStaffSelectionMethod(selectedSingleStaff: true),
           cardSelected: provider.selectedSingleStaff,
@@ -1139,7 +1123,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      StringConstant.salon,
+                      StringConstant.salon.toUpperCase(),
                       style: TextStyle(
                         color: ColorsConstant.textDark,
                         fontWeight: FontWeight.w600,

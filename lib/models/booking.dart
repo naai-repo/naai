@@ -5,18 +5,28 @@ class Booking {
   String? artistId;
   int? startTime;
   int? endTime;
-  // List<String>? serviceId;
-  String? serviceId;
+  List<String>? serviceIds;
   String? salonId;
   String? userId;
   String? selectedDate;
   String? bookingCreatedOn;
   String? bookingCreatedFor;
+
+  // Parameters to ensure perfect transaction working
   double? price;
   String? transactionStatus;
   String? paymentId;
   String? orderId;
   String? errorMessage;
+
+  /// These are additional parameters. Not being fetched/sent from/to Firebase
+  /// This is being used to display the booking related data on the app only.
+  String? salonName;
+  String? artistName;
+  List<String>? bookedServiceNames;
+  double totalPrice;
+  bool isUpcoming;
+  String? createdOnString;
 
   Booking({
     this.id,
@@ -25,7 +35,7 @@ class Booking {
     this.endTime,
     this.salonId,
     this.userId,
-    this.serviceId,
+    this.serviceIds,
     this.bookingCreatedFor,
     this.bookingCreatedOn,
     this.price,
@@ -33,6 +43,12 @@ class Booking {
     this.paymentId,
     this.orderId,
     this.errorMessage,
+    this.salonName,
+    this.artistName,
+    this.bookedServiceNames,
+    this.totalPrice = 0,
+    this.isUpcoming = false,
+    this.createdOnString,
   });
 
   factory Booking.fromDocumentSnapshot(DocumentSnapshot docData) {
@@ -45,8 +61,7 @@ class Booking {
       endTime: data['endTime'],
       salonId: data['salonId'],
       userId: data['userId'],
-      // serviceId: data['serviceId'].cast<String>(),
-      serviceId: data['serviceId'],
+      serviceIds: data['serviceIds'].cast<String>(),
       bookingCreatedOn: data['bookingCreatedOn'],
       bookingCreatedFor: data['bookingCreatedFor'],
       price: data['price'],
@@ -64,7 +79,7 @@ class Booking {
       'endTime': endTime,
       'salonId': salonId,
       'userId': userId,
-      'serviceId': serviceId,
+      'serviceIds': serviceIds,
       'bookingCreatedOn': bookingCreatedOn,
       'bookingCreatedFor': bookingCreatedFor,
       'price': price,
