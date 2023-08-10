@@ -14,7 +14,6 @@ import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
   List<String> imagePaths = [
