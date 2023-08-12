@@ -75,8 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   searchLocationBar(),
                                   dummyDeal(),
                                   Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 2.h),
+                                    padding: EdgeInsets.only(top: 2.h),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
@@ -771,7 +770,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ColorfulInformationCard(
                                         imagePath:
                                             ImagePathConstant.locationIconAlt,
-                                        text: '1.3 km',
+                                        text: provider.salonList[index]
+                                            .getDistanceAsString(
+                                          provider.userCurrentLatLng,
+                                        ),
                                         color: ColorsConstant.purpleDistance,
                                       ),
                                       SizedBox(width: 3.w),
