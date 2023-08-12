@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:marquee/marquee.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
@@ -12,7 +11,6 @@ import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
-import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -25,7 +23,6 @@ class ExploreStylist extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreStylist>
     with SingleTickerProviderStateMixin {
-  bool _isSearchBoxActive = false;
 
   late TabController homeScreenController;
 

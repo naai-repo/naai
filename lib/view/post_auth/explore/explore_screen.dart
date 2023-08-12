@@ -25,7 +25,6 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
-  bool _isSearchBoxActive = false;
 
   late TabController homeScreenController;
 
