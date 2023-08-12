@@ -15,7 +15,7 @@ class SalonData {
     this.address,
     this.rating,
     this.name,
-    this.imagePath = 'assets/images/salon_dummy_image.png',
+    this.imagePath,
     this.salonType,
     this.timing,
   });
@@ -28,7 +28,7 @@ class SalonData {
       address: HomeLocation.fromFirestore(docData['address'] ?? {}),
       name: docData['name'],
       rating: docData['rating'],
-      imagePath: 'assets/images/salon_dummy_image.png',
+      imagePath: docData['imagePath'] ?? 'assets/images/salon_dummy_image.png',
       salonType: docData['salonType'],
       timing: Timing.fromFirestore(docData['timing'] ?? {}),
     );

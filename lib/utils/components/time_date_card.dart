@@ -19,9 +19,8 @@ class TimeDateCard extends StatelessWidget {
         horizontal: 2.5.w,
       ),
       decoration: BoxDecoration(
-        border: Border.all(),
         borderRadius: BorderRadius.circular(2.h),
-        color: fillColor ?? Colors.white,
+        color: fillColor ?? const Color(0xFFEBEBEB),
       ),
       child: child,
     );

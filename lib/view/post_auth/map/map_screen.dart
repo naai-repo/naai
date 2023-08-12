@@ -186,7 +186,6 @@ class _MapScreenState extends State<MapScreen> {
                                         hintText: StringConstant
                                             .exploreSalonsSearchHint,
                                         context,
-                                        isExploreScreenSearchBar: true,
                                       ),
                                     ),
                                   ),

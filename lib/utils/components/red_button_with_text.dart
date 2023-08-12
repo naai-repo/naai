@@ -13,6 +13,8 @@ class RedButtonWithText extends StatelessWidget {
   final Border? border;
   final bool shouldShowBoxShadow;
   final Widget? icon;
+  final bool isIconSuffix;
+  final double? borderRadius;
 
   const RedButtonWithText({
     super.key,
@@ -26,6 +28,8 @@ class RedButtonWithText extends StatelessWidget {
     this.border,
     this.shouldShowBoxShadow = true,
     this.icon,
+    this.isIconSuffix = false,
+    this.borderRadius,
   });
 
   @override
@@ -35,7 +39,7 @@ class RedButtonWithText extends StatelessWidget {
       child: Container(
         padding: padding ?? EdgeInsets.all(1.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1.h),
+          borderRadius: BorderRadius.circular(borderRadius ?? 1.h),
           boxShadow: shouldShowBoxShadow
               ? <BoxShadow>[
                   BoxShadow(
@@ -51,10 +55,12 @@ class RedButtonWithText extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            icon ?? SizedBox(),
             Visibility(
-              visible: icon != null,
-              child: SizedBox(width: 2.w),
+              visible: icon != null && !isIconSuffix,
+              child: Padding(
+                padding: EdgeInsets.only(right: 1.w),
+                child: icon ?? SizedBox(),
+              ),
             ),
             Text(
               buttonText,
@@ -62,6 +68,13 @@ class RedButtonWithText extends StatelessWidget {
                 fontSize: fontSize ?? 12.sp,
                 fontWeight: fontWeight ?? FontWeight.w600,
                 color: textColor ?? Colors.white,
+              ),
+            ),
+            Visibility(
+              visible: icon != null && isIconSuffix,
+              child: Padding(
+                padding: EdgeInsets.only(left: 1.w),
+                child: icon ?? SizedBox(),
               ),
             ),
           ],

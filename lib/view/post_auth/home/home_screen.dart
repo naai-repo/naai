@@ -75,8 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   searchLocationBar(),
                                   dummyDeal(),
                                   Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 2.h),
+                                    padding: EdgeInsets.only(top: 2.h),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
@@ -213,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       NamedRoutes.appointmentDetailsRoute,
                     ),
-                    buttonText: StringConstant.seeAllBookings,
+                    buttonText: StringConstant.seeDetails,
                     fillColor: Colors.white,
                     textColor: ColorsConstant.appColor,
                     border: Border.all(color: ColorsConstant.appColor),
@@ -370,45 +369,45 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Row(
           children: <Widget>[
-            SizedBox(
-              height: 5.h,
-              width: 30.w,
-              child: TextFormField(
-                cursorColor: ColorsConstant.appColor,
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-                textInputAction: TextInputAction.done,
-                onChanged: (searchText) => print(searchText),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: ColorsConstant.graphicFillDark,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.only(left: 2.w),
-                    child: SvgPicture.asset(
-                      ImagePathConstant.searchIcon,
-                      height: 2.h,
-                    ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(minWidth: 9.w),
-                  hintText: StringConstant.search,
-                  hintStyle: TextStyle(
-                    color: ColorsConstant.textLight,
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.h),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: 2.w),
+            // SizedBox(
+            //   height: 5.h,
+            //   width: 30.w,
+            //   child: TextFormField(
+            //     cursorColor: ColorsConstant.appColor,
+            //     style: TextStyle(
+            //       fontSize: 10.sp,
+            //       fontWeight: FontWeight.w500,
+            //     ),
+            //     textInputAction: TextInputAction.done,
+            //     onChanged: (searchText) => print(searchText),
+            //     decoration: InputDecoration(
+            //       filled: true,
+            //       fillColor: ColorsConstant.graphicFillDark,
+            //       contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
+            //       prefixIcon: Padding(
+            //         padding: EdgeInsets.only(left: 2.w),
+            //         child: SvgPicture.asset(
+            //           ImagePathConstant.searchIcon,
+            //           height: 2.h,
+            //         ),
+            //       ),
+            //       prefixIconConstraints: BoxConstraints(minWidth: 9.w),
+            //       hintText: StringConstant.search,
+            //       hintStyle: TextStyle(
+            //         color: ColorsConstant.textLight,
+            //         fontSize: 10.sp,
+            //         fontWeight: FontWeight.w500,
+            //       ),
+            //       border: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(5.h),
+            //         borderSide: BorderSide.none,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(width: 2.w),
             Container(
-              padding: EdgeInsets.all(1.h),
+              padding: EdgeInsets.all(1.5.h),
               decoration: BoxDecoration(
                 color: ColorsConstant.graphicFillDark,
                 borderRadius: BorderRadius.circular(4.h),
@@ -603,14 +602,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         margin: isThin
             ? EdgeInsets.symmetric(
-                horizontal: 3.w,
+                horizontal: 4.w,
                 vertical: 1.h,
               )
             : EdgeInsets.symmetric(
-                horizontal: 1.5.w,
+                horizontal: 1.w,
                 vertical: 1.h,
               ),
-        // height: isThin ? 25.h : 33.h,
         decoration: BoxDecoration(
           color: color,
           boxShadow: <BoxShadow>[

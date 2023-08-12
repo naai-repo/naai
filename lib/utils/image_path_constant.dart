@@ -121,4 +121,6 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'salon_chair_icon.svg');
   static final String artistIcon =
       UtilityFunctions.getImagePath(imageTitle: 'artist_icon.svg');
+  static final String filterIcon =
+      UtilityFunctions.getImagePath(imageTitle: 'filter_icon.svg');
 }

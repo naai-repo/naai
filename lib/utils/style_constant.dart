@@ -74,7 +74,6 @@ class StyleConstant {
   static InputDecoration searchBoxInputDecoration(
     BuildContext context, {
     required String hintText,
-    required bool isExploreScreenSearchBar,
   }) =>
       InputDecoration(
         filled: true,
@@ -87,9 +86,7 @@ class StyleConstant {
             fit: BoxFit.scaleDown,
           ),
         ),
-        suffixIcon: isExploreScreenSearchBar
-            ? SizedBox()
-            : SizedBox(
+        suffixIcon: SizedBox(
                 width: 30.w,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

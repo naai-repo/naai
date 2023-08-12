@@ -45,7 +45,6 @@ class ExploreProvider with ChangeNotifier {
   /// Get all artist list from home screen
   void setArtistList(List<Artist> artists) {
     _artistList = artists;
-    print(_artistList.length);
     notifyListeners();
   }
 

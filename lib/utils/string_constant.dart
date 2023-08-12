@@ -26,6 +26,8 @@ class StringConstant {
   // Explore screen strings
   static const String explore = 'Explore';
   static const String exploreSalons = 'Explore Salons';
+  static const String exploreStylists = 'Explore Stylists';
+  static const String stylists = 'Stylists';
   static const String search = 'Search';
   static const String changeLocation = 'change location';
   static const String cantFindAnyLocation = 'Can\'t find anything!';
@@ -46,7 +48,7 @@ class StringConstant {
   static const String confirmLocation = 'Confirm Location';
   static const String previousBooking = 'Previous Booking';
   static const String bookAgain = 'Book Again';
-  static const String seeAllBookings = 'See all bookings';
+  static const String seeDetails = 'See Details';
   static const String viewAllBookings = 'View all bookings';
   static const String viewAllAppointments = 'View all appointments';
   static const String appointment = 'Appointment';

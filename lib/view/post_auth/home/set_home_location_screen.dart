@@ -193,7 +193,6 @@ class _SetHomeLocationScreenState extends State<SetHomeLocationScreen> {
                           decoration: StyleConstant.searchBoxInputDecoration(
                             context,
                             hintText: StringConstant.search,
-                            isExploreScreenSearchBar: false,
                           ),
                         ),
                       ),

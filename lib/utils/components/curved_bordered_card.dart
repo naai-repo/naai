@@ -36,8 +36,8 @@ class CurvedBorderedCard extends StatelessWidget {
           boxShadow: <BoxShadow>[
             BoxShadow(
               offset: Offset(0, 2.0),
-              color: Colors.grey.shade100,
-              spreadRadius: 0.1,
+              color: Colors.grey.shade200,
+              spreadRadius: 0.5,
               blurRadius: 5,
             ),
           ],

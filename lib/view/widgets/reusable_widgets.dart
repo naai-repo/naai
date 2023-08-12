@@ -307,15 +307,15 @@ class ReusableWidgets {
           children: <Widget>[
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.appColor,
+              color: Colors.grey.shade600,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.appColor,
+              color: Colors.grey.shade600,
             ),
             SvgPicture.asset(
               ImagePathConstant.appBackgroundImage,
-              color: ColorsConstant.appColor,
+              color: Colors.grey.shade600,
             ),
           ],
         ),

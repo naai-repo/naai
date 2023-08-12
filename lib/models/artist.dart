@@ -25,7 +25,7 @@ class Artist {
       id: json['id'],
       name: json['name'],
       rating: json['rating'],
-      imagePath: 'assets/images/artist_dummy_image.svg',
+      imagePath: json['imagePath'] ?? 'assets/images/artist_dummy_image.svg',
       salonId: json['salonId'],
       salonName: json['salonName'],
       availability: Availability.fromFirestore(json['availability'] ?? {}),

@@ -33,7 +33,7 @@ class Review {
       createdAt: (json['createdAt'] as Timestamp).toDate(),
       salonId: json['salonId'],
       userId: json['userId'],
-      imagePath: 'assets/images/salon_dummy_image.png',
+      imagePath: json['imagePath'] ?? 'assets/images/salon_dummy_image.png',
       userName: json['userName'],
       rating: json['rating'],
     );
