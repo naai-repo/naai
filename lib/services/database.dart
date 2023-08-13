@@ -215,4 +215,19 @@ class DatabaseService {
           (error, stackTrace) => throw Exception(error),
         );
   }
+
+  Future<List<Review>> getUserReviewsList(String? userId) async {
+    QuerySnapshot querySnapshot = await reviewsCollection
+        // .where('userId', isEqualTo: userId)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    return querySnapshot.docs
+        .map((docData) => Review.fromDocumentSnapshot(docData))
+        .toList();
+  }
 }

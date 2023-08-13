@@ -5,6 +5,7 @@ import 'package:naai/services/database.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -102,6 +103,24 @@ class ExploreProvider with ChangeNotifier {
   }) {
     _applyServiceFilter = value;
     _appliedServiceFilter = service ?? Services.HAIR;
+    notifyListeners();
+  }
+
+  Future<void> addPreferedSalon(BuildContext context, String? salonId) async {
+    if (salonId == null) return;
+    context.read<HomeProvider>().userData.preferredSalon!.add(salonId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
+    notifyListeners();
+  }
+
+  Future<void> removePreferedSalon(
+      BuildContext context, String? salonId) async {
+    context.read<HomeProvider>().userData.preferredSalon!.remove(salonId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
     notifyListeners();
   }
 }

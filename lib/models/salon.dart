@@ -49,14 +49,12 @@ class SalonData {
   String getDistanceAsString(LatLng? userLatLng) {
     if (address == null || userLatLng == null || address!.geoLocation == null)
       return 'NA';
-    return address!
-        .calculateDistance(
+    return '${address!.calculateDistance(
           userLatLng.latitude,
           userLatLng.longitude,
           address!.geoLocation!.latitude,
           address!.geoLocation!.longitude,
-        )
-        .toStringAsFixed(2);
+        ).toStringAsFixed(2)}km';
   }
 }
 

@@ -28,6 +28,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 
+import '../../../models/review.dart';
+
 class HomeProvider with ChangeNotifier {
   bool _changedLocation = false;
 
@@ -566,5 +568,9 @@ class HomeProvider with ChangeNotifier {
   void clearMapSearchText() {
     _mapSearchController.clear();
     notifyListeners();
+  }
+
+  Future<List<Review>> getUserReviews() async {
+    return await DatabaseService().getUserReviewsList(userData.id);
   }
 }

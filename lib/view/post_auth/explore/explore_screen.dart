@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
@@ -10,6 +11,7 @@ import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -251,6 +253,45 @@ class _ExploreScreenState extends State<ExploreScreen>
                         child: Image.asset(
                             provider.filteredSalonData[index].imagePath ?? ''),
                       ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: InkWell(
+                          onTap: () {
+                            if (!context
+                                .read<HomeProvider>()
+                                .userData
+                                .preferredSalon!
+                                .contains(
+                                    provider.filteredSalonData[index].id)) {
+                              provider.addPreferedSalon(context,
+                                  provider.filteredSalonData[index].id);
+                            } else {
+                              provider.removePreferedSalon(context,
+                                  provider.filteredSalonData[index].id);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              context
+                                      .read<HomeProvider>()
+                                      .userData
+                                      .preferredSalon!
+                                      .contains(
+                                          provider.filteredSalonData[index].id)
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              size: 20,
+                              color: ColorsConstant.appColor,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   SizedBox(height: 2.h),
@@ -285,7 +326,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                           SvgPicture.asset(ImagePathConstant.locationIconAlt),
                           SizedBox(width: 1.w),
                           Text(
-                            '1.3 Km',
+                            '${provider.filteredSalonData[index].getDistanceAsString(context.read<HomeProvider>().userCurrentLatLng)}',
                             style: TextStyle(
                               color: ColorsConstant.textDark,
                               fontWeight: FontWeight.w500,
