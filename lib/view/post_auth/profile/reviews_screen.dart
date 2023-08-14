@@ -9,6 +9,7 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
 
 class ReviewsScreen extends StatefulWidget {
@@ -111,8 +112,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                           borderRadius:
                                               BorderRadius.circular(1.h),
                                           border: Border.all(
-                                              color: ColorsConstant
-                                                  .reviewBoxBorderColor),
+                                            color: ColorsConstant
+                                                .reviewBoxBorderColor,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Color.fromARGB(
@@ -126,12 +128,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            reviewerImageAndName(
-                                              imageUrl: reviewItem.imagePath,
-                                              userName:
-                                                  reviewItem.userName ?? "",
-                                            ),
-                                            SizedBox(width: 2.w),
                                             Expanded(
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
@@ -140,33 +136,23 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      ...List.generate(
-                                                        5,
-                                                        (i) => SvgPicture.asset(
-                                                          ImagePathConstant
-                                                              .starIcon,
-                                                          color: i <
-                                                                  (int.parse(provider
-                                                                          .artistList[
-                                                                              index]
-                                                                          .rating
-                                                                          ?.round()
-                                                                          .toString() ??
-                                                                      "0"))
-                                                              ? ColorsConstant
-                                                                  .appColor
-                                                              : ColorsConstant
-                                                                  .greyStar,
-                                                        ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 0.5.h,
+                                                        bottom: 0.2.h),
+                                                    child: Text(
+                                                      'For : ${reviewItem.salonName}',
+                                                      style: TextStyle(
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.only(
                                                         top: 0.5.h,
-                                                        bottom: 1.h),
+                                                        bottom: 0.2.h),
                                                     child: Text(
                                                       '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
                                                       style: TextStyle(
@@ -178,10 +164,56 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Text(
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 1.h),
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        ...List.generate(
+                                                          5,
+                                                          (i) =>
+                                                              SvgPicture.asset(
+                                                            ImagePathConstant
+                                                                .starIcon,
+                                                            color: i <
+                                                                    (int.parse(provider
+                                                                            .artistList[
+                                                                                index]
+                                                                            .rating
+                                                                            ?.round()
+                                                                            .toString() ??
+                                                                        "0"))
+                                                                ? ColorsConstant
+                                                                    .appColor
+                                                                : ColorsConstant
+                                                                    .greyStar,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  ReadMoreText(
                                                     reviewItem.comment ?? "",
                                                     style: TextStyle(
                                                       fontSize: 10.sp,
+                                                    ),
+                                                    trimCollapsedText:
+                                                        "\nView more",
+                                                    trimExpandedText:
+                                                        "\nView less",
+                                                    trimLines: 2,
+                                                    trimMode: TrimMode.Line,
+                                                    moreStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: ColorsConstant
+                                                          .appColor,
+                                                    ),
+                                                    lessStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: ColorsConstant
+                                                          .appColor,
                                                     ),
                                                   )
                                                 ],
