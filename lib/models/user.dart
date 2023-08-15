@@ -8,6 +8,7 @@ class UserModel {
   String? appleId;
   String? gender;
   List<String>? preferredSalon;
+  List<String>? preferredArtist;
   HomeLocation? homeLocation;
   String? id;
 
@@ -17,6 +18,7 @@ class UserModel {
     this.gmailId,
     this.appleId,
     this.preferredSalon,
+    this.preferredArtist,
     this.gender,
     this.homeLocation,
     this.id,
@@ -29,6 +31,7 @@ class UserModel {
       'gmailId': gmailId,
       'appleId': appleId,
       'preferredSalon': preferredSalon,
+      'preferredArtist': preferredArtist,
       'homeLocation': homeLocation == null ? null : homeLocation?.toMap(),
       'id': id,
       'gender': gender,
@@ -45,6 +48,7 @@ class UserModel {
     appleId = map['appleId'];
     gender = map['gender'];
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
+    preferredArtist = List<String>.from(map['preferredArtist'] ?? []);
     homeLocation = map['homeLocation'] == null
         ? null
         : HomeLocation.fromFirestore(map['homeLocation'] ?? {});

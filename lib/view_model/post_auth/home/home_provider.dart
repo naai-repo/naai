@@ -573,4 +573,22 @@ class HomeProvider with ChangeNotifier {
   Future<List<Review>> getUserReviews() async {
     return await DatabaseService().getUserReviewsList(userData.id);
   }
+
+  Future<void> addPreferedArtist(BuildContext context, String? artistId) async {
+    if (artistId == null) return;
+    context.read<HomeProvider>().userData.preferredArtist!.add(artistId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
+    notifyListeners();
+  }
+
+  Future<void> removePreferedArtist(
+      BuildContext context, String? artistId) async {
+    context.read<HomeProvider>().userData.preferredArtist!.remove(artistId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
+    notifyListeners();
+  }
 }
