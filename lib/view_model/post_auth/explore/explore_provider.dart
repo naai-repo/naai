@@ -123,4 +123,22 @@ class ExploreProvider with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  Future<void> addPreferedArtist(BuildContext context, String? artistId) async {
+    if (artistId == null) return;
+    context.read<HomeProvider>().userData.preferredArtist!.add(artistId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
+    notifyListeners();
+  }
+
+  Future<void> removePreferedArtist(
+      BuildContext context, String? artistId) async {
+    context.read<HomeProvider>().userData.preferredArtist!.remove(artistId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
+    notifyListeners();
+  }
 }

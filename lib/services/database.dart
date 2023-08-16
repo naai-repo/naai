@@ -218,7 +218,7 @@ class DatabaseService {
 
   Future<List<Review>> getUserReviewsList(String? userId) async {
     QuerySnapshot querySnapshot = await reviewsCollection
-        .where('userId', isEqualTo: userId)
+        // .where('userId', isEqualTo: userId)
         .get()
         .onError(
       (error, stackTrace) {

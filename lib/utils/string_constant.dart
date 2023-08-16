@@ -54,6 +54,7 @@ class StringConstant {
   static const String availableStaff = 'AVAILABLE STAFF';
   static const String services = "Services";
   static const String reviews = "Reviews";
+  static const String ratingsAndReviews = "Ratings & Reviews";
   static const String addYourReview = "Add your review";
   static const String summarizeYourReview = "Summarize your review";
   static const String submitReview = "Submit Review";

@@ -603,129 +603,86 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Stack(
-        children: [
-          Container(
-            margin: isThin
-                ? EdgeInsets.symmetric(
-                    horizontal: 3.w,
-                    vertical: 1.h,
-                  )
-                : EdgeInsets.symmetric(
-                    horizontal: 1.5.w,
-                    vertical: 1.h,
-                  ),
-            // height: isThin ? 25.h : 33.h,
-            decoration: BoxDecoration(
-              color: color,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  offset: Offset(2, 2),
-                  color: Colors.grey.shade500,
-                  spreadRadius: 1,
-                  blurRadius: 15,
-                )
-              ],
-              borderRadius: BorderRadius.circular(3.h),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: isThin ? 14.h : 22.h,
-                  child: ClipRRect(
-                    borderRadius: isThin
-                        ? BorderRadius.circular(3.h)
-                        : BorderRadius.vertical(
-                            top: Radius.circular(3.h),
-                          ),
-                    child: Image.asset(
-                      'assets/images/salon_dummy_image.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 1.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 3.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        name.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+      child: Container(
+        margin: isThin
+            ? EdgeInsets.symmetric(
+                horizontal: 3.w,
+                vertical: 1.h,
+              )
+            : EdgeInsets.symmetric(
+                horizontal: 1.5.w,
+                vertical: 1.h,
+              ),
+        // height: isThin ? 25.h : 33.h,
+        decoration: BoxDecoration(
+          color: color,
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              offset: Offset(2, 2),
+              color: Colors.grey.shade500,
+              spreadRadius: 1,
+              blurRadius: 15,
+            )
+          ],
+          borderRadius: BorderRadius.circular(3.h),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: isThin ? 14.h : 22.h,
+              child: ClipRRect(
+                borderRadius: isThin
+                    ? BorderRadius.circular(3.h)
+                    : BorderRadius.vertical(
+                        top: Radius.circular(3.h),
                       ),
-                      Text(
-                        salonName.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 1.h),
-                      Row(
-                        children: List<Widget>.generate(
-                          rating.floor(),
-                          (i) => SvgPicture.asset(
-                            ImagePathConstant.starIcon,
-                            color: ColorsConstant.greyStar,
-                            height: 1.3.h,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: isThin ? 3.h : 5.h),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: InkWell(
-              onTap: () {
-                if (!context
-                    .read<HomeProvider>()
-                    .userData
-                    .preferredArtist!
-                    .contains(artistId)) {
-                  context
-                      .read<HomeProvider>()
-                      .addPreferedArtist(context, artistId);
-                } else {
-                  context.read<HomeProvider>().removePreferedArtist(
-                        context,
-                        artistId,
-                      );
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  context
-                          .read<HomeProvider>()
-                          .userData
-                          .preferredArtist!
-                          .contains(artistId)
-                      ? CupertinoIcons.heart_fill
-                      : CupertinoIcons.heart,
-                  size: 20,
-                  color: ColorsConstant.appColor,
+                child: Image.asset(
+                  'assets/images/salon_dummy_image.png',
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-          )
-        ],
+            SizedBox(height: 1.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    name.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    salonName.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 1.h),
+                  Row(
+                    children: List<Widget>.generate(
+                      rating.floor(),
+                      (i) => SvgPicture.asset(
+                        ImagePathConstant.starIcon,
+                        color: ColorsConstant.greyStar,
+                        height: 1.3.h,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: isThin ? 3.h : 5.h),
+          ],
+        ),
       ),
     );
   }

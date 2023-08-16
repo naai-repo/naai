@@ -64,7 +64,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            StringConstant.reviews,
+                            StringConstant.ratingsAndReviews,
                             style: StyleConstant.headingTextStyle,
                           ),
                         ],
@@ -118,7 +118,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                           boxShadow: [
                                             BoxShadow(
                                               color: Color.fromARGB(
-                                                  255, 229, 229, 229),
+                                                255,
+                                                229,
+                                                229,
+                                                229,
+                                              ),
                                               spreadRadius: 0.1,
                                               blurRadius: 10,
                                             ),
@@ -138,35 +142,87 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                                 children: <Widget>[
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        top: 0.5.h,
-                                                        bottom: 0.2.h),
-                                                    child: Text(
-                                                      'For : ${reviewItem.salonName}',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                      top: 0.5.h,
+                                                      bottom: 0.2.h,
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Store : ${reviewItem.salonName}',
+                                                          style: TextStyle(
+                                                            fontSize: 10.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                        reviewItem.artistName !=
+                                                                null
+                                                            ? Text(
+                                                                'For : ${reviewItem.artistName}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      9.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              )
+                                                            : SizedBox.shrink(),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    minLeadingWidth: 0,
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    visualDensity:
+                                                        VisualDensity.compact,
+                                                    dense: true,
+                                                    leading: CircleAvatar(
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        'assets/images/salon_dummy_image.png',
+                                                      ),
+                                                    ),
+                                                    title: Text.rich(
+                                                      TextSpan(
+                                                        text: reviewItem
+                                                                .userName ??
+                                                            "",
+                                                        children: [
+                                                          TextSpan(
+                                                            text:
+                                                                '\n${DateFormat("dd MMMM y").format(reviewItem.createdAt ?? DateTime.now())}',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 10.sp,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                        style: TextStyle(
+                                                          fontSize: 12.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        top: 0.5.h,
-                                                        bottom: 0.2.h),
-                                                    child: Text(
-                                                      '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
-                                                      style: TextStyle(
-                                                        fontSize: 8.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                      ),
+                                                      top: 1.h,
+                                                      bottom: 1.h,
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 1.h),
                                                     child: Row(
                                                       children: <Widget>[
                                                         ...List.generate(

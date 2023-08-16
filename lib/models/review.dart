@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Review {
   String? salonName;
+  String? artistName;
   String? artistId;
   String? comment;
   String? id;
@@ -23,6 +24,7 @@ class Review {
     this.userName,
     this.rating,
     this.salonName,
+    this.artistName,
   });
 
   factory Review.fromDocumentSnapshot(DocumentSnapshot docData) {
@@ -39,6 +41,7 @@ class Review {
       userName: json['userName'],
       rating: json['rating'],
       salonName: json['salonName'],
+      artistName: json['artistName'],
     );
   }
 
@@ -53,6 +56,7 @@ class Review {
       'userName': userName,
       'rating': rating,
       'salonName': salonName,
+      'artistName': artistName,
     };
   }
 }
