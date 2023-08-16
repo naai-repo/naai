@@ -9,7 +9,7 @@ class Review {
   DateTime? createdAt;
   String? imagePath;
   String? userName;
-  double? rating;
+  num? rating;
 
   Review({
     this.artistId,

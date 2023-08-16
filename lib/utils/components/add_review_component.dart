@@ -3,19 +3,27 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/view/post_auth/barber_profile/barber_profile_screen.dart';
+import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class AddReviewComponent extends StatelessWidget {
-  final String? userId;
-  final String? salonId;
-  final String? artistId;
+class AddReviewComponent extends StatefulWidget {
+  final bool reviewForSalon;
 
   const AddReviewComponent({
     super.key,
-    this.userId,
-    this.salonId,
-    this.artistId,
+    this.reviewForSalon = true,
   });
+
+  @override
+  State<AddReviewComponent> createState() => _AddReviewComponentState();
+}
+
+class _AddReviewComponentState extends State<AddReviewComponent> {
+  int selectedStarIndex = -1;
+  TextEditingController reviewTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,18 +62,30 @@ class AddReviewComponent extends StatelessWidget {
               SizedBox(width: 5.w),
               ...List.generate(
                 5,
-                (index) => SvgPicture.asset(
-                  ImagePathConstant.reviewStarIcon,
-                  color: Colors.grey.shade300,
+                (index) => GestureDetector(
+                  onTap: () => setState(() {
+                    selectedStarIndex = index;
+                  }),
+                  child: SvgPicture.asset(
+                    ImagePathConstant.reviewStarIcon,
+                    color: selectedStarIndex >= index
+                        ? ColorsConstant.yellowStar
+                        : ColorsConstant.reviewStarGreyColor,
+                  ),
                 ),
               ),
               SizedBox(width: 5.w),
             ],
           ),
           SizedBox(height: 3.h),
-          SizedBox(
-            height: 6.h,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: 6.h,
+              maxHeight: 19.h,
+            ),
             child: TextFormField(
+              controller: reviewTextController,
+              maxLines: null,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(
                   left: 5.w,
@@ -87,21 +107,42 @@ class AddReviewComponent extends StatelessWidget {
             ),
           ),
           SizedBox(height: 2.h),
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 1.5.h,
-              horizontal: 10.w,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1.5.h),
-            ),
-            child: Text(
-              StringConstant.submitReview,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 11.sp,
-                color: ColorsConstant.appColor,
+          GestureDetector(
+            onTap: () async {
+              if (widget.reviewForSalon) {
+                await context.read<SalonDetailsProvider>().submitReview(
+                      context,
+                      stars: selectedStarIndex,
+                      text: reviewTextController.text.trim(),
+                    );
+              } else {
+                await context.read<BarberProvider>().submitReview(
+                      context,
+                      stars: selectedStarIndex,
+                      text: reviewTextController.text.trim(),
+                    );
+              }
+              setState(() {
+                selectedStarIndex = -1;
+                reviewTextController.clear();
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 1.5.h,
+                horizontal: 10.w,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(1.5.h),
+              ),
+              child: Text(
+                StringConstant.submitReview,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11.sp,
+                  color: ColorsConstant.appColor,
+                ),
               ),
             ),
           ),

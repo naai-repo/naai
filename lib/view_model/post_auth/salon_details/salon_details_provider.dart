@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/booking.dart';
@@ -6,6 +7,7 @@ import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/utils/enums.dart';
+import 'package:naai/utils/exception/exception_handling.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -399,6 +401,42 @@ class SalonDetailsProvider with ChangeNotifier {
     _currentBooking.serviceIds = [];
     _currentBooking.serviceIds?.addAll(ids);
     _totalPrice = totalPrice;
+    notifyListeners();
+  }
+
+  Future<void> submitReview(
+    BuildContext context, {
+    required int stars,
+    required String text,
+  }) async {
+    if (stars < 1) {
+      ReusableWidgets.showFlutterToast(context, "Please add stars");
+      return;
+    }
+    Loader.showLoader(context);
+    Review review = Review(
+      salonId: selectedSalonData.id,
+      comment: text,
+      createdAt: DateTime.now(),
+      userId: context.read<HomeProvider>().userData.id,
+      userName: context.read<HomeProvider>().userData.name,
+      rating: stars.toDouble(),
+    );
+
+    try {
+      await DatabaseService().addReview(reviewData: review).onError(
+            (FirebaseException error, stackTrace) =>
+                throw ExceptionHandling(message: error.message ?? ""),
+          );
+      _salonReviewList.add(review);
+      Loader.hideLoader(context);
+    } catch (e) {
+      Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(
+        context,
+        '$e',
+      );
+    }
     notifyListeners();
   }
 

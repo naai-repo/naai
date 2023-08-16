@@ -88,6 +88,16 @@ class DatabaseService {
         .toList();
   }
 
+  /// Add review
+  Future<void> addReview({required Review reviewData}) async {
+    final DocumentReference reference = reviewsCollection.doc();
+    reviewData.id = reference.id;
+
+    await reference.set(reviewData.toJson()).onError(
+          (error, stackTrace) => throw Exception(error),
+        );
+  }
+
   /// Fetch the artist's reviews from [FirebaseFirestore]
   Future<List<Review>> getArtistReviewList(String? artistId) async {
     QuerySnapshot querySnapshot = await reviewsCollection

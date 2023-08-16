@@ -7,6 +7,7 @@ import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/post_auth/salon_details/salon_review_container.dart';
 import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -65,7 +66,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                       ),
                       selectedTab == 0
                           ? ReusableWidgets.servicesTab()
-                          : ReusableWidgets.reviewsTab(),
+                          : SalonReviewContainer(),
                     ],
                   ),
                 ),
@@ -114,10 +115,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                   color: ColorsConstant.textDark,
                                 ),
                               ),
-                              Text(
-                                'Rs. ${provider.totalPrice}',
-                                style: StyleConstant.textDark15sp600Style
-                              ),
+                              Text('Rs. ${provider.totalPrice}',
+                                  style: StyleConstant.textDark15sp600Style),
                             ],
                           ),
                           VariableWidthCta(

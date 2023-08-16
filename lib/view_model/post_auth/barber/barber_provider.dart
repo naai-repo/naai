@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/review.dart';
 import 'package:naai/services/database.dart';
+import 'package:naai/utils/exception/exception_handling.dart';
 import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -62,6 +65,42 @@ class BarberProvider with ChangeNotifier {
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> submitReview(
+    BuildContext context, {
+    required int stars,
+    required String text,
+  }) async {
+    if (stars < 1) {
+      ReusableWidgets.showFlutterToast(context, "Please add stars");
+      return;
+    }
+    Loader.showLoader(context);
+    Review review = Review(
+      artistId: artist.id,
+      comment: text,
+      createdAt: DateTime.now(),
+      userId: context.read<HomeProvider>().userData.id,
+      userName: context.read<HomeProvider>().userData.name,
+      rating: stars.toDouble(),
+    );
+
+    try {
+      await DatabaseService().addReview(reviewData: review).onError(
+            (FirebaseException error, stackTrace) =>
+                throw ExceptionHandling(message: error.message ?? ""),
+          );
+      _artistReviewList.add(review);
+      Loader.hideLoader(context);
+    } catch (e) {
+      Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(
+        context,
+        '$e',
+      );
     }
     notifyListeners();
   }
