@@ -12,6 +12,13 @@ class Booking {
   String? bookingCreatedOn;
   String? bookingCreatedFor;
 
+  // Parameters to ensure perfect transaction working
+  double? price;
+  String? transactionStatus;
+  String? paymentId;
+  String? orderId;
+  String? errorMessage;
+
   /// These are additional parameters. Not being fetched/sent from/to Firebase
   /// This is being used to display the booking related data on the app only.
   String? salonName;
@@ -31,6 +38,11 @@ class Booking {
     this.serviceIds,
     this.bookingCreatedFor,
     this.bookingCreatedOn,
+    this.price,
+    this.transactionStatus,
+    this.paymentId,
+    this.orderId,
+    this.errorMessage,
     this.salonName,
     this.artistName,
     this.bookedServiceNames,
@@ -52,6 +64,11 @@ class Booking {
       serviceIds: data['serviceIds'].cast<String>(),
       bookingCreatedOn: data['bookingCreatedOn'],
       bookingCreatedFor: data['bookingCreatedFor'],
+      price: data['price'],
+      transactionStatus: data['transactionStatus'],
+      paymentId: data['paymentId'],
+      orderId: data['orderId'],
+      errorMessage: data['errorMessage'],
     );
   }
 
@@ -65,6 +82,11 @@ class Booking {
       'serviceIds': serviceIds,
       'bookingCreatedOn': bookingCreatedOn,
       'bookingCreatedFor': bookingCreatedFor,
+      'price': price,
+      'transactionStatus': transactionStatus,
+      'paymentId': paymentId,
+      'orderId': orderId,
+      'errorMessage': errorMessage,
     };
   }
 }

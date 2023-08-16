@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
@@ -538,6 +539,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           name: artist.name ?? '',
                           rating: artist.rating ?? 0,
                           salonName: artist.salonName ?? '',
+                          artistId: artist.id ?? '',
                           color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
                             context
@@ -566,6 +568,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           name: artist.name ?? '',
                           rating: artist.rating ?? 0,
                           salonName: artist.salonName ?? '',
+                          artistId: artist.id ?? '',
                           color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
                             context
@@ -594,6 +597,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String name,
     required double rating,
     required String salonName,
+    required String artistId,
     required Color color,
     required Function() onTap,
   }) {
@@ -769,7 +773,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ColorfulInformationCard(
                                         imagePath:
                                             ImagePathConstant.locationIconAlt,
-                                        text: '1.3 km',
+                                        text: provider.salonList[index]
+                                            .getDistanceAsString(
+                                          provider.userCurrentLatLng,
+                                        ),
                                         color: ColorsConstant.purpleDistance,
                                       ),
                                       SizedBox(width: 3.w),

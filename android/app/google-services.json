@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "78905451649-1f0soo3fsjj92q5cuv8fuej3kuupvji1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.naai",
+            "certificate_hash": "d4963e5360eefcb9d3daa1e6ed1345ae89d0cf7f"
+          }
+        },
+        {
           "client_id": "78905451649-h8bjjqqh42pkrp3kf2shiv4gmpbc3jn5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.naai",
             "certificate_hash": "f312e8bc605610f6f39a02a3dfce2ded7d5e4479"
+          }
+        },
+        {
+          "client_id": "78905451649-kibls09kqqu0d5r9btfai1s65p59aj4v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.naai",
+            "certificate_hash": "bad3c39197f16139f66c06f841c0fa2dfe5f04ef"
           }
         },
         {
@@ -37,6 +53,13 @@
             {
               "client_id": "78905451649-4jdpk2is1qu4id713mrhq9vv9l2b52q0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "78905451649-kd4641igt898tj2bnsvvl5f79favcg7j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.naai"
+              }
             }
           ]
         }

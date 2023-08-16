@@ -28,10 +28,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 
+import '../../../models/review.dart';
+
 class HomeProvider with ChangeNotifier {
   bool _changedLocation = false;
 
   final _mapLocation = location.Location();
+  late LatLng _userCurrentLatLng;
+
+  location.Location get mapLocation => _mapLocation;
+  LatLng get userCurrentLatLng => _userCurrentLatLng;
 
   List<SalonData> _salonList = [];
   List<Artist> _artistList = [];
@@ -82,12 +88,31 @@ class HomeProvider with ChangeNotifier {
 
   /// Method to trigger all the API functions of home screen
   Future<void> initHome(BuildContext context) async {
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _mapLocation.requestService();
+    }
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      _permissionGranted = await _mapLocation.requestPermission();
+    }
     Loader.showLoader(context);
-    await Future.wait([
-      context.read<ExploreProvider>().getSalonList(context),
-      getUserDetails(context),
-      getAllArtists(context),
-    ]).onError(
+
+    var _locationData = await _mapLocation.getLocation().timeout(
+          const Duration(seconds: 7),
+          onTimeout: () => UtilityFunctions.locationApiTimeout(context,
+              message: StringConstant.locationApiTookTooLong),
+        );
+    _userCurrentLatLng =
+        LatLng(_locationData.latitude!, _locationData.longitude!);
+
+    await Future.wait(
+      [
+        context.read<ExploreProvider>().getSalonList(context),
+        getUserDetails(context),
+        getAllArtists(context),
+      ],
+    ).onError(
       (error, stackTrace) =>
           ReusableWidgets.showFlutterToast(context, '$error'),
     );
@@ -544,5 +569,9 @@ class HomeProvider with ChangeNotifier {
   void clearMapSearchText() {
     _mapSearchController.clear();
     notifyListeners();
+  }
+
+  Future<List<Review>> getUserReviews() async {
+    return await DatabaseService().getUserReviewsList(userData.id);
   }
 }

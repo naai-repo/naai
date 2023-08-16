@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/models/artist.dart';
@@ -13,6 +14,8 @@ import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -498,6 +501,45 @@ class _ExploreScreenState extends State<ExploreScreen>
                         child: Image.asset(
                             provider.filteredSalonData[index].imagePath ?? ''),
                       ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: InkWell(
+                          onTap: () {
+                            if (!context
+                                .read<HomeProvider>()
+                                .userData
+                                .preferredSalon!
+                                .contains(
+                                    provider.filteredSalonData[index].id)) {
+                              provider.addPreferedSalon(context,
+                                  provider.filteredSalonData[index].id);
+                            } else {
+                              provider.removePreferedSalon(context,
+                                  provider.filteredSalonData[index].id);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              context
+                                      .read<HomeProvider>()
+                                      .userData
+                                      .preferredSalon!
+                                      .contains(
+                                          provider.filteredSalonData[index].id)
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              size: 20,
+                              color: ColorsConstant.appColor,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   SizedBox(height: 1.4.h),
@@ -523,87 +565,23 @@ class _ExploreScreenState extends State<ExploreScreen>
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          ColorfulInformationCard(
-                            imagePath: ImagePathConstant.locationIconAlt,
-                            text: '1.3 km',
-                            color: ColorsConstant.purpleDistance,
-                          ),
-                          SizedBox(width: 3.w),
-                          ColorfulInformationCard(
-                            imagePath: ImagePathConstant.starIcon,
-                            text: '${provider.filteredSalonData[index].rating}',
-                            color: ColorsConstant.greenRating,
+                          SvgPicture.asset(ImagePathConstant.locationIconAlt),
+                          SizedBox(width: 1.w),
+                          Text(
+                            '${provider.filteredSalonData[index].getDistanceAsString(context.read<HomeProvider>().userCurrentLatLng)}',
+                            style: TextStyle(
+                              color: ColorsConstant.textDark,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 1.5.h),
-                  Row(
-                    children: <Widget>[
-                      TimeDateCard(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Mon - Fri",
-                                style: TextStyle(
-                                  color: ColorsConstant.textDark,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "  |  ",
-                                style: TextStyle(
-                                  color: ColorsConstant.textDark,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "10 AM-11 PM",
-                                style: TextStyle(
-                                  color: ColorsConstant.textDark,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 2.w),
-                      TimeDateCard(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Tues",
-                                style: TextStyle(
-                                  color: ColorsConstant.textDark,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "  |  ",
-                                style: TextStyle(
-                                  color: ColorsConstant.textDark,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Closed",
-                                style: TextStyle(
-                                  color: ColorsConstant.textDark,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                      SizedBox(height: 1.2.h),
+                      Text(
+                        '${provider.filteredSalonData[index].address?.addressString}',
+                        style: TextStyle(
+                          color: ColorsConstant.greySalonAddress,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
