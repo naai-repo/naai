@@ -467,7 +467,13 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createBooking(BuildContext context) async {
+  Future<void> createBooking(
+    BuildContext context,
+    String transactionStatus, {
+    String? paymentId,
+    String? orderId,
+    String? errorMessage,
+  }) async {
     Loader.showLoader(context);
     _currentBooking.salonId = _selectedSalonData.id;
     _currentBooking.userId = context.read<HomeProvider>().userData.id;
@@ -475,17 +481,21 @@ class SalonDetailsProvider with ChangeNotifier {
     _currentBooking.bookingCreatedFor = DateFormat('dd-MM-yyyy')
         .parse(_currentBooking.selectedDate ?? '')
         .toString();
+    _currentBooking.price = context.read<SalonDetailsProvider>().totalPrice;
+    _currentBooking.transactionStatus = transactionStatus;
+    _currentBooking.errorMessage = errorMessage;
 
     Map<String, dynamic> _finalData = _currentBooking.toJson();
 
     try {
       await DatabaseService().createBooking(bookingData: _finalData);
       Loader.hideLoader(context);
-
-      Navigator.pushReplacementNamed(
-        context,
-        NamedRoutes.bookingConfirmedRoute,
-      );
+      if (transactionStatus == "success") {
+        Navigator.pushReplacementNamed(
+          context,
+          NamedRoutes.bookingConfirmedRoute,
+        );
+      }
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');

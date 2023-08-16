@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
@@ -82,7 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Column(
                               children: <Widget>[
                                 profileOptions(
-                                  onTap: () => print('tapped'),
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    NamedRoutes.reviewsRoute,
+                                  ),
                                   imagePath: ImagePathConstant.reviewsIcon,
                                   optionTitle: StringConstant.reviews,
                                 ),
@@ -191,10 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    provider.userData.name ?? '',
-                    style: StyleConstant.textDark15sp600Style
-                  ),
+                  Text(provider.userData.name ?? '',
+                      style: StyleConstant.textDark15sp600Style),
                   Text(
                     provider.userData.phoneNumber ?? '',
                     style: TextStyle(

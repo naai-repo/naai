@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // getCurrentLocation();
     checkIfUserExists();
   }
 
@@ -33,9 +34,10 @@ class _SplashScreenState extends State<SplashScreen> {
         context
             .read<HomeProvider>()
             .checkUserIdInSharedPref(FirebaseAuth.instance.currentUser!.uid);
-
         Navigator.pushReplacementNamed(
-            context, NamedRoutes.bottomNavigationRoute);
+          context,
+          NamedRoutes.bottomNavigationRoute,
+        );
       } else {
         Navigator.pushReplacementNamed(
           context,
