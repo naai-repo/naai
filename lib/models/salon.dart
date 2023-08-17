@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:naai/models/user.dart';
 
 class SalonData {
@@ -10,6 +9,8 @@ class SalonData {
   String? imagePath;
   String? salonType;
   Timing? timing;
+  String? distanceFromUserAsString;
+  double? distanceFromUser;
 
   SalonData({
     this.id,
@@ -19,6 +20,8 @@ class SalonData {
     this.imagePath,
     this.salonType,
     this.timing,
+    this.distanceFromUserAsString,
+    this.distanceFromUser,
   });
 
   factory SalonData.fromDocumentSnapshot(DocumentSnapshot data) {
@@ -44,17 +47,6 @@ class SalonData {
       'salonType': salonType,
       'timing': timing!.toJson(),
     };
-  }
-
-  String getDistanceAsString(LatLng? userLatLng) {
-    if (address == null || userLatLng == null || address!.geoLocation == null)
-      return 'NA';
-    return '${address!.calculateDistance(
-          userLatLng.latitude,
-          userLatLng.longitude,
-          address!.geoLocation!.latitude,
-          address!.geoLocation!.longitude,
-        ).toStringAsFixed(2)}km';
   }
 }
 

@@ -53,6 +53,26 @@ class ExploreProvider with ChangeNotifier {
   Future<void> getSalonList(BuildContext context) async {
     try {
       _salonData = await DatabaseService().getSalonList();
+      _salonData.forEach((element) {
+        element.distanceFromUserAsString = "NA";
+        if (element.address!.geoLocation != null) {
+          element.distanceFromUser = element.address!.calculateDistance(
+            context.read<HomeProvider>().userCurrentLatLng.latitude,
+            context.read<HomeProvider>().userCurrentLatLng.longitude,
+            element.address!.geoLocation!.latitude,
+            element.address!.geoLocation!.longitude,
+          );
+          element.distanceFromUserAsString =
+              '${element.address!.calculateDistance(
+                    context.read<HomeProvider>().userCurrentLatLng.latitude,
+                    context.read<HomeProvider>().userCurrentLatLng.longitude,
+                    element.address!.geoLocation!.latitude,
+                    element.address!.geoLocation!.longitude,
+                  ).toStringAsFixed(2)}km';
+        }
+      });
+      _salonData.sort((first, second) =>
+          first.distanceFromUser!.compareTo(second.distanceFromUser!));
       _filteredSalonData.clear();
       _filteredSalonData.addAll(_salonData);
     } catch (e) {
@@ -84,6 +104,12 @@ class ExploreProvider with ChangeNotifier {
     });
     notifyListeners();
   }
+
+  /// Set the value of [_filteredSalonData] according to the selected service.
+  // void filterSalonListByDistance({required Services selectedServiceCategory}) {
+  //   _filteredSalonData.sort((first, second) => );
+  //   notifyListeners();
+  // }
 
   /// Save the index of the selected salon from the list of salons
   void setSelectedSalonIndex(BuildContext context, {int index = 0}) {

@@ -5,14 +5,17 @@ import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/red_button_with_text.dart';
+import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -640,6 +643,23 @@ class _ExploreScreenState extends State<ExploreScreen>
                               ),
                             ],
                           ),
+                          SvgPicture.asset(ImagePathConstant.locationIconAlt),
+                          SizedBox(width: 1.w),
+                          Text(
+                            '${provider.filteredSalonData[index].distanceFromUserAsString}',
+                            style: TextStyle(
+                              color: ColorsConstant.textDark,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 1.2.h),
+                      Text(
+                        '${provider.filteredSalonData[index].address?.addressString}',
+                        style: TextStyle(
+                          color: ColorsConstant.greySalonAddress,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

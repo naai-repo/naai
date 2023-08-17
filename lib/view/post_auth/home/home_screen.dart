@@ -796,9 +796,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         imagePath:
                                             ImagePathConstant.locationIconAlt,
                                         text: provider.salonList[index]
-                                            .getDistanceAsString(
-                                          provider.userCurrentLatLng,
-                                        ),
+                                            .distanceFromUserAsString!,
                                         color: ColorsConstant.purpleDistance,
                                       ),
                                       SizedBox(width: 3.w),

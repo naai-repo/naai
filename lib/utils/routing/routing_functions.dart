@@ -45,7 +45,7 @@ class RoutingFunctions {
       case NamedRoutes.exploreRoute:
         target = ExploreScreen();
         break;
-        case NamedRoutes.exploreStylistRoute:
+      case NamedRoutes.exploreStylistRoute:
         target = ExploreStylist();
         break;
       case NamedRoutes.homeRoute:
