@@ -28,7 +28,6 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
-
   late TabController homeScreenController;
 
   @override
@@ -135,7 +134,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                                               context
                                                   .read<BarberProvider>()
                                                   .setArtistDataFromHome(
-                                                      artist);
+                                                    artist,
+                                                  );
                                               Navigator.pushNamed(
                                                 context,
                                                 NamedRoutes.barberProfileRoute,
@@ -229,12 +229,10 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
-                                                              children: <
-                                                                  Widget>[
+                                                              children: <Widget>[
                                                                 Text.rich(
                                                                   TextSpan(
-                                                                    children: <
-                                                                        InlineSpan>[
+                                                                    children: <InlineSpan>[
                                                                       WidgetSpan(
                                                                         alignment:
                                                                             PlaceholderAlignment.baseline,
@@ -273,8 +271,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                                 ),
                                                                 Text.rich(
                                                                   TextSpan(
-                                                                    children: <
-                                                                        InlineSpan>[
+                                                                    children: <InlineSpan>[
                                                                       WidgetSpan(
                                                                         alignment:
                                                                             PlaceholderAlignment.baseline,
@@ -319,14 +316,47 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                     Align(
                                                       alignment:
                                                           Alignment.topRight,
-                                                      child: SvgPicture.asset(
-                                                        ImagePathConstant
-                                                            .saveIcon,
-                                                        color: index.isOdd
-                                                            ? const Color(
-                                                                0xFF212121)
-                                                            : Colors.white,
-                                                        height: 3.h,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          if (context
+                                                              .read<
+                                                                  HomeProvider>()
+                                                              .userData
+                                                              .preferredArtist!
+                                                              .contains(
+                                                                  artist.id)) {
+                                                            provider
+                                                                .removePreferedArtist(
+                                                              context,
+                                                              artist.id,
+                                                            );
+                                                          } else {
+                                                            provider
+                                                                .addPreferedArtist(
+                                                              context,
+                                                              artist.id,
+                                                            );
+                                                          }
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          ImagePathConstant
+                                                              .saveIcon,
+                                                          color: context
+                                                                  .read<
+                                                                      HomeProvider>()
+                                                                  .userData
+                                                                  .preferredArtist!
+                                                                  .contains(
+                                                                      artist.id)
+                                                              ? ColorsConstant
+                                                                  .appColor
+                                                              : index.isOdd
+                                                                  ? const Color(
+                                                                      0xFF212121)
+                                                                  : Colors
+                                                                      .white,
+                                                          height: 3.h,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],

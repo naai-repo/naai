@@ -74,6 +74,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   ),
                   SliverFillRemaining(
                     child: Container(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.sizeOf(context).height,
+                      ),
                       color: Colors.white,
                       padding: EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
                       child: FutureBuilder<List<Review>>(

@@ -240,4 +240,18 @@ class DatabaseService {
         .map((docData) => Review.fromDocumentSnapshot(docData))
         .toList();
   }
+
+  Future<List<SalonData>> getPreferredSalon(
+      List<String> preferredSalonIds) async {
+    if (preferredSalonIds.isEmpty) {
+      return [];
+    }
+    QuerySnapshot querySnapshot = await salonCollection
+        .where('id', whereIn: preferredSalonIds)
+        .get()
+        .onError((error, stackTrace) => throw Exception(error));
+    return querySnapshot.docs
+        .map((salonData) => SalonData.fromDocumentSnapshot(salonData))
+        .toList();
+  }
 }
