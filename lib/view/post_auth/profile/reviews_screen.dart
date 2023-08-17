@@ -72,7 +72,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     ),
                     centerTitle: false,
                   ),
-                  SliverFillRemaining(
+                  SliverToBoxAdapter(
                     child: Container(
                       color: Colors.white,
                       padding: EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
@@ -91,15 +91,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                 ? Center(
                                     child: Text("No Reviews Yet!"),
                                   )
-                                : ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.requireData.length,
-                                    itemBuilder: (context, index) {
-                                      Review? reviewItem =
-                                          snapshot.requireData[index];
-
+                                : Column(
+                                    children:
+                                        snapshot.requireData.map((reviewItem) {
                                       return Container(
                                         margin:
                                             EdgeInsets.symmetric(vertical: 1.h),
@@ -232,9 +226,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                                             ImagePathConstant
                                                                 .starIcon,
                                                             color: i <
-                                                                    (int.parse(provider
-                                                                            .artistList[
-                                                                                index]
+                                                                    (int.parse(reviewItem
                                                                             .rating
                                                                             ?.round()
                                                                             .toString() ??
@@ -278,7 +270,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                           ],
                                         ),
                                       );
-                                    },
+                                    }).toList(),
                                   );
                           }
                           return Center(
