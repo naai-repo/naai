@@ -52,7 +52,7 @@ class HomeProvider with ChangeNotifier {
 
   UserModel _userData = UserModel();
 
-  Booking? _lastOrNextBooking;
+  List<Booking> _lastOrNextBooking = [];
 
   //============= GETTERS =============//
   List<SalonData> get salonList => _salonList;
@@ -64,7 +64,7 @@ class HomeProvider with ChangeNotifier {
 
   UserModel get userData => _userData;
 
-  Booking? get lastOrNextBooking => _lastOrNextBooking;
+  List<Booking> get lastOrNextBooking => _lastOrNextBooking;
 
   /// Check if there is a [uid] stored in [SharedPreferences] or not.
   /// If no [uid] is found, then get the userId of the currently logged in
@@ -161,34 +161,47 @@ class HomeProvider with ChangeNotifier {
     try {
       List<Booking> response =
           await DatabaseService().getUserBookings(userId: userData.id ?? '');
-
+      _lastOrNextBooking.clear();
       for (int i = 0; i < response.length; i++) {
         if (DateTime.parse(response[i].bookingCreatedFor ?? '')
             .isAfter(DateTime.now())) {
-          _lastOrNextBooking = response[i];
-          break;
-        } else if (i == response.length - 1) {
-          _lastOrNextBooking = response[i];
+          _lastOrNextBooking.add(response[i]);
+          if (_salonList.isNotEmpty) {
+            _lastOrNextBooking.last.salonName = _salonList
+                .firstWhere(
+                    (element) => element.id == _lastOrNextBooking.last.salonId)
+                .name;
+          }
+          _lastOrNextBooking.last.createdOnString =
+              getTimeAgoString(_lastOrNextBooking.last.bookingCreatedOn);
+          if (_artistList.isNotEmpty) {
+            _lastOrNextBooking.last.artistName = _artistList
+                .firstWhere(
+                    (element) => element.id == _lastOrNextBooking.last.artistId)
+                .name;
+          }
+          _lastOrNextBooking.last.isUpcoming = true;
         }
       }
 
-      if (_salonList.isNotEmpty) {
-        _lastOrNextBooking?.salonName = _salonList
-            .firstWhere((element) => element.id == _lastOrNextBooking?.salonId)
-            .name;
+      if (_lastOrNextBooking.isEmpty && response.isNotEmpty) {
+        _lastOrNextBooking.add(response.last);
+        _lastOrNextBooking.last.isUpcoming = false;
+        if (_salonList.isNotEmpty) {
+          _lastOrNextBooking.last.salonName = _salonList
+              .firstWhere(
+                  (element) => element.id == _lastOrNextBooking.last.salonId)
+              .name;
+        }
+        _lastOrNextBooking.last.createdOnString =
+            getTimeAgoString(_lastOrNextBooking.last.bookingCreatedOn);
+        if (_artistList.isNotEmpty) {
+          _lastOrNextBooking.last.artistName = _artistList
+              .firstWhere(
+                  (element) => element.id == _lastOrNextBooking.last.artistId)
+              .name;
+        }
       }
-
-      if (_artistList.isNotEmpty) {
-        _lastOrNextBooking?.artistName = _artistList
-            .firstWhere((element) => element.id == _lastOrNextBooking?.artistId)
-            .name;
-      }
-
-      _lastOrNextBooking?.createdOnString =
-          getTimeAgoString(_lastOrNextBooking?.bookingCreatedOn);
-
-      _lastOrNextBooking?.isUpcoming = DateTime.now().isBefore(
-          DateTime.parse(_lastOrNextBooking?.bookingCreatedFor ?? ''));
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -221,14 +234,17 @@ class HomeProvider with ChangeNotifier {
   Future<void> getServicesNamesAndPrice(BuildContext context) async {
     try {
       var response = await DatabaseService().getAllServices();
-      _lastOrNextBooking?.bookedServiceNames = [];
-      response.forEach((element) {
-        if (_lastOrNextBooking?.serviceIds?.contains(element.id) == true) {
-          _lastOrNextBooking?.bookedServiceNames
-              ?.add(element.serviceTitle ?? '');
-          _lastOrNextBooking?.totalPrice += element.price ?? 0;
-        }
-      });
+      for (int i = 0; i < _lastOrNextBooking.length; i++) {
+        _lastOrNextBooking[i].bookedServiceNames = [];
+        response.forEach((element) {
+          if (_lastOrNextBooking[i].serviceIds?.contains(element.id) == true) {
+            _lastOrNextBooking[i]
+                .bookedServiceNames
+                ?.add(element.serviceTitle ?? '');
+            _lastOrNextBooking[i].totalPrice += element.price ?? 0;
+          }
+        });
+      }
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -494,21 +510,21 @@ class HomeProvider with ChangeNotifier {
     );
   }
 
-  void populateBookingData(BuildContext context) async {
+  void populateBookingData(BuildContext context, int index) async {
     await context.read<SalonDetailsProvider>().getSalonData(
           context,
-          salonId: _lastOrNextBooking!.salonId!,
+          salonId: _lastOrNextBooking[index].salonId!,
         );
 
     await context.read<SalonDetailsProvider>().getArtistList(context);
     await context.read<SalonDetailsProvider>().getServiceList(
           context,
-          salonIdFromOutside: _lastOrNextBooking!.salonId,
+          salonIdFromOutside: _lastOrNextBooking[index].salonId,
         );
 
     context.read<SalonDetailsProvider>().setServiceIds(
-          ids: _lastOrNextBooking!.serviceIds!,
-          totalPrice: _lastOrNextBooking!.totalPrice,
+          ids: _lastOrNextBooking[index].serviceIds!,
+          totalPrice: _lastOrNextBooking[index].totalPrice,
         );
 
     context
@@ -518,7 +534,7 @@ class HomeProvider with ChangeNotifier {
     context.read<SalonDetailsProvider>().setBookingData(
           context,
           setArtistId: true,
-          artistId: _lastOrNextBooking?.artistId,
+          artistId: _lastOrNextBooking[index].artistId,
         );
     Navigator.pushNamed(
       context,
@@ -535,24 +551,44 @@ class HomeProvider with ChangeNotifier {
     bool getFullDate = false,
     bool secondaryDateFormat = false,
     String? dateTimeString,
+    required int index,
   }) {
     DateTime dateTime =
         DateTime.parse(dateTimeString ?? DateTime.now().toString());
-    _lastOrNextBooking?.bookingCreatedFor ?? DateTime.now().toString();
+    _lastOrNextBooking[index].bookingCreatedFor ?? DateTime.now().toString();
     if (getFormattedDate) {
       return DateFormat('MMM dd').format(dateTime);
     } else if (getAbbreviatedDay) {
       return DateFormat('EEE').format(dateTime);
     } else if (getTimeScheduled) {
-      String formattedTime = DateFormat('hh:mm a').format(dateTime);
-      String formattedTimePlusOneHour =
-          DateFormat('hh:mm a').format(dateTime.add(Duration(hours: 1)));
-      return '$formattedTime - $formattedTimePlusOneHour';
+      return getTimeRangeString(_lastOrNextBooking[index].startTime ?? 0,
+          _lastOrNextBooking[index].endTime ?? 0);
     } else if (getFullDate) {
       return DateFormat('dd-MM-yyyy').format(dateTime);
     } else {
       return DateFormat('dd MMMM yyyy').format(dateTime);
     }
+  }
+
+  String formatTime(int timeInSeconds) {
+    int hours = (timeInSeconds ~/ 3600) % 12;
+    int minutes = ((timeInSeconds % 3600) ~/ 60);
+    String amPm = (timeInSeconds ~/ 43200) == 0 ? 'AM' : 'PM';
+
+    if (hours == 0) {
+      hours = 12;
+    }
+
+    String formattedTime =
+        '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')} $amPm';
+    return formattedTime;
+  }
+
+  String getTimeRangeString(int startTime, int endTime) {
+    String formattedStartTime = formatTime(startTime);
+    String formattedEndTime = formatTime(endTime);
+
+    return '$formattedStartTime - $formattedEndTime';
   }
 
   /// Get the address text from the user's home location

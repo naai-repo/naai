@@ -99,15 +99,31 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             serviceCategories(),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 3.w),
-                              child: Visibility(
-                                visible: provider.lastOrNextBooking != null &&
-                                    provider.lastOrNextBooking!.isUpcoming,
-                                child: upcomingBookingCard(),
-                                replacement: previousBookingCard(),
+                            if (provider.lastOrNextBooking.isNotEmpty)
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                child: Visibility(
+                                  visible: provider
+                                      .lastOrNextBooking.last.isUpcoming,
+                                  child: MediaQuery.removePadding(
+                                    context: context,
+                                    removeBottom: true,
+                                    removeTop: true,
+                                    child: ListView.separated(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount:
+                                          provider.lastOrNextBooking.length,
+                                      itemBuilder: (context, index) {
+                                        return upcomingBookingCard(index);
+                                      },
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(height: 2.h),
+                                    ),
+                                  ),
+                                  replacement: previousBookingCard(),
+                                ),
                               ),
-                            ),
                             salonNearMe(),
                             SizedBox(height: 5.h),
                             ourStylist(),
@@ -150,14 +166,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   BookedSalonAndArtistName(
                     headerText: StringConstant.salon,
                     headerIconPath: ImagePathConstant.salonChairIcon,
-                    nameText: provider.lastOrNextBooking?.salonName ?? '',
+                    nameText: provider.lastOrNextBooking.last.salonName ?? '',
                   ),
                   Visibility(
                     visible: provider.artistList.isNotEmpty,
                     child: BookedSalonAndArtistName(
                       headerText: StringConstant.artist,
                       headerIconPath: ImagePathConstant.artistIcon,
-                      nameText: provider.lastOrNextBooking?.artistName ?? '',
+                      nameText:
+                          provider.lastOrNextBooking.last.artistName ?? '',
                     ),
                   ),
                 ],
@@ -179,7 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => Text(
-                    provider.lastOrNextBooking?.bookedServiceNames?[index] ??
+                    provider.lastOrNextBooking.last
+                            .bookedServiceNames?[index] ??
                         '',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
@@ -188,9 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   separatorBuilder: (context, index) => Text(', '),
-                  itemCount:
-                      provider.lastOrNextBooking?.bookedServiceNames?.length ??
-                          0,
+                  itemCount: provider
+                          .lastOrNextBooking.last.bookedServiceNames?.length ??
+                      0,
                 ),
               ),
               Row(
@@ -198,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   RedButtonWithText(
                     buttonText: StringConstant.bookAgain,
-                    onTap: () => provider.populateBookingData(context),
+                    onTap: () => provider.populateBookingData(context, 0),
                     padding: EdgeInsets.symmetric(
                       horizontal: 5.w,
                       vertical: 1.h,
@@ -211,6 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => Navigator.pushNamed(
                       context,
                       NamedRoutes.appointmentDetailsRoute,
+                      arguments: 0,
                     ),
                     buttonText: StringConstant.seeDetails,
                     fillColor: Colors.white,
@@ -231,12 +250,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget upcomingBookingCard() {
+  Widget upcomingBookingCard(int index) {
     return Consumer<HomeProvider>(builder: (context, provider, child) {
       return GestureDetector(
         onTap: () => Navigator.pushNamed(
           context,
           NamedRoutes.appointmentDetailsRoute,
+          arguments: index,
         ),
         child: Container(
           padding: EdgeInsets.all(1.5.h),
@@ -263,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 12.sp,
                     lineColor: Colors.white,
                     textColor: Colors.white,
-                    text: StringConstant.viewAllAppointments.toUpperCase(),
+                    text: StringConstant.viewAppointment.toUpperCase(),
                   ),
                   Card(
                     color: Colors.white,
@@ -292,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        provider.lastOrNextBooking?.salonName ?? '',
+                        provider.lastOrNextBooking[index].salonName ?? '',
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w600,
@@ -317,7 +337,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               provider.getFormattedDateOfBooking(
                                 getFormattedDate: true,
                                 dateTimeString: provider
-                                    .lastOrNextBooking?.bookingCreatedFor,
+                                    .lastOrNextBooking[index].bookingCreatedFor,
+                              index: index,
                               ),
                               style: StyleConstant.bookingDateTimeTextStyle,
                             ),
@@ -329,7 +350,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               provider.getFormattedDateOfBooking(
                                 getAbbreviatedDay: true,
                                 dateTimeString: provider
-                                    .lastOrNextBooking?.bookingCreatedFor,
+                                    .lastOrNextBooking[index].bookingCreatedFor,
+                                index: index,
                               ),
                               style: StyleConstant.bookingDateTimeTextStyle,
                             ),
@@ -341,7 +363,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               provider.getFormattedDateOfBooking(
                                 getTimeScheduled: true,
                                 dateTimeString: provider
-                                    .lastOrNextBooking?.bookingCreatedFor,
+                                    .lastOrNextBooking[index].bookingCreatedFor,
+                                index: index,
                               ),
                               style: StyleConstant.bookingDateTimeTextStyle,
                             ),

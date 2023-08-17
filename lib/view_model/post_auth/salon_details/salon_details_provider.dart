@@ -270,7 +270,6 @@ class SalonDetailsProvider with ChangeNotifier {
         bookingDate,
       );
       Loader.hideLoader(context);
-
       _bookingList.forEach((booking) {
         for (int i = booking.startTime ?? 0;
             i < (booking.endTime ?? 0);
@@ -490,6 +489,7 @@ class SalonDetailsProvider with ChangeNotifier {
     try {
       await DatabaseService().createBooking(bookingData: _finalData);
       Loader.hideLoader(context);
+      context.read<HomeProvider>().getUserBookings(context);
       if (transactionStatus == "success") {
         Navigator.pushReplacementNamed(
           context,

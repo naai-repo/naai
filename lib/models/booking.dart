@@ -61,7 +61,7 @@ class Booking {
       endTime: data['endTime'],
       salonId: data['salonId'],
       userId: data['userId'],
-      serviceIds: data['serviceIds'].cast<String>(),
+      serviceIds: data['serviceIds'] != null ? data['serviceIds'].cast<String>() : [],
       bookingCreatedOn: data['bookingCreatedOn'],
       bookingCreatedFor: data['bookingCreatedFor'],
       price: data['price'],

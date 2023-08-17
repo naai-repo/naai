@@ -73,7 +73,7 @@ class RoutingFunctions {
         target = BookingConfirmedSreen();
         break;
       case NamedRoutes.appointmentDetailsRoute:
-        target = AppointmentDetails();
+        target = AppointmentDetails(index: settings.arguments as int);
         break;
     }
 
