@@ -59,15 +59,17 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: (context, snapshot) {
-        return Sizer(builder: (context, orientation, deviceType) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Naai',
-            theme: ThemeData(fontFamily: 'Poppins'),
-            onGenerateRoute: RoutingFunctions.generateRoutes,
-            initialRoute: NamedRoutes.splashRoute,
-          );
-        });
+        return Sizer(
+          builder: (context, orientation, deviceType) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Naai',
+              theme: ThemeData(fontFamily: 'Poppins'),
+              onGenerateRoute: RoutingFunctions.generateRoutes,
+              initialRoute: NamedRoutes.splashRoute,
+            );
+          },
+        );
       },
     );
   }

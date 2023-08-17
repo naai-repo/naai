@@ -4,7 +4,6 @@ import 'package:naai/view/post_auth/bottom_navigation_screen.dart';
 import 'package:naai/view/post_auth/create_booking/appointment_details.dart';
 import 'package:naai/view/post_auth/create_booking/booking_confirmed_screen.dart';
 import 'package:naai/view/post_auth/create_booking/create_booking_screen.dart';
-import 'package:naai/view/post_auth/create_booking/payment_screen.dart';
 import 'package:naai/view/post_auth/explore/explore_stylist.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/post_auth/home/set_home_location_screen.dart';
@@ -46,7 +45,7 @@ class RoutingFunctions {
       case NamedRoutes.exploreRoute:
         target = ExploreScreen();
         break;
-        case NamedRoutes.exploreStylistRoute:
+      case NamedRoutes.exploreStylistRoute:
         target = ExploreStylist();
         break;
       case NamedRoutes.homeRoute:
