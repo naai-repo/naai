@@ -250,8 +250,12 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                                                 1.w),
                                                                       ),
                                                                       TextSpan(
-                                                                        text:
-                                                                            '1.3 km',
+                                                                        text: provider
+                                                                            .filteredSalonData
+                                                                            .firstWhere(
+                                                                              (element) => element.id == artist.salonId,
+                                                                            )
+                                                                            .distanceFromUserAsString,
                                                                         style:
                                                                             TextStyle(
                                                                           fontWeight:
