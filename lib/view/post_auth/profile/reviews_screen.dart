@@ -75,7 +75,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   SliverFillRemaining(
                     child: Container(
                       constraints: BoxConstraints(
-                        minHeight: MediaQuery.sizeOf(context).height,
+                        minHeight: MediaQuery.of(context).size.height,
                       ),
                       color: Colors.white,
                       padding: EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
@@ -297,29 +297,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           ),
         );
       },
-    );
-  }
-
-  static Widget reviewerImageAndName(
-      {String? imageUrl, required String userName}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-          radius: 5.h,
-          backgroundImage: AssetImage('assets/images/salon_dummy_image.png'),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 0.5.h),
-          child: Text(
-            userName,
-            style: TextStyle(
-              fontSize: 10.sp,
-              color: ColorsConstant.textDark,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

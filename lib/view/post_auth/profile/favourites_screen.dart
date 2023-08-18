@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/models/artist.dart';
-import 'package:naai/models/salon.dart';
-import 'package:naai/services/database.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/image_path_constant.dart';
@@ -81,7 +79,7 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                   SliverToBoxAdapter(
                     child: Container(
                       constraints: BoxConstraints(
-                        minHeight: MediaQuery.sizeOf(context).height,
+                        minHeight: MediaQuery.of(context).size.height,
                       ),
                       color: Colors.white,
                       padding: EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
