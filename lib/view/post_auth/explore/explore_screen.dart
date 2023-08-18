@@ -5,17 +5,14 @@ import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/red_button_with_text.dart';
-import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
-import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
-import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -134,7 +131,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                                               context
                                                   .read<BarberProvider>()
                                                   .setArtistDataFromHome(
-                                                      artist);
+                                                    artist,
+                                                  );
                                               Navigator.pushNamed(
                                                 context,
                                                 NamedRoutes.barberProfileRoute,
@@ -228,12 +226,10 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
-                                                              children: <
-                                                                  Widget>[
+                                                              children: <Widget>[
                                                                 Text.rich(
                                                                   TextSpan(
-                                                                    children: <
-                                                                        InlineSpan>[
+                                                                    children: <InlineSpan>[
                                                                       WidgetSpan(
                                                                         alignment:
                                                                             PlaceholderAlignment.baseline,
@@ -272,8 +268,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                                 ),
                                                                 Text.rich(
                                                                   TextSpan(
-                                                                    children: <
-                                                                        InlineSpan>[
+                                                                    children: <InlineSpan>[
                                                                       WidgetSpan(
                                                                         alignment:
                                                                             PlaceholderAlignment.baseline,
@@ -318,14 +313,47 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                     Align(
                                                       alignment:
                                                           Alignment.topRight,
-                                                      child: SvgPicture.asset(
-                                                        ImagePathConstant
-                                                            .saveIcon,
-                                                        color: index.isOdd
-                                                            ? const Color(
-                                                                0xFF212121)
-                                                            : Colors.white,
-                                                        height: 3.h,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          if (context
+                                                              .read<
+                                                                  HomeProvider>()
+                                                              .userData
+                                                              .preferredArtist!
+                                                              .contains(
+                                                                  artist.id)) {
+                                                            provider
+                                                                .removePreferedArtist(
+                                                              context,
+                                                              artist.id,
+                                                            );
+                                                          } else {
+                                                            provider
+                                                                .addPreferedArtist(
+                                                              context,
+                                                              artist.id,
+                                                            );
+                                                          }
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          ImagePathConstant
+                                                              .saveIcon,
+                                                          color: context
+                                                                  .read<
+                                                                      HomeProvider>()
+                                                                  .userData
+                                                                  .preferredArtist!
+                                                                  .contains(
+                                                                      artist.id)
+                                                              ? ColorsConstant
+                                                                  .appColor
+                                                              : index.isOdd
+                                                                  ? const Color(
+                                                                      0xFF212121)
+                                                                  : Colors
+                                                                      .white,
+                                                          height: 3.h,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],

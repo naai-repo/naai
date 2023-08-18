@@ -91,6 +91,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   optionTitle: StringConstant.reviews,
                                 ),
                                 profileOptions(
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    NamedRoutes.favouritesRoute,
+                                  ),
+                                  imagePath: ImagePathConstant.saveIcon,
+                                  optionTitle: StringConstant.favourties,
+                                ),
+                                profileOptions(
                                   onTap: () => print('tapped'),
                                   imagePath:
                                       ImagePathConstant.bookingHistoryIcon,

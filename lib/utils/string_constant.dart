@@ -95,6 +95,7 @@ class StringConstant {
   static const String barberProfile = 'Barber profile';
   static const String worksAt = 'WORKS AT';
   static const String rating = "RATING";
+  static const String favourties = "Favourites";
 
   // Exception related strings
   static const String locationApiTookTooLong =

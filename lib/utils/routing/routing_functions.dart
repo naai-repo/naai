@@ -8,6 +8,7 @@ import 'package:naai/view/post_auth/explore/explore_stylist.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/post_auth/home/set_home_location_screen.dart';
 import 'package:naai/view/post_auth/map/map_screen.dart';
+import 'package:naai/view/post_auth/profile/favourites_screen.dart';
 import 'package:naai/view/post_auth/profile/reviews_screen.dart';
 import 'package:naai/view/post_auth/salon_details/salon_details_screen.dart';
 import 'package:naai/view/pre_auth/authentication_screen.dart';
@@ -68,6 +69,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.reviewsRoute:
         target = ReviewsScreen();
+        break;
+      case NamedRoutes.favouritesRoute:
+        target = FavourtieScreen();
         break;
       case NamedRoutes.bookingConfirmedRoute:
         target = BookingConfirmedSreen();
