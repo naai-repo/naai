@@ -228,10 +228,12 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
-                                                              children: <Widget>[
+                                                              children: <
+                                                                  Widget>[
                                                                 Text.rich(
                                                                   TextSpan(
-                                                                    children: <InlineSpan>[
+                                                                    children: <
+                                                                        InlineSpan>[
                                                                       WidgetSpan(
                                                                         alignment:
                                                                             PlaceholderAlignment.baseline,
@@ -270,7 +272,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                                                                 ),
                                                                 Text.rich(
                                                                   TextSpan(
-                                                                    children: <InlineSpan>[
+                                                                    children: <
+                                                                        InlineSpan>[
                                                                       WidgetSpan(
                                                                         alignment:
                                                                             PlaceholderAlignment.baseline,
@@ -564,7 +567,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                           ColorfulInformationCard(
                             imagePath: ImagePathConstant.locationIconAlt,
                             text:
-                                '${provider.filteredSalonData[index].getDistanceAsString(context.read<HomeProvider>().userCurrentLatLng)}',
+                                '${provider.filteredSalonData[index].distanceFromUserAsString}',
                             color: ColorsConstant.purpleDistance,
                           ),
                           SizedBox(width: 3.w),
@@ -643,28 +646,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                               ),
                             ],
                           ),
-                          SvgPicture.asset(ImagePathConstant.locationIconAlt),
-                          SizedBox(width: 1.w),
-                          Text(
-                            '${provider.filteredSalonData[index].distanceFromUserAsString}',
-                            style: TextStyle(
-                              color: ColorsConstant.textDark,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 1.2.h),
-                      Text(
-                        '${provider.filteredSalonData[index].address?.addressString}',
-                        style: TextStyle(
-                          color: ColorsConstant.greySalonAddress,
-                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 1.h),
+                  SizedBox(height: 1.2.h),
                   index == (provider.filteredSalonData.length - 1)
                       ? SizedBox(height: 10.h)
                       : Divider(
