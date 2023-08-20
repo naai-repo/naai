@@ -8,12 +8,14 @@ class IconTextSelectorComponent extends StatelessWidget {
   final String text;
   final String iconPath;
   final bool isSelected;
+  final bool showSelector;
 
   const IconTextSelectorComponent({
     super.key,
     required this.text,
     required this.iconPath,
     this.isSelected = false,
+    this.showSelector = false,
   });
 
   @override
@@ -26,6 +28,7 @@ class IconTextSelectorComponent extends StatelessWidget {
             SvgPicture.asset(
               iconPath,
               color: isSelected ? ColorsConstant.appColor : null,
+              height: 1.5.h,
             ),
             SizedBox(width: 2.w),
             Text(
@@ -33,19 +36,22 @@ class IconTextSelectorComponent extends StatelessWidget {
               style: TextStyle(
                 color: isSelected
                     ? ColorsConstant.appColor
-                    : ColorsConstant.textDark,
+                    : ColorsConstant.textLight,
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        SvgPicture.asset(
-          isSelected
-              ? ImagePathConstant.selectedOption
-              : ImagePathConstant.unselectedOption,
-          width: 5.w,
-          fit: BoxFit.fitWidth,
+        Visibility(
+          visible: showSelector,
+          child: SvgPicture.asset(
+            isSelected
+                ? ImagePathConstant.selectedOption
+                : ImagePathConstant.unselectedOption,
+            width: 5.w,
+            fit: BoxFit.fitWidth,
+          ),
         ),
       ],
     );

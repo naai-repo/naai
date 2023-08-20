@@ -71,7 +71,7 @@ class StringConstant {
   static const String selectStaff = 'Select Staff';
   static const String selectSlot = 'Select Slot';
   static const String payment = 'Payment';
-  static const String singleStaffText = 'SINGLE STAFF FOR ALL SERVICE';
+  static const String singleStaffText = 'Single staff for all service';
   static const String multipleStaffText = 'MULTIPLE STAFF';
   static const String useThisToSaveTime = 'USE THIS TO SAVE TIME';
   static const String next = 'NEXT';
