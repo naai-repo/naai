@@ -198,7 +198,8 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                         children: <Widget>[
                                                           Text.rich(
                                                             TextSpan(
-                                                              children: <InlineSpan>[
+                                                              children: <
+                                                                  InlineSpan>[
                                                                 WidgetSpan(
                                                                   alignment:
                                                                       PlaceholderAlignment
@@ -240,7 +241,8 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                           ),
                                                           Text.rich(
                                                             TextSpan(
-                                                              children: <InlineSpan>[
+                                                              children: <
+                                                                  InlineSpan>[
                                                                 WidgetSpan(
                                                                   alignment:
                                                                       PlaceholderAlignment
@@ -465,7 +467,7 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                                 .locationIconAlt),
                                                         SizedBox(width: 1.w),
                                                         Text(
-                                                          '${preferredSalon.getDistanceAsString(context.read<HomeProvider>().userCurrentLatLng)}',
+                                                          '${preferredSalon.distanceFromUserAsString}',
                                                           style: TextStyle(
                                                             color:
                                                                 ColorsConstant
