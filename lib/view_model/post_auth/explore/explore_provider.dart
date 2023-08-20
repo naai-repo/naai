@@ -32,6 +32,15 @@ class ExploreProvider with ChangeNotifier {
   void initExploreScreen(BuildContext context) async {
     Loader.showLoader(context);
     await getSalonList(context);
+    artistList.forEach((artist) {
+      artist.distanceFromUser = salonData
+          .firstWhere((element) => element.id == artist.salonId)
+          .distanceFromUser;
+    });
+    artistList.sort(
+      (first, second) =>
+          first.distanceFromUser!.compareTo(second.distanceFromUser!),
+    );
 
     if (_applyServiceFilter) {
       filterSalonListByService(selectedServiceCategory: _appliedServiceFilter);

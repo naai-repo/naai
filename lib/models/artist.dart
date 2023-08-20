@@ -8,6 +8,7 @@ class Artist {
   String? salonId;
   String? salonName;
   Availability? availability;
+  double? distanceFromUser;
 
   Artist({
     this.id,
