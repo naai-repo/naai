@@ -198,8 +198,7 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                         children: <Widget>[
                                                           Text.rich(
                                                             TextSpan(
-                                                              children: <
-                                                                  InlineSpan>[
+                                                              children: <InlineSpan>[
                                                                 WidgetSpan(
                                                                   alignment:
                                                                       PlaceholderAlignment
@@ -223,8 +222,14 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                                           1.w),
                                                                 ),
                                                                 TextSpan(
-                                                                  text:
-                                                                      '1.3 km',
+                                                                  text: provider
+                                                                      .salonData
+                                                                      .firstWhere((element) =>
+                                                                          element
+                                                                              .id ==
+                                                                          artist
+                                                                              .salonId)
+                                                                      .distanceFromUserAsString,
                                                                   style:
                                                                       TextStyle(
                                                                     fontWeight:
@@ -241,8 +246,7 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                           ),
                                                           Text.rich(
                                                             TextSpan(
-                                                              children: <
-                                                                  InlineSpan>[
+                                                              children: <InlineSpan>[
                                                                 WidgetSpan(
                                                                   alignment:
                                                                       PlaceholderAlignment
