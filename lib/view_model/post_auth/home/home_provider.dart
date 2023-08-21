@@ -53,6 +53,7 @@ class HomeProvider with ChangeNotifier {
   UserModel _userData = UserModel();
 
   List<Booking> _lastOrNextBooking = [];
+  List<Booking> _allBookings = [];
 
   //============= GETTERS =============//
   List<SalonData> get salonList => _salonList;
@@ -65,6 +66,7 @@ class HomeProvider with ChangeNotifier {
   UserModel get userData => _userData;
 
   List<Booking> get lastOrNextBooking => _lastOrNextBooking;
+  List<Booking> get allBookings => _allBookings;
 
   /// Check if there is a [uid] stored in [SharedPreferences] or not.
   /// If no [uid] is found, then get the userId of the currently logged in
@@ -161,6 +163,7 @@ class HomeProvider with ChangeNotifier {
     try {
       List<Booking> response =
           await DatabaseService().getUserBookings(userId: userData.id ?? '');
+      _allBookings = response;
       _lastOrNextBooking.clear();
       for (int i = 0; i < response.length; i++) {
         if (DateTime.parse(response[i].bookingCreatedFor ?? '')

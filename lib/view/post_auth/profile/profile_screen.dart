@@ -99,7 +99,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   optionTitle: StringConstant.favourties,
                                 ),
                                 profileOptions(
-                                  onTap: () => print('tapped'),
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    NamedRoutes.bookingHistoryRoute,
+                                  ),
                                   imagePath:
                                       ImagePathConstant.bookingHistoryIcon,
                                   optionTitle: StringConstant.bookingHistory,
