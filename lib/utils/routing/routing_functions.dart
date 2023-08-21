@@ -8,6 +8,7 @@ import 'package:naai/view/post_auth/explore/explore_stylist.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/post_auth/home/set_home_location_screen.dart';
 import 'package:naai/view/post_auth/map/map_screen.dart';
+import 'package:naai/view/post_auth/profile/booking_history_screen.dart';
 import 'package:naai/view/post_auth/profile/favourites_screen.dart';
 import 'package:naai/view/post_auth/profile/reviews_screen.dart';
 import 'package:naai/view/post_auth/salon_details/salon_details_screen.dart';
@@ -78,6 +79,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.appointmentDetailsRoute:
         target = AppointmentDetails(index: settings.arguments as int);
+        break;
+      case NamedRoutes.bookingHistoryRoute:
+        target = BookingHistoryScreen();
         break;
     }
 

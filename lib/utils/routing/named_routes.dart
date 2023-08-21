@@ -21,4 +21,5 @@ class NamedRoutes {
   static const String favouritesRoute = '/favourites';
   static const String bookingConfirmedRoute = '/booking-confirmed';
   static const String appointmentDetailsRoute = '/appointment-details';
+  static const String bookingHistoryRoute = '/booking-history';
 }
