@@ -74,195 +74,202 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return Scaffold(
-        body: Stack(
-          children: <Widget>[
-            ReusableWidgets.appScreenCommonBackground(),
-            CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                ReusableWidgets.transparentFlexibleSpace(),
-                SliverAppBar(
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(3.h),
-                      topRight: Radius.circular(3.h),
+      return WillPopScope(
+        onWillPop: () async {
+          provider.resetCurrentBooking();
+          return true;
+        },
+        child: Scaffold(
+          body: Stack(
+            children: <Widget>[
+              ReusableWidgets.appScreenCommonBackground(),
+              CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: [
+                  ReusableWidgets.transparentFlexibleSpace(),
+                  SliverAppBar(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(3.h),
+                        topRight: Radius.circular(3.h),
+                      ),
                     ),
-                  ),
-                  backgroundColor: Colors.white,
-                  pinned: true,
-                  floating: true,
-                  leadingWidth: 0,
-                  title: Container(
-                    padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
-                    child: Row(
-                      children: <Widget>[
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            provider.resetCurrentBooking();
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(1.h),
-                            child: SvgPicture.asset(
-                              ImagePathConstant.leftArrowIcon,
-                              color: ColorsConstant.textDark,
-                              height: 2.h,
+                    backgroundColor: Colors.white,
+                    pinned: true,
+                    floating: true,
+                    leadingWidth: 0,
+                    title: Container(
+                      padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
+                      child: Row(
+                        children: <Widget>[
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              provider.resetCurrentBooking();
+                              Navigator.pop(context);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(1.h),
+                              child: SvgPicture.asset(
+                                ImagePathConstant.leftArrowIcon,
+                                color: ColorsConstant.textDark,
+                                height: 2.h,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          StringConstant.yourAppointment,
-                          style: StyleConstant.headingTextStyle,
+                          SizedBox(width: 4.w),
+                          Text(
+                            StringConstant.yourAppointment,
+                            style: StyleConstant.headingTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    centerTitle: false,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      <Widget>[
+                        Container(
+                          height: 100.h,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4.w,
+                          ),
+                          color: Colors.white,
+                          child: Column(
+                            children: <Widget>[
+                              salonOverviewCard(),
+                              SizedBox(height: 2.h),
+                              provider.isOnPaymentPage
+                                  ? paymentComponent()
+                                  : Column(
+                                      children: <Widget>[
+                                        schedulingStatus(),
+                                        SizedBox(height: 2.h),
+                                        if (provider.isOnSelectStaffType)
+                                          Padding(
+                                            padding: EdgeInsets.all(2.h),
+                                            child: selectSingleStaffCard(),
+                                          ),
+                                        if (provider.isOnSelectSlot)
+                                          slotSelectionWidget(),
+                                      ],
+                                    ),
+                              SizedBox(height: 35.h),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  centerTitle: false,
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    <Widget>[
-                      Container(
-                        height: 100.h,
+                ],
+              ),
+              !provider.isOnPaymentPage
+                  ? Positioned(
+                      bottom: 3.h,
+                      right: 3.h,
+                      left: 3.h,
+                      child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 4.w,
+                          vertical: 1.h,
+                          horizontal: 3.w,
                         ),
-                        color: Colors.white,
-                        child: Column(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(1.h),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                              offset: Offset(0, 2.0),
+                              color: Colors.grey,
+                              spreadRadius: 0.2,
+                              blurRadius: 15,
+                            ),
+                          ],
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            salonOverviewCard(),
-                            SizedBox(height: 2.h),
-                            provider.isOnPaymentPage
-                                ? paymentComponent()
-                                : Column(
-                                    children: <Widget>[
-                                      schedulingStatus(),
-                                      SizedBox(height: 2.h),
-                                      if (provider.isOnSelectStaffType)
-                                        Padding(
-                                          padding: EdgeInsets.all(2.h),
-                                          child: selectSingleStaffCard(),
-                                        ),
-                                      if (provider.isOnSelectSlot)
-                                        slotSelectionWidget(),
-                                    ],
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  StringConstant.total,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10.sp,
+                                    color: ColorsConstant.textDark,
                                   ),
-                            SizedBox(height: 35.h),
+                                ),
+                                Text('Rs. ${provider.totalPrice}',
+                                    style: StyleConstant.appColorBoldTextStyle),
+                              ],
+                            ),
+                            VariableWidthCta(
+                              onTap: () {
+                                if (provider.isOnSelectStaffType) {
+                                  provider.setSchedulingStatus(
+                                      selectStaffFinished: true);
+                                } else if (provider.isOnSelectSlot) {
+                                  provider.setSchedulingStatus(
+                                      selectSlotFinished: true);
+                                }
+                              },
+                              isActive: provider.isNextButtonActive,
+                              buttonText: StringConstant.next,
+                              horizontalPadding: 7.w,
+                            )
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            !provider.isOnPaymentPage
-                ? Positioned(
-                    bottom: 3.h,
-                    right: 3.h,
-                    left: 3.h,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 1.h,
-                        horizontal: 3.w,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1.h),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            offset: Offset(0, 2.0),
-                            color: Colors.grey,
-                            spreadRadius: 0.2,
-                            blurRadius: 15,
-                          ),
-                        ],
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                StringConstant.total,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10.sp,
-                                  color: ColorsConstant.textDark,
-                                ),
-                              ),
-                              Text('Rs. ${provider.totalPrice}',
-                                  style: StyleConstant.appColorBoldTextStyle),
-                            ],
-                          ),
-                          VariableWidthCta(
-                            onTap: () {
-                              if (provider.isOnSelectStaffType) {
-                                provider.setSchedulingStatus(
-                                    selectStaffFinished: true);
-                              } else if (provider.isOnSelectSlot) {
-                                provider.setSchedulingStatus(
-                                    selectSlotFinished: true);
-                              }
-                            },
-                            isActive: provider.isNextButtonActive,
-                            buttonText: StringConstant.next,
-                            horizontalPadding: 7.w,
-                          )
-                        ],
+                    )
+                  : Positioned(
+                      bottom: 2.h,
+                      right: 2.h,
+                      left: 2.h,
+                      child: ReusableWidgets.redFullWidthButton(
+                        buttonText: StringConstant.payNow,
+                        onTap: () {
+                          var options = {
+                            'key': Keys.razorpay_api_key,
+                            'amount': (context
+                                            .read<SalonDetailsProvider>()
+                                            .totalPrice *
+                                        0.18 +
+                                    context
+                                        .read<SalonDetailsProvider>()
+                                        .totalPrice) *
+                                100,
+                            'name': 'NAAI',
+                            'description': context
+                                .read<SalonDetailsProvider>()
+                                .selectedSalonData
+                                .name,
+                            'prefill': {
+                              'contact': context
+                                  .read<ProfileProvider>()
+                                  .userData
+                                  .phoneNumber,
+                              'email': context
+                                  .read<ProfileProvider>()
+                                  .userData
+                                  .gmailId,
+                            }
+                          };
+                          _razorpay.open(options);
+                        },
+                        isActive: true,
                       ),
                     ),
-                  )
-                : Positioned(
-                    bottom: 2.h,
-                    right: 2.h,
-                    left: 2.h,
-                    child: ReusableWidgets.redFullWidthButton(
-                      buttonText: StringConstant.payNow,
-                      onTap: () {
-                        var options = {
-                          'key': Keys.razorpay_api_key,
-                          'amount':
-                              (context.read<SalonDetailsProvider>().totalPrice *
-                                          0.18 +
-                                      context
-                                          .read<SalonDetailsProvider>()
-                                          .totalPrice) *
-                                  100,
-                          'name': 'NAAI',
-                          'description': context
-                              .read<SalonDetailsProvider>()
-                              .selectedSalonData
-                              .name,
-                          'prefill': {
-                            'contact': context
-                                .read<ProfileProvider>()
-                                .userData
-                                .phoneNumber,
-                            'email': context
-                                .read<ProfileProvider>()
-                                .userData
-                                .gmailId,
-                          }
-                        };
-                        _razorpay.open(options);
-                      },
-                      isActive: true,
-                    ),
-                  ),
-            Align(
-              alignment: Alignment.center,
-              child: showArtistSlotDialogue
-                  ? artistSlotPickerDialogueBox()
-                  : SizedBox(),
-            ),
-          ],
+              Align(
+                alignment: Alignment.center,
+                child: showArtistSlotDialogue
+                    ? artistSlotPickerDialogueBox()
+                    : SizedBox(),
+              ),
+            ],
+          ),
         ),
       );
     });

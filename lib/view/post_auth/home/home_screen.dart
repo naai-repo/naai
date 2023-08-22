@@ -435,14 +435,14 @@ class _HomeScreenState extends State<HomeScreen> {
             //   ),
             // ),
             // SizedBox(width: 2.w),
-            Container(
-              padding: EdgeInsets.all(1.5.h),
-              decoration: BoxDecoration(
-                color: ColorsConstant.graphicFillDark,
-                borderRadius: BorderRadius.circular(4.h),
-              ),
-              child: SvgPicture.asset(ImagePathConstant.appointmentIcon),
-            ),
+            // Container(
+            //   padding: EdgeInsets.all(1.5.h),
+            //   decoration: BoxDecoration(
+            //     color: ColorsConstant.graphicFillDark,
+            //     borderRadius: BorderRadius.circular(4.h),
+            //   ),
+            //   child: SvgPicture.asset(ImagePathConstant.appointmentIcon),
+            // ),
           ],
         )
       ],
@@ -494,7 +494,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 margin: EdgeInsets.only(left: 2.w),
-                width: 73.w,
                 height: 4.h,
                 alignment: Alignment.centerLeft,
                 child: _shouldScroll
@@ -519,13 +518,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
               ),
-              Spacer(),
-              SvgPicture.asset(
-                ImagePathConstant.downArrow,
-                color: ColorsConstant.textDark,
-                width: 2.5.w,
-              ),
-              SizedBox(width: 1.w),
             ],
           );
         }),
