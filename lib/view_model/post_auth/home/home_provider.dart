@@ -517,10 +517,7 @@ class HomeProvider with ChangeNotifier {
         );
 
     await context.read<SalonDetailsProvider>().getArtistList(context);
-    await context.read<SalonDetailsProvider>().getServiceList(
-          context,
-          salonIdFromOutside: _lastOrNextBooking[index].salonId,
-        );
+    await context.read<SalonDetailsProvider>().getServiceList(context);
 
     context.read<SalonDetailsProvider>().setServiceIds(
           ids: _lastOrNextBooking[index].serviceIds!,

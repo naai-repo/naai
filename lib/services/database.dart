@@ -74,9 +74,24 @@ class DatabaseService {
   }
 
   /// Fetch the services list for a given salon from [FirebaseFirestore]
-  Future<List<ServiceDetail>> getServiceList(String? salonId) async {
+  Future<List<ServiceDetail>> getServiceList(List<String> artistIdList) async {
     QuerySnapshot querySnapshot = await servicesCollection
-        .where('salonId', isEqualTo: salonId)
+        .where('artistIdList', arrayContainsAny: artistIdList)
+        .get()
+        .onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+    return querySnapshot.docs
+        .map((docData) => ServiceDetail.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  /// Fetch the services list for a given artist from [FirebaseFirestore]
+  Future<List<ServiceDetail>> getServiceListForArtist(String artistId) async {
+    QuerySnapshot querySnapshot = await servicesCollection
+        .where('artistIdList', arrayContains: artistId)
         .get()
         .onError(
       (error, stackTrace) {

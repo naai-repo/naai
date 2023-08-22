@@ -7,14 +7,14 @@ class ServiceDetail {
   double? price;
   Gender? targetGender;
   String? id;
-  String? salonId;
+  List<String>? artistIdList;
 
   ServiceDetail({
     this.category,
     this.serviceTitle,
     this.price,
     this.targetGender,
-    this.salonId,
+    this.artistIdList,
     this.id,
   });
 
@@ -23,7 +23,7 @@ class ServiceDetail {
 
     return ServiceDetail(
       id: data['id'],
-      salonId: data['salonId'],
+      artistIdList: data['artistIdList'].cast<String>(),
       category: Services.values[(Services.values.indexWhere(
           (category) => category.name.toLowerCase() == data['category']))],
       serviceTitle: data['serviceTitle'],

@@ -73,28 +73,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: <Widget>[
                                   logoAndNotifications(),
                                   searchLocationBar(),
-                                  dummyDeal(),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 2.h),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget>[
-                                        Text(
-                                          StringConstant.viewMore,
-                                          style: TextStyle(
-                                            fontSize: 8.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: ColorsConstant.textDark,
-                                          ),
-                                        ),
-                                        SizedBox(width: 1.w),
-                                        Icon(
-                                          Icons.arrow_forward,
-                                          size: 2.h,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  // dummyDeal(),
+                                  // Padding(
+                                  //   padding: EdgeInsets.only(top: 2.h),
+                                  //   child: Row(
+                                  //     mainAxisAlignment: MainAxisAlignment.end,
+                                  //     children: <Widget>[
+                                  //       Text(
+                                  //         StringConstant.viewMore,
+                                  //         style: TextStyle(
+                                  //           fontSize: 8.sp,
+                                  //           fontWeight: FontWeight.w600,
+                                  //           color: ColorsConstant.textDark,
+                                  //         ),
+                                  //       ),
+                                  //       SizedBox(width: 1.w),
+                                  //       Icon(
+                                  //         Icons.arrow_forward,
+                                  //         size: 2.h,
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
