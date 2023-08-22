@@ -690,20 +690,6 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     showArtistSlotDialogue = false;
                                   }),
                                   child: Text(
-                                    StringConstant.cancel.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 9.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsConstant.appColor,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                GestureDetector(
-                                  onTap: () => setState(() {
-                                    showArtistSlotDialogue = false;
-                                  }),
-                                  child: Text(
                                     StringConstant.ok,
                                     style: TextStyle(
                                       fontSize: 9.sp,

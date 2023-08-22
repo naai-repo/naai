@@ -294,6 +294,16 @@ class SalonDetailsProvider with ChangeNotifier {
           }
         }
       });
+
+      if (_currentBooking.selectedDateInDateTimeFormat!.day ==
+              DateTime.now().day &&
+          _currentBooking.selectedDateInDateTimeFormat!.month ==
+              DateTime.now().month) {
+        int secondsElapsedTillNow =
+            DateTime.now().hour * 3600 + DateTime.now().minute * 60;
+        _artistAvailabilityToDisplay
+            .removeWhere((element) => element <= secondsElapsedTillNow);
+      }
     } catch (e) {
       Loader.hideLoader(context);
       ReusableWidgets.showFlutterToast(context, '$e');
