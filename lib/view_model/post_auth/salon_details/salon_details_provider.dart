@@ -100,9 +100,9 @@ class SalonDetailsProvider with ChangeNotifier {
     Loader.showLoader(context);
     setSelectedSalonData(context);
 
+    await getArtistList(context);
     await Future.wait([
       getServiceList(context),
-      getArtistList(context),
       getSalonReviewsList(context),
     ]).onError(
       (error, stackTrace) =>
@@ -442,14 +442,12 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
-  Future<void> getServiceList(
-    BuildContext context, {
-    String? salonIdFromOutside,
-  }) async {
+  /// Get the list of services provided by the selected salon
+  Future<void> getServiceList(BuildContext context) async {
+    List<String> _artistIdList = _artistList.map((e) => e.id ?? '').toList();
     try {
-      _serviceList = await DatabaseService()
-          .getServiceList(salonIdFromOutside ?? _selectedSalonData.id);
+      _serviceList = await DatabaseService().getServiceList(_artistIdList);
+      print(_serviceList);
       _filteredServiceList.clear();
       _filteredServiceList.addAll(_serviceList);
     } catch (e) {

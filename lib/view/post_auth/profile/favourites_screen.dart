@@ -4,10 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
+import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
@@ -198,7 +200,8 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                         children: <Widget>[
                                                           Text.rich(
                                                             TextSpan(
-                                                              children: <InlineSpan>[
+                                                              children: <
+                                                                  InlineSpan>[
                                                                 WidgetSpan(
                                                                   alignment:
                                                                       PlaceholderAlignment
@@ -246,7 +249,8 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                           ),
                                                           Text.rich(
                                                             TextSpan(
-                                                              children: <InlineSpan>[
+                                                              children: <
+                                                                  InlineSpan>[
                                                                 WidgetSpan(
                                                                   alignment:
                                                                       PlaceholderAlignment
@@ -466,30 +470,120 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: <Widget>[
-                                                        SvgPicture.asset(
-                                                            ImagePathConstant
-                                                                .locationIconAlt),
-                                                        SizedBox(width: 1.w),
-                                                        Text(
-                                                          '${preferredSalon.distanceFromUserAsString}',
-                                                          style: TextStyle(
-                                                            color:
-                                                                ColorsConstant
-                                                                    .textDark,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
+                                                        ColorfulInformationCard(
+                                                          imagePath:
+                                                              ImagePathConstant
+                                                                  .locationIconAlt,
+                                                          text:
+                                                              '${preferredSalon.distanceFromUserAsString}',
+                                                          color: ColorsConstant
+                                                              .purpleDistance,
+                                                        ),
+                                                        SizedBox(width: 3.w),
+                                                        ColorfulInformationCard(
+                                                          imagePath:
+                                                              ImagePathConstant
+                                                                  .starIcon,
+                                                          text:
+                                                              '${preferredSalon.rating}',
+                                                          color: ColorsConstant
+                                                              .greenRating,
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height: 1.2.h),
-                                                    Text(
-                                                      '${preferredSalon.address?.addressString}',
-                                                      style: TextStyle(
-                                                        color: ColorsConstant
-                                                            .greySalonAddress,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                  ],
+                                                ),
+                                                SizedBox(height: 1.5.h),
+                                                Row(
+                                                  children: <Widget>[
+                                                    TimeDateCard(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: "Mon - Fri",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorsConstant
+                                                                        .textDark,
+                                                                fontSize: 10.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: "  |  ",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorsConstant
+                                                                        .textDark,
+                                                                fontSize: 10.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text:
+                                                                  "10 AM-11 PM",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorsConstant
+                                                                        .textDark,
+                                                                fontSize: 10.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 2.w),
+                                                    TimeDateCard(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: "Tues",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorsConstant
+                                                                        .textDark,
+                                                                fontSize: 10.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: "  |  ",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorsConstant
+                                                                        .textDark,
+                                                                fontSize: 10.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: "Closed",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorsConstant
+                                                                        .textDark,
+                                                                fontSize: 10.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ],

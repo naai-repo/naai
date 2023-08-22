@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
+import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/red_button_with_text.dart';
 import 'package:naai/utils/components/time_date_card.dart';
 import 'package:naai/utils/image_path_constant.dart';
@@ -229,154 +230,158 @@ class _ExploreScreenState extends State<ExploreScreen>
               NamedRoutes.barberProfileRoute,
             );
           },
-          child: Container(
-            padding: EdgeInsets.all(3.w),
-            constraints: BoxConstraints(maxWidth: 45.w),
-            width: 45.w,
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(0.5.h),
-                            child: CircleAvatar(
-                              radius: 5.h,
-                              backgroundImage: AssetImage(
-                                'assets/images/salon_dummy_image.png',
-                              ),
-                            ),
-                          ),
-                          Text(
-                            artist.name ?? '',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: index.isOdd
-                                  ? ColorsConstant.textDark
-                                  : Colors.white,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            artist.salonName ?? '',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: ColorsConstant.textLight,
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: CurvedBorderedCard(
+            borderColor: const Color(0xFFDBDBDB),
+            fillColor: index.isEven ? const Color(0xFF212121) : Colors.white,
+            child: Container(
+              padding: EdgeInsets.all(3.w),
+              constraints: BoxConstraints(maxWidth: 45.w),
+              width: 45.w,
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
                           children: <Widget>[
-                            Text.rich(
-                              TextSpan(
-                                children: <InlineSpan>[
-                                  WidgetSpan(
-                                    alignment: PlaceholderAlignment.baseline,
-                                    baseline: TextBaseline.ideographic,
-                                    child: SvgPicture.asset(
-                                      ImagePathConstant.locationIconAlt,
-                                      color: ColorsConstant.purpleDistance,
-                                      height: 2.h,
-                                    ),
-                                  ),
-                                  WidgetSpan(
-                                    child: SizedBox(width: 1.w),
-                                  ),
-                                  TextSpan(
-                                    text: provider.filteredSalonData
-                                        .firstWhere(
-                                          (element) =>
-                                              element.id == artist.salonId,
-                                        )
-                                        .distanceFromUserAsString,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 10.sp,
-                                      color: ColorsConstant.purpleDistance,
-                                    ),
-                                  ),
-                                ],
+                            Padding(
+                              padding: EdgeInsets.all(0.5.h),
+                              child: CircleAvatar(
+                                radius: 5.h,
+                                backgroundImage: AssetImage(
+                                  'assets/images/salon_dummy_image.png',
+                                ),
                               ),
                             ),
-                            Text.rich(
-                              TextSpan(
-                                children: <InlineSpan>[
-                                  WidgetSpan(
-                                    alignment: PlaceholderAlignment.baseline,
-                                    baseline: TextBaseline.ideographic,
-                                    child: SvgPicture.asset(
-                                      ImagePathConstant.starIcon,
-                                      color: ColorsConstant.greenRating,
-                                    ),
-                                  ),
-                                  WidgetSpan(
-                                    child: SizedBox(width: 1.w),
-                                  ),
-                                  TextSpan(
-                                    text: artist.rating.toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 10.sp,
-                                      color: ColorsConstant.greenRating,
-                                    ),
-                                  ),
-                                ],
+                            Text(
+                              artist.name ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: index.isOdd
+                                    ? ColorsConstant.textDark
+                                    : Colors.white,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              artist.salonName ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: ColorsConstant.textLight,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    onTap: () {
-                      if (context
-                          .read<HomeProvider>()
-                          .userData
-                          .preferredArtist!
-                          .contains(artist.id)) {
-                        provider.removePreferedArtist(
-                          context,
-                          artist.id,
-                        );
-                      } else {
-                        provider.addPreferedArtist(
-                          context,
-                          artist.id,
-                        );
-                      }
-                    },
-                    child: SvgPicture.asset(
-                      ImagePathConstant.saveIcon,
-                      color: context
-                              .read<HomeProvider>()
-                              .userData
-                              .preferredArtist!
-                              .contains(artist.id)
-                          ? ColorsConstant.appColor
-                          : index.isOdd
-                              ? const Color(0xFF212121)
-                              : Colors.white,
-                      height: 3.h,
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text.rich(
+                                TextSpan(
+                                  children: <InlineSpan>[
+                                    WidgetSpan(
+                                      alignment: PlaceholderAlignment.baseline,
+                                      baseline: TextBaseline.ideographic,
+                                      child: SvgPicture.asset(
+                                        ImagePathConstant.locationIconAlt,
+                                        color: ColorsConstant.purpleDistance,
+                                        height: 2.h,
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: SizedBox(width: 1.w),
+                                    ),
+                                    TextSpan(
+                                      text: provider.filteredSalonData
+                                          .firstWhere(
+                                            (element) =>
+                                                element.id == artist.salonId,
+                                          )
+                                          .distanceFromUserAsString,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10.sp,
+                                        color: ColorsConstant.purpleDistance,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: <InlineSpan>[
+                                    WidgetSpan(
+                                      alignment: PlaceholderAlignment.baseline,
+                                      baseline: TextBaseline.ideographic,
+                                      child: SvgPicture.asset(
+                                        ImagePathConstant.starIcon,
+                                        color: ColorsConstant.greenRating,
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: SizedBox(width: 1.w),
+                                    ),
+                                    TextSpan(
+                                      text: artist.rating.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10.sp,
+                                        color: ColorsConstant.greenRating,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      onTap: () {
+                        if (context
+                            .read<HomeProvider>()
+                            .userData
+                            .preferredArtist!
+                            .contains(artist.id)) {
+                          provider.removePreferedArtist(
+                            context,
+                            artist.id,
+                          );
+                        } else {
+                          provider.addPreferedArtist(
+                            context,
+                            artist.id,
+                          );
+                        }
+                      },
+                      child: SvgPicture.asset(
+                        ImagePathConstant.saveIcon,
+                        color: context
+                                .read<HomeProvider>()
+                                .userData
+                                .preferredArtist!
+                                .contains(artist.id)
+                            ? ColorsConstant.appColor
+                            : index.isOdd
+                                ? const Color(0xFF212121)
+                                : Colors.white,
+                        height: 3.h,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

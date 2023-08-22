@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/models/review.dart';
+import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/add_review_component.dart';
+import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
@@ -36,93 +38,400 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
   Widget build(BuildContext context) {
     return Consumer<BarberProvider>(
       builder: (context, provider, child) {
-        return Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: Stack(
-            children: <Widget>[
-              ReusableWidgets.appScreenCommonBackground(),
-              CustomScrollView(
-                physics: BouncingScrollPhysics(),
-                slivers: [
-                  ReusableWidgets.transparentFlexibleSpace(),
-                  SliverAppBar(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(3.h),
-                        topRight: Radius.circular(3.h),
+        return WillPopScope(
+          onWillPop: () async {
+            provider.clearSearchController();
+            provider.clearSelectedGendersFilter();
+            provider.clearSelectedServiceCategories();
+            return true;
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: Stack(
+              children: <Widget>[
+                ReusableWidgets.appScreenCommonBackground(),
+                CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: [
+                    ReusableWidgets.transparentFlexibleSpace(),
+                    SliverAppBar(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(3.h),
+                          topRight: Radius.circular(3.h),
+                        ),
                       ),
-                    ),
-                    backgroundColor: Colors.white,
-                    pinned: true,
-                    floating: true,
-                    leadingWidth: 0,
-                    title: Container(
-                      padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
-                      child: Row(
-                        children: <Widget>[
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => Navigator.pop(context),
-                            child: Padding(
-                              padding: EdgeInsets.all(1.h),
-                              child: SvgPicture.asset(
-                                ImagePathConstant.leftArrowIcon,
-                                color: ColorsConstant.textDark,
-                                height: 2.h,
+                      backgroundColor: Colors.white,
+                      pinned: true,
+                      floating: true,
+                      leadingWidth: 0,
+                      title: Container(
+                        padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
+                        child: Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                provider.clearSearchController();
+                                provider.clearSelectedGendersFilter();
+                                provider.clearSelectedServiceCategories();
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(1.h),
+                                child: SvgPicture.asset(
+                                  ImagePathConstant.leftArrowIcon,
+                                  color: ColorsConstant.textDark,
+                                  height: 2.h,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            StringConstant.barberProfile,
-                            style: StyleConstant.headingTextStyle,
+                            SizedBox(width: 4.w),
+                            Text(
+                              StringConstant.barberProfile,
+                              style: StyleConstant.headingTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      centerTitle: false,
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 1.h, right: 4.w, left: 4.w),
+                                  padding: EdgeInsets.all(1.h),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(2.h),
+                                  ),
+                                  child: barberOverview(),
+                                ),
+                                SizedBox(height: 2.h),
+                                Divider(
+                                  thickness: 2,
+                                  height: 0,
+                                  color: ColorsConstant.graphicFillDark,
+                                ),
+                                servicesAndReviewTabBar(),
+                                selectedTab == 0
+                                    ? servicesTab()
+                                    : reviewColumn(),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    centerTitle: false,
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: 1.h, right: 4.w, left: 4.w),
-                                padding: EdgeInsets.all(1.h),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2.h),
-                                ),
-                                child: barberOverview(),
-                              ),
-                              SizedBox(height: 2.h),
-                              Divider(
-                                thickness: 2,
-                                height: 0,
-                                color: ColorsConstant.graphicFillDark,
-                              ),
-                              servicesAndReviewTabBar(),
-                              selectedTab == 0
-                                  ? ReusableWidgets.servicesTab()
-                                  : reviewColumn(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
     );
+  }
+
+  Widget servicesTab() {
+    return Consumer<BarberProvider>(builder: (context, provider, child) {
+      return Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+            child: Container(
+              padding: EdgeInsets.all(2.h),
+              decoration: BoxDecoration(
+                color: ColorsConstant.graphicFillDark,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  genderAndSearchFilterWidget(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.h, bottom: 1.h),
+                    child: Text(
+                      "${StringConstant.selectCategory}:",
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
+                        color: ColorsConstant.textDark,
+                      ),
+                    ),
+                  ),
+                  serviceCategoryFilterWidget(),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 1.h),
+          provider.filteredServiceList.length == 0
+              ? Container(
+                  height: 10.h,
+                  child: Center(
+                    child: Text('Nothing here :('),
+                  ),
+                )
+              : ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: provider.filteredServiceList.length,
+                  itemBuilder: (context, index) {
+                    ServiceDetail? serviceDetail =
+                        provider.filteredServiceList[index];
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: 1.h,
+                        horizontal: 3.w,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 3.w,
+                        vertical: 1.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(1.h),
+                        border: Border.all(color: ColorsConstant.divider),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 50.w,
+                            child: Row(
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  serviceDetail.targetGender == Gender.MEN
+                                      ? ImagePathConstant.manIcon
+                                      : ImagePathConstant.womanIcon,
+                                  height: 4.h,
+                                ),
+                                SizedBox(width: 2.w),
+                                Expanded(
+                                  child: Text(
+                                    serviceDetail.serviceTitle ?? "",
+                                    style: TextStyle(
+                                      color: ColorsConstant.textDark,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            "Rs. ${serviceDetail.price}",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                              color: ColorsConstant.textDark,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+          SizedBox(height: 3.h),
+        ],
+      );
+    });
+  }
+
+  Widget serviceCategoryFilterWidget() {
+    return Consumer<BarberProvider>(builder: (context, provider, child) {
+      return Container(
+        height: 4.2.h,
+        child: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: Services.values.length,
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () {
+              provider.setSelectedServiceCategories(
+                selectedServiceCategory: Services.values[index],
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 2.w),
+              height: 4.2.h,
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.7.h),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3.h),
+                color: provider.selectedServiceCategories
+                        .contains(Services.values[index])
+                    ? ColorsConstant.appColor
+                    : Colors.white,
+              ),
+              child: Center(
+                child: Text(
+                  "${Services.values[index].name}",
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                    color: provider.selectedServiceCategories
+                            .contains(Services.values[index])
+                        ? Colors.white
+                        : ColorsConstant.textDark,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget genderAndSearchFilterWidget() {
+    return Consumer<BarberProvider>(builder: (context, provider, child) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          SizedBox(
+            height: 5.h,
+            child: Row(
+              children: <Widget>[
+                genderFilterTabs(isMen: true, isWomen: false),
+                genderFilterTabs(isMen: false, isWomen: true),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 30.w,
+            height: 4.5.h,
+            child: TextFormField(
+              controller: provider.searchController,
+              cursorColor: ColorsConstant.appColor,
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: ColorsConstant.textDark,
+                fontWeight: FontWeight.w500,
+              ),
+              textInputAction: TextInputAction.done,
+              onChanged: (searchText) =>
+                  provider.filterOnSearchText(searchText),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(horizontal: 3.5.w),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.only(left: 0.5.w),
+                  child: SvgPicture.asset(
+                    ImagePathConstant.searchIcon,
+                    color: ColorsConstant.textDark,
+                    height: 10.sp,
+                  ),
+                ),
+                prefixIconConstraints: BoxConstraints(minWidth: 9.w),
+                hintText: StringConstant.search,
+                hintStyle: TextStyle(
+                  color: ColorsConstant.textDark,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.h),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget genderFilterTabs({
+    required bool isMen,
+    required bool isWomen,
+  }) {
+    return Consumer<BarberProvider>(builder: (context, provider, child) {
+      return GestureDetector(
+        onTap: () => provider.setSelectedGendersFilter(
+            selectedGender: isMen ? Gender.MEN : Gender.WOMEN),
+        child: Container(
+          margin: EdgeInsets.only(right: 2.w),
+          padding: EdgeInsets.all(1.5.w),
+          decoration: BoxDecoration(
+            color: provider.selectedGendersFilter.isEmpty
+                ? Colors.white
+                : isMen
+                    ? provider.selectedGendersFilter.contains(Gender.MEN)
+                        ? ColorsConstant.selectedGenderFilterBoxColor
+                        : Colors.white
+                    : provider.selectedGendersFilter.contains(Gender.WOMEN)
+                        ? ColorsConstant.selectedGenderFilterBoxColor
+                        : Colors.white,
+            borderRadius: BorderRadius.circular(1.5.w),
+            border: Border.all(
+              color: provider.selectedGendersFilter.isEmpty
+                  ? ColorsConstant.divider
+                  : isMen
+                      ? provider.selectedGendersFilter.contains(Gender.MEN)
+                          ? ColorsConstant.appColor
+                          : ColorsConstant.divider
+                      : provider.selectedGendersFilter.contains(Gender.WOMEN)
+                          ? ColorsConstant.appColor
+                          : ColorsConstant.divider,
+            ),
+            boxShadow: provider.selectedGendersFilter.isEmpty
+                ? null
+                : isMen
+                    ? provider.selectedGendersFilter.contains(Gender.MEN)
+                        ? [
+                            BoxShadow(
+                              color: Color(0xFF000000).withOpacity(0.14),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            )
+                          ]
+                        : null
+                    : provider.selectedGendersFilter.contains(Gender.WOMEN)
+                        ? [
+                            BoxShadow(
+                              color: ColorsConstant.dropShadowColor,
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            )
+                          ]
+                        : null,
+          ),
+          child: Row(
+            children: <Widget>[
+              Container(
+                height: 3.h,
+                width: 3.h,
+                margin: EdgeInsets.only(right: 1.5.w),
+                child: SvgPicture.asset(
+                  isMen
+                      ? ImagePathConstant.manGenderTypeIcon
+                      : ImagePathConstant.womanGenderTypeIcon,
+                ),
+              ),
+              Text(
+                isMen ? StringConstant.men : StringConstant.women,
+                style: TextStyle(
+                  color: ColorsConstant.textDark,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget reviewColumn() {
@@ -155,7 +464,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                         itemCount: provider.artistReviewList.length,
                         itemBuilder: (context, index) {
                           Review? reviewItem = provider.artistReviewList[index];
-        
+
                           return Container(
                             margin: EdgeInsets.symmetric(vertical: 1.h),
                             padding: EdgeInsets.symmetric(
@@ -191,7 +500,8 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                 Expanded(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Row(
@@ -390,15 +700,16 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                       horizontal: 5.w,
                     ),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1.h),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade300,
-                            blurRadius: 10,
-                            spreadRadius: 0.1,
-                          ),
-                        ]),
+                      borderRadius: BorderRadius.circular(1.h),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          blurRadius: 10,
+                          spreadRadius: 0.1,
+                        ),
+                      ],
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
