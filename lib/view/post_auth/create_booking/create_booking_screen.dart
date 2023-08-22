@@ -224,7 +224,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     right: 2.h,
                     left: 2.h,
                     child: ReusableWidgets.redFullWidthButton(
-                      buttonText: StringConstant.confirm,
+                      buttonText: StringConstant.payNow,
                       onTap: () {
                         var options = {
                           'key': Keys.razorpay_api_key,

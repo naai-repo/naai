@@ -115,7 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       itemCount:
                                           provider.lastOrNextBooking.length,
                                       itemBuilder: (context, index) {
-                                        return upcomingBookingCard(index);
+                                        return Visibility(
+                                          visible: provider
+                                                  .lastOrNextBooking[index]
+                                                  .paymentId !=
+                                              null,
+                                          child: upcomingBookingCard(index),
+                                        );
                                       },
                                       separatorBuilder: (context, index) =>
                                           SizedBox(height: 2.h),
@@ -338,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 getFormattedDate: true,
                                 dateTimeString: provider
                                     .lastOrNextBooking[index].bookingCreatedFor,
-                              index: index,
+                                index: index,
                               ),
                               style: StyleConstant.bookingDateTimeTextStyle,
                             ),
