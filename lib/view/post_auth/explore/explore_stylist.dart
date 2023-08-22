@@ -88,7 +88,7 @@ class _ExploreScreenState extends State<ExploreStylist>
                                 GestureDetector(
                                   onTap: () {},
                                   child: RedButtonWithText(
-                                    buttonText: 'Filter',
+                                    buttonText: StringConstant.filter,
                                     textColor: ColorsConstant.appColor,
                                     fontSize: 10.sp,
                                     border: Border.all(
@@ -207,7 +207,8 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                       children: <Widget>[
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <InlineSpan>[
+                                                            children: <
+                                                                InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment
@@ -254,7 +255,8 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                         ),
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <InlineSpan>[
+                                                            children: <
+                                                                InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment

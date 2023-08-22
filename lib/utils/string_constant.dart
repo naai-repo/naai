@@ -35,6 +35,7 @@ class StringConstant {
   static const String salonData = 'screen-data';
   static const String yourCurrentLocation = 'Your current location';
   static const String artistNearMe = 'Artist near me';
+  static const String filter = 'Filter';
 
   // Home screen strings
   static const String home = 'Home';

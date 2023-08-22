@@ -16,3 +16,7 @@ enum StaffType {
   Single,
   Multiple,
 }
+
+enum FilterType {
+  Rating,
+}

@@ -168,7 +168,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                       GestureDetector(
                                         onTap: () {},
                                         child: RedButtonWithText(
-                                          buttonText: 'Filter',
+                                          buttonText: StringConstant.filter,
                                           textColor: ColorsConstant.appColor,
                                           fontSize: 10.sp,
                                           border: Border.all(
