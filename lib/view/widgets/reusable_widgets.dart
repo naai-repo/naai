@@ -421,49 +421,56 @@ class ReusableWidgets {
                           borderRadius: BorderRadius.circular(1.h),
                           border: Border.all(color: ColorsConstant.divider),
                         ),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            SvgPicture.asset(
-                              serviceDetail.targetGender == Gender.MEN
-                                  ? ImagePathConstant.manIcon
-                                  : ImagePathConstant.womanIcon,
-                              height: 4.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    serviceDetail.serviceTitle ?? "",
-                                    style: TextStyle(
-                                      color: ColorsConstant.textDark,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            SizedBox(
+                              width: 50.w,
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    serviceDetail.targetGender == Gender.MEN
+                                        ? ImagePathConstant.manIcon
+                                        : ImagePathConstant.womanIcon,
+                                    height: 4.h,
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Rs. ${serviceDetail.price}",
+                                  SizedBox(width: 2.w),
+                                  Expanded(
+                                    child: Text(
+                                      serviceDetail.serviceTitle ?? "",
                                       style: TextStyle(
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w600,
                                         color: ColorsConstant.textDark,
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(width: 1.h),
-                                    Checkbox(
-                                      value: isAdded,
-                                      onChanged: (value) =>
-                                          provider.setSelectedService(
-                                              serviceDetail.id ?? ''),
-                                    ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "Rs. ${serviceDetail.price}",
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: ColorsConstant.textDark,
+                                  ),
+                                ),
+                                Checkbox(
+                                  activeColor: ColorsConstant.appColor,
+                                  side: BorderSide(
+                                    color: Color.fromARGB(255, 193, 193, 193),
+                                    width: 2,
+                                  ),
+                                  value: isAdded,
+                                  onChanged: (value) =>
+                                      provider.setSelectedService(
+                                          serviceDetail.id ?? ''),
                                 ),
                               ],
                             ),

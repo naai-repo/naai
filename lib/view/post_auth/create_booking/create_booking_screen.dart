@@ -38,7 +38,9 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
 
   @override
   void initState() {
-    context.read<ProfileProvider>().getUserDataFromUserProvider(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<ProfileProvider>().getUserDataFromUserProvider(context);
+    });
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -125,6 +127,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                   delegate: SliverChildListDelegate(
                     <Widget>[
                       Container(
+                        height: 100.h,
                         padding: EdgeInsets.symmetric(
                           horizontal: 4.w,
                         ),
@@ -135,38 +138,18 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             SizedBox(height: 2.h),
                             provider.isOnPaymentPage
                                 ? paymentComponent()
-                                : CurvedBorderedCard(
-                                    removeBottomPadding: false,
-                                    child: Column(
-                                      children: <Widget>[
-                                        schedulingStatus(),
-                                        SizedBox(height: 2.h),
-                                        if (provider.isOnSelectStaffType)
-                                          Padding(
-                                            padding: EdgeInsets.all(2.h),
-                                            child: Column(
-                                              children: <Widget>[
-                                                selectSingleStaffCard(),
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 2.h),
-                                                  child: Text(
-                                                    StringConstant.or,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 10.sp,
-                                                    ),
-                                                  ),
-                                                ),
-                                                selectMultipleStaffCard(),
-                                              ],
-                                            ),
-                                          ),
-                                        if (provider.isOnSelectSlot)
-                                          slotSelectionWidget(),
-                                      ],
-                                    ),
+                                : Column(
+                                    children: <Widget>[
+                                      schedulingStatus(),
+                                      SizedBox(height: 2.h),
+                                      if (provider.isOnSelectStaffType)
+                                        Padding(
+                                          padding: EdgeInsets.all(2.h),
+                                          child: selectSingleStaffCard(),
+                                        ),
+                                      if (provider.isOnSelectSlot)
+                                        slotSelectionWidget(),
+                                    ],
                                   ),
                             SizedBox(height: 35.h),
                           ],
@@ -333,10 +316,11 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    SizedBox(height: 2.w),
                     Text(
-                      StringConstant.services,
+                      StringConstant.services.toUpperCase(),
                       style: TextStyle(
-                        fontSize: 10.sp,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.w500,
                         color: ColorsConstant.textLight,
                       ),
@@ -431,7 +415,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       color: Color(0xFFD3D3D3),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 2.w),
+                      margin: EdgeInsets.only(top: 2.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,7 +423,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                           Text(
                             StringConstant.subtotal.toUpperCase(),
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
                               color: ColorsConstant.textDark,
                             ),
@@ -467,7 +451,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 2.w),
+                      margin: EdgeInsets.only(bottom: 2.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -477,7 +461,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                               Text(
                                 StringConstant.tax,
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 10.sp,
                                   fontWeight: FontWeight.w500,
                                   color: ColorsConstant.textDark,
                                 ),
@@ -521,11 +505,9 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
             SizedBox(height: 2.h),
             CurvedBorderedCard(
               child: Container(
-                padding: EdgeInsets.fromLTRB(
-                  3.w,
-                  0,
-                  3.w,
-                  1.7.w,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 3.w,
+                  vertical: 0,
                 ),
                 margin: EdgeInsets.symmetric(vertical: 2.w),
                 child: Row(
@@ -535,7 +517,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     Text(
                       StringConstant.grandTotal,
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: ColorsConstant.textDark,
                       ),
@@ -543,7 +525,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     Text(
                       ' ₹ ${provider.totalPrice * 0.18 + provider.totalPrice}',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: ColorsConstant.textDark,
                       ),
@@ -587,12 +569,13 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  '${DateFormat.E().format(DateFormat('dd-MM-yyyy').parse(provider.currentBooking.selectedDate ?? ''))}, ${DateFormat.yMMMMd().format(DateFormat('dd-MM-yyyy').parse(provider.currentBooking.selectedDate ?? ''))}',
+                                  '${DateFormat.E().format(provider.currentBooking.selectedDateInDateTimeFormat ?? DateTime.now())}, ${DateFormat.yMMMMd().format(provider.currentBooking.selectedDateInDateTimeFormat ?? DateTime.now())}',
                                   style: TextStyle(
                                     fontSize: 11.sp,
                                     color: ColorsConstant.textDark,
@@ -601,63 +584,98 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                               ],
                             ),
                             SizedBox(height: 1.h),
+                            Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: Text(
+                                StringConstant.morning,
+                                style: TextStyle(
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsConstant.textDark,
+                                ),
+                              ),
+                            ),
                             Wrap(
                               children: provider.initialAvailability
                                   .map(
-                                    (element) => GestureDetector(
-                                      onTap: () => provider
-                                              .artistAvailabilityToDisplay
-                                              .contains(element)
-                                          ? provider.setBookingData(
-                                              context,
-                                              setSelectedTime: true,
-                                              startTime: element,
-                                            )
-                                          : null,
-                                      child: Container(
-                                        width: 17.w,
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 1.w),
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: 1.w,
-                                          vertical: 1.5.w,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(2.h),
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Color(0xFFF5F5F5),
-                                          ),
-                                          color: provider
-                                                  .artistAvailabilityToDisplay
-                                                  .contains(element)
-                                              ? element ==
-                                                      (provider.currentBooking
-                                                              .startTime ??
-                                                          0)
-                                                  ? ColorsConstant.appColor
-                                                  : Colors.white
-                                              : Colors.grey.shade200,
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          provider.convertSecondsToTimeString(
-                                              element),
-                                          style: TextStyle(
-                                            fontSize: 9.sp,
-                                            color: provider
-                                                    .artistAvailabilityToDisplay
-                                                    .contains(element)
-                                                ? element ==
-                                                        (provider.currentBooking
-                                                                .startTime ??
-                                                            0)
-                                                    ? Colors.white
-                                                    : ColorsConstant.textDark
-                                                : Colors.white,
-                                          ),
-                                        ),
+                                    (element) => Visibility(
+                                      visible: element <= 43200,
+                                      child: GestureDetector(
+                                        onTap: () => provider
+                                                .artistAvailabilityToDisplay
+                                                .contains(element)
+                                            ? provider.setBookingData(
+                                                context,
+                                                setSelectedTime: true,
+                                                startTime: element,
+                                              )
+                                            : null,
+                                        child: timeCard(element),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: Text(
+                                StringConstant.afternoon,
+                                style: TextStyle(
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsConstant.textDark,
+                                ),
+                              ),
+                            ),
+                            Wrap(
+                              children: provider.initialAvailability
+                                  .map(
+                                    (element) => Visibility(
+                                      visible:
+                                          element > 43200 && element <= 57600,
+                                      child: GestureDetector(
+                                        onTap: () => provider
+                                                .artistAvailabilityToDisplay
+                                                .contains(element)
+                                            ? provider.setBookingData(
+                                                context,
+                                                setSelectedTime: true,
+                                                startTime: element,
+                                              )
+                                            : null,
+                                        child: timeCard(element),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: Text(
+                                StringConstant.evening,
+                                style: TextStyle(
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorsConstant.textDark,
+                                ),
+                              ),
+                            ),
+                            Wrap(
+                              children: provider.initialAvailability
+                                  .map(
+                                    (element) => Visibility(
+                                      visible: element > 57600,
+                                      child: GestureDetector(
+                                        onTap: () => provider
+                                                .artistAvailabilityToDisplay
+                                                .contains(element)
+                                            ? provider.setBookingData(
+                                                context,
+                                                setSelectedTime: true,
+                                                startTime: element,
+                                              )
+                                            : null,
+                                        child: timeCard(element),
                                       ),
                                     ),
                                   )
@@ -711,6 +729,43 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
     );
   }
 
+  Widget timeCard(int element) {
+    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+      return Container(
+        width: 15.w,
+        padding: EdgeInsets.symmetric(vertical: 1.w),
+        margin: EdgeInsets.symmetric(
+          horizontal: 1.w,
+          vertical: 1.5.w,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.h),
+          border: Border.all(
+            width: 1,
+            color: Color.fromARGB(255, 214, 214, 214),
+          ),
+          color: provider.artistAvailabilityToDisplay.contains(element)
+              ? element == (provider.currentBooking.startTime ?? 0)
+                  ? ColorsConstant.appColor
+                  : Colors.white
+              : Colors.grey.shade200,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          provider.convertSecondsToTimeString(element),
+          style: TextStyle(
+            fontSize: 9.sp,
+            color: provider.artistAvailabilityToDisplay.contains(element)
+                ? element == (provider.currentBooking.startTime ?? 0)
+                    ? Colors.white
+                    : ColorsConstant.textDark
+                : Colors.white,
+          ),
+        ),
+      );
+    });
+  }
+
   Widget slotSelectionWidget() {
     return Consumer<SalonDetailsProvider>(
       builder: (context, provider, child) {
@@ -734,40 +789,40 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       ),
                       SizedBox(height: 2.h),
                       CurvedBorderedCard(
-                        onTap: () {
-                          provider.showDialogue(
-                            context,
-                            Container(
-                              height: 40.h,
-                              width: 40.h,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5.h),
-                                child: SfDateRangePicker(
-                                  selectionColor: ColorsConstant.appColor,
-                                  todayHighlightColor: ColorsConstant.appColor,
-                                  backgroundColor: Colors.white,
-                                  headerStyle: DateRangePickerHeaderStyle(
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  initialDisplayDate: DateTime.now().toLocal(),
-                                  showNavigationArrow: true,
-                                  onSelectionChanged: (date) {
-                                    provider.setBookingData(
-                                      context,
-                                      setSelectedDate: true,
-                                      selectedDate: date.value,
-                                    );
-                                    provider.resetTime();
-                                    provider.getArtistBooking(context);
-                                    Navigator.pop(context);
-                                  },
-                                  selectionMode:
-                                      DateRangePickerSelectionMode.single,
+                        onTap: () => provider.showDialogue(
+                          context,
+                          Container(
+                            height: 35.h,
+                            width: 40.h,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5.h),
+                              child: SfDateRangePicker(
+                                selectionColor: ColorsConstant.appColor,
+                                backgroundColor: Colors.white,
+                                headerStyle: DateRangePickerHeaderStyle(
+                                  textAlign: TextAlign.center,
                                 ),
+                                initialSelectedDate: provider.currentBooking
+                                    .selectedDateInDateTimeFormat,
+                                initialDisplayDate: DateTime.now().toLocal(),
+                                showNavigationArrow: true,
+                                enablePastDates: false,
+                                onSelectionChanged: (date) {
+                                  provider.setBookingData(
+                                    context,
+                                    setSelectedDate: true,
+                                    selectedDate: date.value,
+                                  );
+                                  provider.resetTime();
+                                  provider.getArtistBooking(context);
+                                  Navigator.pop(context);
+                                },
+                                selectionMode:
+                                    DateRangePickerSelectionMode.single,
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                         fillColor:
                             provider.currentBooking.selectedDate?.isNotEmpty ==
                                     true
@@ -956,139 +1011,137 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
   Widget selectSingleStaffCard() {
     return Consumer<SalonDetailsProvider>(
       builder: (context, provider, child) {
-        return CurvedBorderedCard(
-          removeBottomPadding: false,
-          onTap: () =>
-              provider.setStaffSelectionMethod(selectedSingleStaff: true),
-          cardSelected: provider.selectedSingleStaff,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.w),
-                child: IconTextSelectorComponent(
-                  text: StringConstant.singleStaffText,
-                  iconPath: ImagePathConstant.singleStaffIcon,
-                  isSelected: provider.selectedSingleStaff,
-                ),
+        return Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: IconTextSelectorComponent(
+                text: StringConstant.singleStaffText,
+                iconPath: ImagePathConstant.singleStaffIcon,
+                isSelected: false,
               ),
-              SizedBox(height: 1.5.h),
-              provider.selectedSingleStaff
-                  ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          singleStaffListExpanded = !singleStaffListExpanded;
-                        });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(1.2.h),
-                        padding: EdgeInsets.all(1.5.h),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1.h),
-                          color: Colors.white,
+            ),
+            SizedBox(height: 1.5.h),
+            CurvedBorderedCard(
+              onTap: () => setState(() {
+                singleStaffListExpanded = !singleStaffListExpanded;
+              }),
+              child: Container(
+                padding: EdgeInsets.all(1.5.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1.h),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          provider.currentBooking.artistId != null
+                              ? provider.getSelectedArtistName(
+                                  provider.currentBooking.artistId ?? '')
+                              : StringConstant.chooseAStaff,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.sp,
+                          ),
                         ),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  provider.currentBooking.artistId != null
-                                      ? provider.getSelectedArtistName(
-                                          provider.currentBooking.artistId ??
-                                              '')
-                                      : StringConstant.chooseAStaff,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12.sp,
-                                  ),
-                                ),
-                                SvgPicture.asset(
-                                  ImagePathConstant.downArrow,
-                                  width: 3.w,
-                                  color: Colors.black,
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ],
-                            ),
-                            singleStaffListExpanded
-                                ? Container(
-                                    constraints:
-                                        BoxConstraints(maxHeight: 20.h),
-                                    child: ListView.separated(
-                                      shrinkWrap: true,
-                                      itemCount: provider.artistList.length,
-                                      itemBuilder: (context, index) {
-                                        Artist artist =
-                                            provider.artistList[index];
-                                        return GestureDetector(
-                                          behavior: HitTestBehavior.opaque,
-                                          onTap: () {
-                                            provider.setBookingData(
-                                              context,
-                                              setArtistId: true,
-                                              artistId: artist.id,
-                                            );
-                                            provider.resetSlotInfo();
-                                            provider.updateIsNextButtonActive();
-                                            setState(() {
-                                              singleStaffListExpanded = false;
-                                            });
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 2.w,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Text(
-                                                  artist.name ?? '',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 10.sp,
-                                                    color: Color(0xFF727272),
+                        SvgPicture.asset(
+                          ImagePathConstant.downArrow,
+                          width: 3.w,
+                          color: Colors.black,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ],
+                    ),
+                    singleStaffListExpanded
+                        ? Container(
+                            constraints: BoxConstraints(maxHeight: 20.h),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: provider.artistList.length,
+                              itemBuilder: (context, index) {
+                                Artist artist = provider.artistList[index];
+                                return GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    if (provider.currentBooking.artistId ==
+                                        artist.id) {
+                                      provider.setBookingData(
+                                        context,
+                                        setArtistId: true,
+                                        artistId: null,
+                                      );
+                                    } else {
+                                      provider.setBookingData(
+                                        context,
+                                        setArtistId: true,
+                                        artistId: artist.id,
+                                      );
+                                    }
+                                    provider.updateIsNextButtonActive();
+                                    provider.resetSlotInfo();
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 2.w,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text.rich(
+                                          TextSpan(
+                                            children: <InlineSpan>[
+                                              WidgetSpan(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 2.w),
+                                                  child: SvgPicture.asset(
+                                                    artist.id ==
+                                                            provider
+                                                                .currentBooking
+                                                                .artistId
+                                                        ? ImagePathConstant
+                                                            .selectedOption
+                                                        : ImagePathConstant
+                                                            .unselectedOption,
+                                                    width: 5.w,
+                                                    fit: BoxFit.fitWidth,
                                                   ),
                                                 ),
-                                                RatingBox(
-                                                  rating: artist.rating ?? 0.0,
-                                                  fontSize: 10.sp,
+                                              ),
+                                              TextSpan(
+                                                text: artist.name ?? '',
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.w500,
+                                                  fontSize: 10.sp,
+                                                  color: Color(0xFF727272),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) =>
-                                          Divider(),
+                                        ),
+                                        RatingBox(
+                                          rating: artist.rating ?? 0.0,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                      ),
-                    )
-                  : Container(
-                      padding: EdgeInsets.all(1.w),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFEA8BA1),
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(1.h),
-                        ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        StringConstant.useThisToSaveTime,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 10.sp,
-                        ),
-                      ),
-                    ),
-            ],
-          ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) => Divider(),
+                            ),
+                          )
+                        : SizedBox()
+                  ],
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

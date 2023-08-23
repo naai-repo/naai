@@ -46,8 +46,10 @@ class SalonDetailsProvider with ChangeNotifier {
 
   Booking _currentBooking = Booking();
 
+  // TODO: Change this to [false] once multiple artist booking method is finished
+  bool _selectedSingleStaff = true;
   bool _selectedMultipleStaff = false;
-  bool _selectedSingleStaff = false;
+
   bool _isOnSelectStaffType = true;
   bool _isOnSelectSlot = false;
   bool _isOnPaymentPage = false;
@@ -174,6 +176,7 @@ class SalonDetailsProvider with ChangeNotifier {
       String formattedDate =
           DateFormat('dd-MM-yyyy').format(selectedDate ?? DateTime.now());
       _currentBooking.selectedDate = formattedDate;
+      _currentBooking.selectedDateInDateTimeFormat = selectedDate;
       setArtistStartEndTime();
     }
     if (setSelectedTime) {
@@ -270,7 +273,6 @@ class SalonDetailsProvider with ChangeNotifier {
         bookingDate,
       );
       Loader.hideLoader(context);
-
       _bookingList.forEach((booking) {
         for (int i = booking.startTime ?? 0;
             i < (booking.endTime ?? 0);
@@ -490,6 +492,7 @@ class SalonDetailsProvider with ChangeNotifier {
     try {
       await DatabaseService().createBooking(bookingData: _finalData);
       Loader.hideLoader(context);
+      context.read<HomeProvider>().getUserBookings(context);
       if (transactionStatus == "success") {
         Navigator.pushReplacementNamed(
           context,
@@ -607,8 +610,9 @@ class SalonDetailsProvider with ChangeNotifier {
   /// Reset values of booking related data
   void resetCurrentBooking() {
     _currentBooking = Booking();
-    _selectedMultipleStaff = false;
-    _selectedSingleStaff = false;
+    // TODO: Uncomment this once multiple artist booking method is finished
+    // _selectedMultipleStaff = false;
+    // _selectedSingleStaff = false;
     _isOnSelectStaffType = true;
     _isOnSelectSlot = false;
     _isOnPaymentPage = false;

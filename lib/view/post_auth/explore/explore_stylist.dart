@@ -23,7 +23,6 @@ class ExploreStylist extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreStylist>
     with SingleTickerProviderStateMixin {
-
   late TabController homeScreenController;
 
   @override
@@ -208,8 +207,7 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                       children: <Widget>[
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment
@@ -232,7 +230,14 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                                     width: 1.w),
                                                               ),
                                                               TextSpan(
-                                                                text: '1.3 km',
+                                                                text: provider
+                                                                    .salonData
+                                                                    .firstWhere((element) =>
+                                                                        element
+                                                                            .id ==
+                                                                        artist
+                                                                            .salonId)
+                                                                    .distanceFromUserAsString,
                                                                 style:
                                                                     TextStyle(
                                                                   fontWeight:
@@ -249,8 +254,7 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                         ),
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment

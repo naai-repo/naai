@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
-import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/red_button_with_text.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
@@ -124,243 +123,9 @@ class _ExploreScreenState extends State<ExploreScreen>
                                       itemBuilder: (context, index) {
                                         Artist artist =
                                             provider.artistList[index];
-                                        return Padding(
-                                          padding: EdgeInsets.only(right: 4.w),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              context
-                                                  .read<BarberProvider>()
-                                                  .setArtistDataFromHome(
-                                                    artist,
-                                                  );
-                                              Navigator.pushNamed(
-                                                context,
-                                                NamedRoutes.barberProfileRoute,
-                                              );
-                                            },
-                                            child: CurvedBorderedCard(
-                                              borderColor:
-                                                  const Color(0xFFDBDBDB),
-                                              fillColor: index.isEven
-                                                  ? const Color(0xFF212121)
-                                                  : Colors.white,
-                                              child: Container(
-                                                padding: EdgeInsets.all(3.w),
-                                                constraints: BoxConstraints(
-                                                    maxWidth: 45.w),
-                                                width: 45.w,
-                                                child: Stack(
-                                                  children: <Widget>[
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 4.w),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: <Widget>[
-                                                          Column(
-                                                            children: <Widget>[
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(0.5
-                                                                            .h),
-                                                                child:
-                                                                    CircleAvatar(
-                                                                  radius: 5.h,
-                                                                  backgroundImage:
-                                                                      AssetImage(
-                                                                    'assets/images/salon_dummy_image.png',
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                artist.name ??
-                                                                    '',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: index
-                                                                          .isOdd
-                                                                      ? ColorsConstant
-                                                                          .textDark
-                                                                      : Colors
-                                                                          .white,
-                                                                  fontSize:
-                                                                      13.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                artist.salonName ??
-                                                                    '',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: ColorsConstant
-                                                                      .textLight,
-                                                                  fontSize:
-                                                                      10.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .bottomCenter,
-                                                            child: Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: <Widget>[
-                                                                Text.rich(
-                                                                  TextSpan(
-                                                                    children: <InlineSpan>[
-                                                                      WidgetSpan(
-                                                                        alignment:
-                                                                            PlaceholderAlignment.baseline,
-                                                                        baseline:
-                                                                            TextBaseline.ideographic,
-                                                                        child: SvgPicture
-                                                                            .asset(
-                                                                          ImagePathConstant
-                                                                              .locationIconAlt,
-                                                                          color:
-                                                                              ColorsConstant.purpleDistance,
-                                                                          height:
-                                                                              2.h,
-                                                                        ),
-                                                                      ),
-                                                                      WidgetSpan(
-                                                                        child: SizedBox(
-                                                                            width:
-                                                                                1.w),
-                                                                      ),
-                                                                      TextSpan(
-                                                                        text:
-                                                                            '1.3 km',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                          fontSize:
-                                                                              10.sp,
-                                                                          color:
-                                                                              ColorsConstant.purpleDistance,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                Text.rich(
-                                                                  TextSpan(
-                                                                    children: <InlineSpan>[
-                                                                      WidgetSpan(
-                                                                        alignment:
-                                                                            PlaceholderAlignment.baseline,
-                                                                        baseline:
-                                                                            TextBaseline.ideographic,
-                                                                        child: SvgPicture
-                                                                            .asset(
-                                                                          ImagePathConstant
-                                                                              .starIcon,
-                                                                          color:
-                                                                              ColorsConstant.greenRating,
-                                                                        ),
-                                                                      ),
-                                                                      WidgetSpan(
-                                                                        child: SizedBox(
-                                                                            width:
-                                                                                1.w),
-                                                                      ),
-                                                                      TextSpan(
-                                                                        text: artist
-                                                                            .rating
-                                                                            .toString(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                          fontSize:
-                                                                              10.sp,
-                                                                          color:
-                                                                              ColorsConstant.greenRating,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.topRight,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          if (context
-                                                              .read<
-                                                                  HomeProvider>()
-                                                              .userData
-                                                              .preferredArtist!
-                                                              .contains(
-                                                                  artist.id)) {
-                                                            provider
-                                                                .removePreferedArtist(
-                                                              context,
-                                                              artist.id,
-                                                            );
-                                                          } else {
-                                                            provider
-                                                                .addPreferedArtist(
-                                                              context,
-                                                              artist.id,
-                                                            );
-                                                          }
-                                                        },
-                                                        child: SvgPicture.asset(
-                                                          ImagePathConstant
-                                                              .saveIcon,
-                                                          color: context
-                                                                  .read<
-                                                                      HomeProvider>()
-                                                                  .userData
-                                                                  .preferredArtist!
-                                                                  .contains(
-                                                                      artist.id)
-                                                              ? ColorsConstant
-                                                                  .appColor
-                                                              : index.isOdd
-                                                                  ? const Color(
-                                                                      0xFF212121)
-                                                                  : Colors
-                                                                      .white,
-                                                          height: 3.h,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                        return artistCard(
+                                          artist,
+                                          index,
                                         );
                                       },
                                     ),
@@ -445,7 +210,179 @@ class _ExploreScreenState extends State<ExploreScreen>
     });
   }
 
-  MediaQuery titleSearchBarWithLocation() {
+  Widget artistCard(
+    Artist artist,
+    int index,
+  ) {
+    return Consumer<ExploreProvider>(builder: (context, provider, child) {
+      return Padding(
+        padding: EdgeInsets.only(right: 4.w),
+        child: GestureDetector(
+          onTap: () {
+            context.read<BarberProvider>().setArtistDataFromHome(
+                  artist,
+                );
+            Navigator.pushNamed(
+              context,
+              NamedRoutes.barberProfileRoute,
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(3.w),
+            constraints: BoxConstraints(maxWidth: 45.w),
+            width: 45.w,
+            child: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(0.5.h),
+                            child: CircleAvatar(
+                              radius: 5.h,
+                              backgroundImage: AssetImage(
+                                'assets/images/salon_dummy_image.png',
+                              ),
+                            ),
+                          ),
+                          Text(
+                            artist.name ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: index.isOdd
+                                  ? ColorsConstant.textDark
+                                  : Colors.white,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            artist.salonName ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: ColorsConstant.textLight,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text.rich(
+                              TextSpan(
+                                children: <InlineSpan>[
+                                  WidgetSpan(
+                                    alignment: PlaceholderAlignment.baseline,
+                                    baseline: TextBaseline.ideographic,
+                                    child: SvgPicture.asset(
+                                      ImagePathConstant.locationIconAlt,
+                                      color: ColorsConstant.purpleDistance,
+                                      height: 2.h,
+                                    ),
+                                  ),
+                                  WidgetSpan(
+                                    child: SizedBox(width: 1.w),
+                                  ),
+                                  TextSpan(
+                                    text: provider.filteredSalonData
+                                        .firstWhere(
+                                          (element) =>
+                                              element.id == artist.salonId,
+                                        )
+                                        .distanceFromUserAsString,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10.sp,
+                                      color: ColorsConstant.purpleDistance,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: <InlineSpan>[
+                                  WidgetSpan(
+                                    alignment: PlaceholderAlignment.baseline,
+                                    baseline: TextBaseline.ideographic,
+                                    child: SvgPicture.asset(
+                                      ImagePathConstant.starIcon,
+                                      color: ColorsConstant.greenRating,
+                                    ),
+                                  ),
+                                  WidgetSpan(
+                                    child: SizedBox(width: 1.w),
+                                  ),
+                                  TextSpan(
+                                    text: artist.rating.toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10.sp,
+                                      color: ColorsConstant.greenRating,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: () {
+                      if (context
+                          .read<HomeProvider>()
+                          .userData
+                          .preferredArtist!
+                          .contains(artist.id)) {
+                        provider.removePreferedArtist(
+                          context,
+                          artist.id,
+                        );
+                      } else {
+                        provider.addPreferedArtist(
+                          context,
+                          artist.id,
+                        );
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      ImagePathConstant.saveIcon,
+                      color: context
+                              .read<HomeProvider>()
+                              .userData
+                              .preferredArtist!
+                              .contains(artist.id)
+                          ? ColorsConstant.appColor
+                          : index.isOdd
+                              ? const Color(0xFF212121)
+                              : Colors.white,
+                      height: 3.h,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget titleSearchBarWithLocation() {
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
@@ -529,8 +466,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                             provider.filteredSalonData[index].imagePath ?? ''),
                       ),
                       Positioned(
-                        top: 8,
-                        right: 8,
+                        top: 1.h,
+                        right: 1.h,
                         child: InkWell(
                           onTap: () {
                             if (!context
@@ -547,7 +484,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                             }
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: EdgeInsets.all(1.w),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
@@ -561,12 +498,12 @@ class _ExploreScreenState extends State<ExploreScreen>
                                           provider.filteredSalonData[index].id)
                                   ? CupertinoIcons.heart_fill
                                   : CupertinoIcons.heart,
-                              size: 20,
+                              size: 2.5.h,
                               color: ColorsConstant.appColor,
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                   SizedBox(height: 1.4.h),
@@ -592,28 +529,93 @@ class _ExploreScreenState extends State<ExploreScreen>
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          SvgPicture.asset(ImagePathConstant.locationIconAlt),
-                          SizedBox(width: 1.w),
-                          Text(
-                            '${provider.filteredSalonData[index].getDistanceAsString(context.read<HomeProvider>().userCurrentLatLng)}',
-                            style: TextStyle(
-                              color: ColorsConstant.textDark,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          ColorfulInformationCard(
+                            imagePath: ImagePathConstant.locationIconAlt,
+                            text:
+                                '${provider.filteredSalonData[index].distanceFromUserAsString}',
+                            color: ColorsConstant.purpleDistance,
+                          ),
+                          SizedBox(width: 3.w),
+                          ColorfulInformationCard(
+                            imagePath: ImagePathConstant.starIcon,
+                            text: '${provider.filteredSalonData[index].rating}',
+                            color: ColorsConstant.greenRating,
                           ),
                         ],
                       ),
-                      SizedBox(height: 1.2.h),
-                      Text(
-                        '${provider.filteredSalonData[index].address?.addressString}',
-                        style: TextStyle(
-                          color: ColorsConstant.greySalonAddress,
-                          fontWeight: FontWeight.w500,
+                    ],
+                  ),
+                  SizedBox(height: 1.5.h),
+                  Row(
+                    children: <Widget>[
+                      TimeDateCard(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Mon - Fri",
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "  |  ",
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "10 AM-11 PM",
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      TimeDateCard(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Tues",
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "  |  ",
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "Closed",
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 1.h),
+                  SizedBox(height: 1.2.h),
                   index == (provider.filteredSalonData.length - 1)
                       ? SizedBox(height: 10.h)
                       : Divider(

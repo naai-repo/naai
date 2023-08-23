@@ -11,7 +11,12 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class AppointmentDetails extends StatelessWidget {
-  const AppointmentDetails({super.key});
+  final int index;
+
+  const AppointmentDetails({
+    super.key,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +58,7 @@ class AppointmentDetails extends StatelessWidget {
                   horizontal: 3.w,
                 ),
                 decoration: BoxDecoration(
-                  color: provider.lastOrNextBooking!.isUpcoming
+                  color: provider.lastOrNextBooking[index].isUpcoming
                       ? const Color(0xFFF6DE86)
                       : const Color(0xFF52D185).withOpacity(0.08),
                 ),
@@ -61,13 +66,13 @@ class AppointmentDetails extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      provider.lastOrNextBooking!.isUpcoming
+                      provider.lastOrNextBooking[index].isUpcoming
                           ? StringConstant.upcoming.toUpperCase()
                           : StringConstant.completed.toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 10.sp,
-                        color: provider.lastOrNextBooking!.isUpcoming
+                        color: provider.lastOrNextBooking[index].isUpcoming
                             ? ColorsConstant.textDark
                             : const Color(0xFF52D185),
                       ),
@@ -79,7 +84,8 @@ class AppointmentDetails extends StatelessWidget {
                               text: '${StringConstant.booked}: ',
                               style: StyleConstant.textLight11sp400Style),
                           TextSpan(
-                            text: provider.lastOrNextBooking?.createdOnString,
+                            text: provider
+                                .lastOrNextBooking[index].createdOnString,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 10.sp,
@@ -174,7 +180,8 @@ class AppointmentDetails extends StatelessWidget {
                     SizedBox(height: 1.h),
                     textInRow(
                       textOne: StringConstant.subtotal,
-                      textTwo: 'Rs ${provider.lastOrNextBooking?.totalPrice}',
+                      textTwo:
+                          'Rs ${provider.lastOrNextBooking[index].totalPrice}',
                     ),
                   ],
                 ),
@@ -185,7 +192,7 @@ class AppointmentDetails extends StatelessWidget {
         bottomNavigationBar: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Visibility(
-            visible: provider.lastOrNextBooking!.isUpcoming,
+            visible: provider.lastOrNextBooking[index].isUpcoming,
             replacement: Padding(
               padding: EdgeInsets.only(bottom: 1.h),
               child: RedButtonWithText(
@@ -266,7 +273,7 @@ class AppointmentDetails extends StatelessWidget {
                 ),
                 SizedBox(height: 0.5.h),
                 Text(
-                  '${provider.lastOrNextBooking?.artistName}',
+                  '${provider.lastOrNextBooking[index].artistName}',
                   style: StyleConstant.textDark12sp600Style,
                 ),
                 SizedBox(height: 1.5.h),
@@ -281,8 +288,9 @@ class AppointmentDetails extends StatelessWidget {
                       TextSpan(
                         text: provider.getFormattedDateOfBooking(
                           secondaryDateFormat: true,
-                          dateTimeString:
-                              provider.lastOrNextBooking?.bookingCreatedFor,
+                          dateTimeString: provider
+                              .lastOrNextBooking[index].bookingCreatedFor,
+                          index: index,
                         ),
                         style: StyleConstant.textDark12sp600Style,
                       ),
@@ -296,8 +304,9 @@ class AppointmentDetails extends StatelessWidget {
                       TextSpan(
                         text: provider.getFormattedDateOfBooking(
                           getTimeScheduled: true,
-                          dateTimeString:
-                              provider.lastOrNextBooking?.bookingCreatedFor,
+                          dateTimeString: provider
+                              .lastOrNextBooking[index].bookingCreatedFor,
+                          index: index,
                         ),
                         style: StyleConstant.textDark12sp600Style,
                       ),
@@ -318,7 +327,8 @@ class AppointmentDetails extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => Text(
-                      provider.lastOrNextBooking!.bookedServiceNames![index],
+                      provider
+                          .lastOrNextBooking[index].bookedServiceNames![index],
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 11.sp,
@@ -326,8 +336,8 @@ class AppointmentDetails extends StatelessWidget {
                       ),
                     ),
                     separatorBuilder: (context, index) => Text(', '),
-                    itemCount: provider
-                            .lastOrNextBooking?.bookedServiceNames?.length ??
+                    itemCount: provider.lastOrNextBooking[index]
+                            .bookedServiceNames?.length ??
                         0,
                   ),
                 )

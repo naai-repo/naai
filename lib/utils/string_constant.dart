@@ -50,7 +50,7 @@ class StringConstant {
   static const String bookAgain = 'Book Again';
   static const String seeDetails = 'See Details';
   static const String viewAllBookings = 'View all bookings';
-  static const String viewAllAppointments = 'View all appointments';
+  static const String viewAppointment = 'View appointment';
   static const String appointment = 'Appointment';
 
   // Salon detail screen strings
@@ -71,7 +71,7 @@ class StringConstant {
   static const String selectStaff = 'Select Staff';
   static const String selectSlot = 'Select Slot';
   static const String payment = 'Payment';
-  static const String singleStaffText = 'SINGLE STAFF FOR ALL SERVICE';
+  static const String singleStaffText = 'Single staff for all service';
   static const String multipleStaffText = 'MULTIPLE STAFF';
   static const String useThisToSaveTime = 'USE THIS TO SAVE TIME';
   static const String next = 'NEXT';
