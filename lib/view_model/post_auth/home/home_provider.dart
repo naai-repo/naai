@@ -120,6 +120,7 @@ class HomeProvider with ChangeNotifier {
     );
 
     _salonList = [...context.read<ExploreProvider>().salonData];
+    updateRatings();
 
     if (_userData.homeLocation?.geoLocation == null) {
       Loader.hideLoader(context);
@@ -609,5 +610,20 @@ class HomeProvider with ChangeNotifier {
 
   Future<List<Review>> getUserReviews() async {
     return await DatabaseService().getUserReviewsList(userData.id);
+  }
+
+  void updateRatings() {
+    salonList.forEach((salon) {
+      final allArtist =
+          artistList.where((artist) => artist.salonId == salon.id);
+      if (allArtist.isNotEmpty) {
+        double avg = 0;
+        allArtist.forEach((artist) {
+          avg += artist.rating ?? 0;
+        });
+        avg = avg / allArtist.length;
+        salon.rating = (salon.rating ?? 0 + avg) / 2;
+      }
+    });
   }
 }
