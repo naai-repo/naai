@@ -7,34 +7,34 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:78905451649:android:0ed2ef1e12e2dcefdbd980",
+        "mobilesdk_app_id": "1:78905451649:android:b3731b151839347fdbd980",
         "android_client_info": {
-          "package_name": "com.example.naai"
+          "package_name": "com.naai.flutterApp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "78905451649-1f0soo3fsjj92q5cuv8fuej3kuupvji1.apps.googleusercontent.com",
+          "client_id": "78905451649-7bi7mnrissd3e964lqgmonfses8p1o7h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.naai",
-            "certificate_hash": "d4963e5360eefcb9d3daa1e6ed1345ae89d0cf7f"
+            "package_name": "com.naai.flutterApp",
+            "certificate_hash": "bad3c39197f16139f66c06f841c0fa2dfe5f04ef"
           }
         },
         {
-          "client_id": "78905451649-h8bjjqqh42pkrp3kf2shiv4gmpbc3jn5.apps.googleusercontent.com",
+          "client_id": "78905451649-gfdkdd5b2ia91iv8moakfu4rs6ec5dr0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.naai",
+            "package_name": "com.naai.flutterApp",
             "certificate_hash": "f312e8bc605610f6f39a02a3dfce2ded7d5e4479"
           }
         },
         {
-          "client_id": "78905451649-kibls09kqqu0d5r9btfai1s65p59aj4v.apps.googleusercontent.com",
+          "client_id": "78905451649-gg9d8b75smqikju7a9f14m3pb1ujpkpg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.naai",
-            "certificate_hash": "bad3c39197f16139f66c06f841c0fa2dfe5f04ef"
+            "package_name": "com.naai.flutterApp",
+            "certificate_hash": "d4963e5360eefcb9d3daa1e6ed1345ae89d0cf7f"
           }
         },
         {
@@ -55,10 +55,10 @@
               "client_type": 3
             },
             {
-              "client_id": "78905451649-kd4641igt898tj2bnsvvl5f79favcg7j.apps.googleusercontent.com",
+              "client_id": "78905451649-jro5gbi9d1g6nbd258l65q2s9vp6gurd.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.naai"
+                "bundle_id": "com.naai.flutterApp"
               }
             }
           ]
