@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 class ExploreProvider with ChangeNotifier {
   TextEditingController _salonSearchController = TextEditingController();
 
+  List<FilterType> _selectedFilterTypeList = [];
   List<SalonData> _salonData = [];
   List<SalonData> _filteredSalonData = [];
   List<ServiceDetail> _currentSalonServices = [];
@@ -24,9 +25,25 @@ class ExploreProvider with ChangeNotifier {
   //============= GETTERS =============//
   TextEditingController get salonSearchController => _salonSearchController;
 
+  List<FilterType> get selectedFilterTypeList => _selectedFilterTypeList;
   List<SalonData> get salonData => _salonData;
   List<SalonData> get filteredSalonData => _filteredSalonData;
   List<Artist> get artistList => _artistList;
+
+  /// Set selected filter
+  void setSelectedFilter(FilterType filterType) {
+    if (_selectedFilterTypeList.contains(filterType)) {
+      _selectedFilterTypeList.remove(filterType);
+      _filteredSalonData = _salonData;
+    } else {
+      _selectedFilterTypeList.add(filterType);
+      _filteredSalonData.sort((a, b) {
+        return b.rating!.compareTo(a.rating!);
+      });
+    }
+
+    notifyListeners();
+  }
 
   /// Method to initialize values of Explore screen viz. [_salonData] and [_userCurrentLatLng]
   void initExploreScreen(BuildContext context) async {

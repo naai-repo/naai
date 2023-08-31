@@ -6,6 +6,7 @@ import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
 import 'package:naai/utils/components/red_button_with_text.dart';
 import 'package:naai/utils/components/time_date_card.dart';
+import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
@@ -165,26 +166,116 @@ class _ExploreScreenState extends State<ExploreScreen>
                                           ],
                                         ),
                                       ),
-                                      GestureDetector(
-                                        onTap: () {},
-                                        child: RedButtonWithText(
-                                          buttonText: StringConstant.filter,
-                                          textColor: ColorsConstant.appColor,
-                                          fontSize: 10.sp,
-                                          border: Border.all(
-                                              color: ColorsConstant.appColor),
-                                          icon: SvgPicture.asset(
-                                              ImagePathConstant.filterIcon),
-                                          fillColor:
-                                              ColorsConstant.lightAppColor,
-                                          borderRadius: 3.h,
-                                          onTap: () {},
-                                          shouldShowBoxShadow: false,
-                                          isIconSuffix: true,
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 1.5.w,
-                                            horizontal: 2.5.w,
+                                      RedButtonWithText(
+                                        buttonText: StringConstant.filter,
+                                        textColor: ColorsConstant.appColor,
+                                        fontSize: 10.sp,
+                                        border: Border.all(
+                                            color: ColorsConstant.appColor),
+                                        icon: provider.selectedFilterTypeList
+                                                .isNotEmpty
+                                            ? Text(
+                                                '${provider.selectedFilterTypeList.length}',
+                                                style: TextStyle(
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color:
+                                                      ColorsConstant.appColor,
+                                                ),
+                                              )
+                                            : SvgPicture.asset(
+                                                ImagePathConstant.filterIcon),
+                                        fillColor: ColorsConstant.lightAppColor,
+                                        borderRadius: 3.h,
+                                        onTap: () => showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(2.h),
+                                            ),
                                           ),
+                                          builder: (context) {
+                                            return Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Text(
+                                                  StringConstant.filter,
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color:
+                                                        ColorsConstant.appColor,
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  thickness: 2,
+                                                  color:
+                                                      ColorsConstant.textLight,
+                                                ),
+                                                SizedBox(height: 2.h),
+                                                SizedBox(
+                                                  width: 30.w,
+                                                  child: RedButtonWithText(
+                                                    buttonText:
+                                                        StringConstant.rating,
+                                                    icon: CircleAvatar(
+                                                      radius: 1.5.h,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: ColorsConstant
+                                                            .appColor,
+                                                        size: 2.h,
+                                                      ),
+                                                    ),
+                                                    textColor: provider
+                                                            .selectedFilterTypeList
+                                                            .contains(FilterType
+                                                                .Rating)
+                                                        ? Colors.white
+                                                        : ColorsConstant
+                                                            .appColor,
+                                                    fontSize: 10.sp,
+                                                    border: Border.all(
+                                                        color: ColorsConstant
+                                                            .appColor),
+                                                    fillColor: provider
+                                                            .selectedFilterTypeList
+                                                            .contains(FilterType
+                                                                .Rating)
+                                                        ? ColorsConstant
+                                                            .appColor
+                                                        : ColorsConstant
+                                                            .lightAppColor,
+                                                    borderRadius: 3.h,
+                                                    onTap: () {
+                                                      provider
+                                                          .setSelectedFilter(
+                                                              FilterType
+                                                                  .Rating);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    shouldShowBoxShadow: false,
+                                                    isIconSuffix: true,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      vertical: 1.5.w,
+                                                      horizontal: 2.5.w,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 2.h),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                        shouldShowBoxShadow: false,
+                                        isIconSuffix: true,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 1.5.w,
+                                          horizontal: 2.5.w,
                                         ),
                                       ),
                                     ],
