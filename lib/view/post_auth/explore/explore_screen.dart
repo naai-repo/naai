@@ -11,6 +11,7 @@ import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
+import 'package:naai/view/widgets/colorful_information_card.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
