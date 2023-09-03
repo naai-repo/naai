@@ -637,6 +637,13 @@ class HomeProvider with ChangeNotifier {
         average += review.rating ?? 0;
       });
       average /= (allReviews.length + 1);
+      final allArtist = artistList.where(
+        (artist) => artist.salonId == salon.id,
+      );
+      allArtist.forEach((artist) {
+        average += artist.originalRating ?? 0;
+      });
+      average /= (allArtist.length + 1);
       salon.rating = average;
     });
     artistList.forEach((artist) {
