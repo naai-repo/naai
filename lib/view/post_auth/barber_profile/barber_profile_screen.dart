@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:naai/models/review.dart';
 import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/add_review_component.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/image_path_constant.dart';
+import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
+import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:readmore/readmore.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -187,56 +192,77 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   itemBuilder: (context, index) {
                     ServiceDetail? serviceDetail =
                         provider.filteredServiceList[index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: 1.h,
-                        horizontal: 3.w,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 3.w,
-                        vertical: 1.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(1.h),
-                        border: Border.all(color: ColorsConstant.divider),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 50.w,
-                            child: Row(
-                              children: <Widget>[
-                                SvgPicture.asset(
-                                  serviceDetail.targetGender == Gender.MEN
-                                      ? ImagePathConstant.manIcon
-                                      : ImagePathConstant.womanIcon,
-                                  height: 4.h,
-                                ),
-                                SizedBox(width: 2.w),
-                                Expanded(
-                                  child: Text(
-                                    serviceDetail.serviceTitle ?? "",
-                                    style: TextStyle(
-                                      color: ColorsConstant.textDark,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w500,
+                    return InkWell(
+                      onTap: () {
+                        context
+                            .read<SalonDetailsProvider>()
+                            .setSelectedService(serviceDetail.id!);
+                        context.read<ExploreProvider>().setSelectedSalonIndex(
+                              context,
+                              index: context
+                                  .read<ExploreProvider>()
+                                  .salonData
+                                  .indexWhere(
+                                    (salon) =>
+                                        salon.id == provider.artist.salonId,
+                                  ),
+                            );
+                        Navigator.pushNamed(
+                          context,
+                          NamedRoutes.salonDetailsRoute,
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: 1.h,
+                          horizontal: 3.w,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 3.w,
+                          vertical: 1.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(1.h),
+                          border: Border.all(color: ColorsConstant.divider),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 50.w,
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    serviceDetail.targetGender == Gender.MEN
+                                        ? ImagePathConstant.manIcon
+                                        : ImagePathConstant.womanIcon,
+                                    height: 4.h,
+                                  ),
+                                  SizedBox(width: 2.w),
+                                  Expanded(
+                                    child: Text(
+                                      serviceDetail.serviceTitle ?? "",
+                                      style: TextStyle(
+                                        color: ColorsConstant.textDark,
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Text(
-                            "Rs. ${serviceDetail.price}",
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w600,
-                              color: ColorsConstant.textDark,
+                            Text(
+                              "Rs. ${serviceDetail.price}",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w600,
+                                color: ColorsConstant.textDark,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -456,99 +482,179 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                     ),
                   ),
                 ),
-                provider.artistReviewList.isNotEmpty
-                    ? ListView.builder(
+                context
+                        .read<HomeProvider>()
+                        .reviewList
+                        .where((review) =>
+                            review.artistId != null &&
+                            review.artistId == provider.artist.id)
+                        .isNotEmpty
+                    ? ListView(
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: provider.artistReviewList.length,
-                        itemBuilder: (context, index) {
-                          Review? reviewItem = provider.artistReviewList[index];
-
-                          return Container(
-                            margin: EdgeInsets.symmetric(vertical: 1.h),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 3.w,
-                              vertical: 1.5.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(1.h),
-                              border: Border.all(
-                                  color: ColorsConstant.reviewBoxBorderColor),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(
-                                    255,
-                                    229,
-                                    229,
-                                    229,
+                        children: context
+                            .read<HomeProvider>()
+                            .reviewList
+                            .where((review) =>
+                                review.artistId != null &&
+                                review.artistId == provider.artist.id)
+                            .map((reviewItem) => Container(
+                                  margin: EdgeInsets.symmetric(vertical: 1.h),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 3.w,
+                                    vertical: 1.5.h,
                                   ),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                reviewerImageAndName(
-                                  imageUrl: reviewItem.imagePath,
-                                  userName: reviewItem.userName ?? "",
-                                ),
-                                SizedBox(width: 2.w),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          ...List.generate(
-                                            5,
-                                            (i) => SvgPicture.asset(
-                                              ImagePathConstant.starIcon,
-                                              color: i <
-                                                      (int.parse(provider
-                                                              .artistReviewList[
-                                                                  index]
-                                                              .rating
-                                                              ?.round()
-                                                              .toString() ??
-                                                          "0"))
-                                                  ? ColorsConstant.appColor
-                                                  : ColorsConstant.greyStar,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 0.5.h, bottom: 1.h),
-                                        child: Text(
-                                          '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
-                                          style: TextStyle(
-                                            fontSize: 8.sp,
-                                            fontWeight: FontWeight.w600,
-                                            fontStyle: FontStyle.italic,
-                                          ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(1.h),
+                                    border: Border.all(
+                                      color:
+                                          ColorsConstant.reviewBoxBorderColor,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromARGB(
+                                          255,
+                                          229,
+                                          229,
+                                          229,
                                         ),
+                                        spreadRadius: 0.1,
+                                        blurRadius: 10,
                                       ),
-                                      Text(
-                                        reviewItem.comment ?? "",
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                        ),
-                                      )
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 0.5.h,
+                                                bottom: 0.2.h,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Store : ${reviewItem.salonName}',
+                                                    style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  reviewItem.artistName != null
+                                                      ? Text(
+                                                          'For : ${reviewItem.artistName}',
+                                                          style: TextStyle(
+                                                            fontSize: 9.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                ],
+                                              ),
+                                            ),
+                                            ListTile(
+                                              minLeadingWidth: 0,
+                                              contentPadding: EdgeInsets.zero,
+                                              visualDensity:
+                                                  VisualDensity.compact,
+                                              dense: true,
+                                              leading: CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                  'assets/images/salon_dummy_image.png',
+                                                ),
+                                              ),
+                                              title: Text.rich(
+                                                TextSpan(
+                                                  text:
+                                                      reviewItem.userName ?? "",
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '\n${DateFormat("dd MMMM y").format(reviewItem.createdAt ?? DateTime.now())}',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 10.sp,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 1.h,
+                                                bottom: 1.h,
+                                              ),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  ...List.generate(
+                                                    5,
+                                                    (i) => SvgPicture.asset(
+                                                      ImagePathConstant
+                                                          .starIcon,
+                                                      color: i <
+                                                              (int.parse(reviewItem
+                                                                      .rating
+                                                                      ?.round()
+                                                                      .toString() ??
+                                                                  "0"))
+                                                          ? ColorsConstant
+                                                              .appColor
+                                                          : ColorsConstant
+                                                              .greyStar,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            ReadMoreText(
+                                              reviewItem.comment ?? "",
+                                              style: TextStyle(
+                                                fontSize: 10.sp,
+                                              ),
+                                              trimCollapsedText: "\nView more",
+                                              trimExpandedText: "\nView less",
+                                              trimLines: 2,
+                                              trimMode: TrimMode.Line,
+                                              moreStyle: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: ColorsConstant.appColor,
+                                              ),
+                                              lessStyle: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: ColorsConstant.appColor,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
                       )
                     : SizedBox(),
               ],
@@ -582,7 +688,8 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
   }
 
   Widget barberOverview() {
-    return Consumer<BarberProvider>(builder: (context, provider, child) {
+    return Consumer2<BarberProvider, ExploreProvider>(
+        builder: (context, barberProvider, exploreProvider, child) {
       return Column(
         children: <Widget>[
           Row(
@@ -617,7 +724,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      provider.artist.name ?? '',
+                      barberProvider.artist.name ?? '',
                       style: TextStyle(
                         color: ColorsConstant.blackAvailableStaff,
                         fontWeight: FontWeight.w600,
@@ -635,7 +742,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                       ),
                     ),
                     Text(
-                      provider.artist.salonName ?? '',
+                      barberProvider.artist.salonName ?? '',
                       style: TextStyle(
                         color: ColorsConstant.blackAvailableStaff,
                         fontWeight: FontWeight.w600,
@@ -670,7 +777,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                       children: List<Widget>.generate(
                         5,
                         (i) => (i >
-                                int.parse(provider.artist.rating
+                                int.parse(barberProvider.artist.rating
                                             ?.floor()
                                             .toString() ??
                                         "0") -
@@ -693,7 +800,18 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
               SizedBox(
                 width: 38.w,
                 child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    exploreProvider.setSelectedSalonIndex(
+                      context,
+                      index: exploreProvider.salonData.indexWhere(
+                        (salon) => salon.id == barberProvider.artist.salonId,
+                      ),
+                    );
+                    Navigator.pushNamed(
+                      context,
+                      NamedRoutes.salonDetailsRoute,
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       vertical: 1.2.h,
@@ -738,7 +856,13 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
           ContactAndInteractionWidget(
             iconOnePath: ImagePathConstant.phoneIcon,
             iconTwoPath: ImagePathConstant.shareIcon,
-            iconThreePath: ImagePathConstant.saveIcon,
+            iconThreePath: context
+                    .read<HomeProvider>()
+                    .userData
+                    .preferredArtist!
+                    .contains(barberProvider.artist.id)
+                ? ImagePathConstant.saveIconFill
+                : ImagePathConstant.saveIcon,
             iconFourPath: ImagePathConstant.instagramIcon,
             onTapIconOne: () => launchUrl(
               Uri(
@@ -746,9 +870,29 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                 path: '+919717950608',
               ),
             ),
-            onTapIconTwo: () => print('Two'),
-            onTapIconThree: () => print('Three'),
-            onTapIconFour: () => print('Four'),
+            onTapIconTwo: () => Share.share(
+              "https://play.google.com/apps/internaltest/4700441013010444632",
+            ),
+            onTapIconThree: () {
+              if (context
+                  .read<HomeProvider>()
+                  .userData
+                  .preferredArtist!
+                  .contains(barberProvider.artist.id)) {
+                exploreProvider.removePreferedArtist(
+                  context,
+                  barberProvider.artist.id,
+                );
+              } else {
+                exploreProvider.addPreferedArtist(
+                  context,
+                  barberProvider.artist.id,
+                );
+              }
+            },
+            onTapIconFour: () => launchUrl(
+              Uri.parse('https://www.instagram.com/naaiindia'),
+            ),
           ),
           SizedBox(height: 1.h),
         ],

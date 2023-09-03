@@ -41,6 +41,7 @@ class HomeProvider with ChangeNotifier {
 
   List<SalonData> _salonList = [];
   List<Artist> _artistList = [];
+  List<Review> _allReviewList = [];
 
   late Symbol _symbol;
 
@@ -58,6 +59,7 @@ class HomeProvider with ChangeNotifier {
   //============= GETTERS =============//
   List<SalonData> get salonList => _salonList;
   List<Artist> get artistList => _artistList;
+  List<Review> get reviewList => _allReviewList;
 
   String get addressText => _addressText;
 
@@ -110,9 +112,12 @@ class HomeProvider with ChangeNotifier {
 
     await Future.wait(
       [
-        context.read<ExploreProvider>().getSalonList(context),
-        getUserDetails(context),
+        getUserDetails(context).whenComplete(
+          () async =>
+              await context.read<ExploreProvider>().getSalonList(context),
+        ),
         getAllArtists(context),
+        getAllReviews(context),
       ],
     ).onError(
       (error, stackTrace) =>
@@ -120,7 +125,7 @@ class HomeProvider with ChangeNotifier {
     );
 
     _salonList = [...context.read<ExploreProvider>().salonData];
-    updateRatings();
+    changeRatings(context);
 
     if (_userData.homeLocation?.geoLocation == null) {
       Loader.hideLoader(context);
@@ -153,6 +158,15 @@ class HomeProvider with ChangeNotifier {
       _artistList = await DatabaseService().getAllArtists();
       _artistList.sort((a, b) => ((a.rating ?? 0) - (b.rating ?? 0)).toInt());
       context.read<ExploreProvider>().setArtistList(_artistList);
+    } catch (e) {
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> getAllReviews(context) async {
+    try {
+      _allReviewList = await DatabaseService().getAllReviews();
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
@@ -414,7 +428,8 @@ class HomeProvider with ChangeNotifier {
           (FirebaseException error, stackTrace) =>
               throw ExceptionHandling(message: error.message ?? ""));
       _changedLocation = true;
-      getUserDetails(context);
+      await getUserDetails(context);
+      context.read<ExploreProvider>().getSalonList(context, justDistance: true);
       Loader.hideLoader(context);
     } catch (e) {
       Loader.hideLoader(context);
@@ -423,7 +438,7 @@ class HomeProvider with ChangeNotifier {
         '$e',
       );
     }
-
+    notifyListeners();
     Navigator.pop(context);
   }
 
@@ -612,18 +627,33 @@ class HomeProvider with ChangeNotifier {
     return await DatabaseService().getUserReviewsList(userData.id);
   }
 
-  void updateRatings() {
+  void changeRatings(BuildContext context, {bool notify = false}) {
     salonList.forEach((salon) {
-      final allArtist =
-          artistList.where((artist) => artist.salonId == salon.id);
-      if (allArtist.isNotEmpty) {
-        double avg = 0;
-        allArtist.forEach((artist) {
-          avg += artist.rating ?? 0;
-        });
-        avg = avg / allArtist.length;
-        salon.rating = (salon.rating ?? 0 + avg) / 2;
-      }
+      double average = salon.originalRating ?? 0;
+      final allReviews = _allReviewList.where(
+        (review) => review.salonId == salon.id,
+      );
+      allReviews.forEach((review) {
+        average += review.rating ?? 0;
+      });
+      average /= (allReviews.length + 1);
+      salon.rating = average;
     });
+    artistList.forEach((artist) {
+      double average = artist.originalRating ?? 0;
+      final allReviews = _allReviewList.where(
+        (review) => review.artistId != null && review.artistId == artist.id,
+      );
+      allReviews.forEach((review) {
+        average += review.rating ?? 0;
+      });
+      average /= (allReviews.length + 1);
+      artist.rating = average;
+    });
+    if (notify) notifyListeners();
+  }
+
+  void addReview(Review review) {
+    _allReviewList.add(review);
   }
 }

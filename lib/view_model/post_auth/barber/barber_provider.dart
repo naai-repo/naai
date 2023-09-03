@@ -10,7 +10,6 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
-import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class BarberProvider with ChangeNotifier {
@@ -20,7 +19,7 @@ class BarberProvider with ChangeNotifier {
   List<Services> _selectedServiceCategories = [];
   List<ServiceDetail> _serviceList = [];
   List<ServiceDetail> _filteredServiceList = [];
-  List<Review> _artistReviewList = [];
+  // List<Review> _artistReviewList = [];
 
   Artist _artist = Artist();
 
@@ -35,7 +34,7 @@ class BarberProvider with ChangeNotifier {
   List<Services> get selectedServiceCategories => _selectedServiceCategories;
   List<ServiceDetail> get serviceList => _serviceList;
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
-  List<Review> get artistReviewList => _artistReviewList;
+  // List<Review> get artistReviewList => _artistReviewList;
 
   Artist get artist => _artist;
 
@@ -48,7 +47,7 @@ class BarberProvider with ChangeNotifier {
       setArtistData(context);
     }
     await Future.wait([
-      getArtistReviewList(context),
+      // getArtistReviewList(context),
       getServiceList(context),
     ]);
     _shouldSetArtistData = true;
@@ -126,8 +125,7 @@ class BarberProvider with ChangeNotifier {
     BuildContext context, {
     Artist? artistData,
   }) {
-    _artist =
-        context.read<SalonDetailsProvider>().artistList[_selectedArtistIndex];
+    _artist = context.read<HomeProvider>().artistList[_selectedArtistIndex];
     notifyListeners();
   }
 
@@ -140,18 +138,18 @@ class BarberProvider with ChangeNotifier {
   }
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
-  Future<void> getArtistReviewList(BuildContext context) async {
-    Loader.showLoader(context);
-    try {
-      _artistReviewList =
-          await DatabaseService().getArtistReviewList(_artist.id);
-      Loader.hideLoader(context);
-    } catch (e) {
-      Loader.hideLoader(context);
-      ReusableWidgets.showFlutterToast(context, '$e');
-    }
-    notifyListeners();
-  }
+  // Future<void> getArtistReviewList(BuildContext context) async {
+  //   Loader.showLoader(context);
+  //   try {
+  //     _artistReviewList =
+  //         await DatabaseService().getArtistReviewList(_artist.id);
+  //     Loader.hideLoader(context);
+  //   } catch (e) {
+  //     Loader.hideLoader(context);
+  //     ReusableWidgets.showFlutterToast(context, '$e');
+  //   }
+  //   notifyListeners();
+  // }
 
   /// Get the list of services provided by the selected salon
   Future<void> getServiceList(BuildContext context) async {
@@ -178,6 +176,9 @@ class BarberProvider with ChangeNotifier {
     Loader.showLoader(context);
     Review review = Review(
       artistId: artist.id,
+      artistName: artist.name,
+      salonId: artist.salonId,
+      salonName: artist.salonName,
       comment: text,
       createdAt: DateTime.now(),
       userId: context.read<HomeProvider>().userData.id,
@@ -187,10 +188,12 @@ class BarberProvider with ChangeNotifier {
 
     try {
       await DatabaseService().addReview(reviewData: review).onError(
-            (FirebaseException error, stackTrace) =>
-                throw ExceptionHandling(message: error.message ?? ""),
+            (FirebaseException error, stackTrace) => throw ExceptionHandling(
+              message: error.message ?? "",
+            ),
           );
-      _artistReviewList.add(review);
+      context.read<HomeProvider>().reviewList.add(review);
+      context.read<HomeProvider>().changeRatings(context);
       Loader.hideLoader(context);
     } catch (e) {
       Loader.hideLoader(context);

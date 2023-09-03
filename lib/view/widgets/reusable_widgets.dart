@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:naai/models/review.dart';
 import 'package:naai/models/salon.dart';
 import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
@@ -13,6 +12,7 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -647,7 +647,14 @@ class ReusableWidgets {
                   ),
                 ),
               ),
-              provider.salonReviewList.isNotEmpty ? reviewList() : SizedBox(),
+              context
+                      .read<HomeProvider>()
+                      .reviewList
+                      .where((review) =>
+                          review.salonId == provider.selectedSalonData.id)
+                      .isNotEmpty
+                  ? reviewList()
+                  : SizedBox(),
             ],
           ),
         );
@@ -703,88 +710,94 @@ class ReusableWidgets {
 
   static Widget reviewList() {
     return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
-      return ListView.builder(
+      return ListView(
         padding: EdgeInsets.zero,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: provider.salonReviewList.length,
-        itemBuilder: (context, index) {
-          Review? reviewItem = provider.salonReviewList[index];
-
-          return Container(
-            margin: EdgeInsets.symmetric(vertical: 1.h),
-            padding: EdgeInsets.symmetric(
-              horizontal: 3.w,
-              vertical: 1.5.h,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1.h),
-              border: Border.all(color: ColorsConstant.reviewBoxBorderColor),
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 229, 229, 229),
-                  spreadRadius: 0.1,
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                reviewerImageAndName(
-                  imageUrl: reviewItem.imagePath,
-                  userName: reviewItem.userName ?? "",
-                ),
-                SizedBox(width: 2.w),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          ...List.generate(
-                            5,
-                            (i) => SvgPicture.asset(
-                              ImagePathConstant.starIcon,
-                              color: i <
-                                      (int.parse(provider
-                                              .artistList[index].rating
-                                              ?.round()
-                                              .toString() ??
-                                          "0"))
-                                  ? ColorsConstant.appColor
-                                  : ColorsConstant.greyStar,
-                            ),
-                          ),
-                        ],
+        children: context
+            .read<HomeProvider>()
+            .reviewList
+            .where((review) => review.salonId == provider.selectedSalonData.id)
+            .map((reviewItem) => Container(
+                  margin: EdgeInsets.symmetric(vertical: 1.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.w,
+                    vertical: 1.5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(1.h),
+                    border:
+                        Border.all(color: ColorsConstant.reviewBoxBorderColor),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 229, 229, 229),
+                        spreadRadius: 0.1,
+                        blurRadius: 10,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 0.5.h, bottom: 1.h),
-                        child: Text(
-                          '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
-                          style: TextStyle(
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        reviewItem.comment ?? "",
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                        ),
-                      )
                     ],
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      reviewerImageAndName(
+                        imageUrl: reviewItem.imagePath,
+                        userName: reviewItem.userName ?? "",
+                      ),
+                      SizedBox(width: 2.w),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                ...List.generate(
+                                  5,
+                                  (i) => SvgPicture.asset(
+                                    ImagePathConstant.starIcon,
+                                    color: i <
+                                            (int.parse(context
+                                                    .read<HomeProvider>()
+                                                    .artistList
+                                                    .firstWhere((artist) =>
+                                                        artist.id ==
+                                                        reviewItem.artistId)
+                                                    .rating
+                                                    ?.round()
+                                                    .toString() ??
+                                                "0"))
+                                        ? ColorsConstant.appColor
+                                        : ColorsConstant.greyStar,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 0.5.h, bottom: 1.h),
+                              child: Text(
+                                '${DateFormat.yMMMM().format(reviewItem.createdAt ?? DateTime.now())}',
+                                style: TextStyle(
+                                  fontSize: 8.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              reviewItem.comment ?? "",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ))
+            .toList(),
       );
     });
   }

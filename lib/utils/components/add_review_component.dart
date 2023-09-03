@@ -111,13 +111,13 @@ class _AddReviewComponentState extends State<AddReviewComponent> {
               if (widget.reviewForSalon) {
                 await context.read<SalonDetailsProvider>().submitReview(
                       context,
-                      stars: selectedStarIndex,
+                      stars: selectedStarIndex + 1,
                       text: reviewTextController.text.trim(),
                     );
               } else {
                 await context.read<BarberProvider>().submitReview(
                       context,
-                      stars: selectedStarIndex,
+                      stars: selectedStarIndex + 1,
                       text: reviewTextController.text.trim(),
                     );
               }

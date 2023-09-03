@@ -107,7 +107,6 @@ class DatabaseService {
   Future<void> addReview({required Review reviewData}) async {
     final DocumentReference reference = reviewsCollection.doc();
     reviewData.id = reference.id;
-
     await reference.set(reviewData.toJson()).onError(
           (error, stackTrace) => throw Exception(error),
         );
@@ -154,6 +153,18 @@ class DatabaseService {
 
     return querySnapshot.docs
         .map((docData) => Artist.fromDocumentSnapshot(docData))
+        .toList();
+  }
+
+  Future<List<Review>> getAllReviews() async {
+    QuerySnapshot querySnapshot = await reviewsCollection.get().onError(
+      (error, stackTrace) {
+        throw Exception(error);
+      },
+    );
+
+    return querySnapshot.docs
+        .map((docData) => Review.fromDocumentSnapshot(docData))
         .toList();
   }
 
@@ -243,7 +254,7 @@ class DatabaseService {
 
   Future<List<Review>> getUserReviewsList(String? userId) async {
     QuerySnapshot querySnapshot = await reviewsCollection
-        // .where('userId', isEqualTo: userId)
+        .where('userId', isEqualTo: userId)
         .get()
         .onError(
       (error, stackTrace) {

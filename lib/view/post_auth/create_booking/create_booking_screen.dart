@@ -372,7 +372,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     Text(
                                       provider.getSelectedArtistName(
                                           provider.currentBooking.artistId ??
-                                              ''),
+                                              '',
+                                          context),
                                       style: TextStyle(
                                         fontSize: 10.sp,
                                         color: ColorsConstant.textDark,
@@ -1033,7 +1034,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         Text(
                           provider.currentBooking.artistId != null
                               ? provider.getSelectedArtistName(
-                                  provider.currentBooking.artistId ?? '')
+                                  provider.currentBooking.artistId ?? '',
+                                  context)
                               : StringConstant.chooseAStaff,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
@@ -1053,9 +1055,14 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             constraints: BoxConstraints(maxHeight: 20.h),
                             child: ListView.separated(
                               shrinkWrap: true,
-                              itemCount: provider.artistList.length,
+                              itemCount: context
+                                  .read<HomeProvider>()
+                                  .artistList
+                                  .length,
                               itemBuilder: (context, index) {
-                                Artist artist = provider.artistList[index];
+                                Artist artist = context
+                                    .read<HomeProvider>()
+                                    .artistList[index];
                                 return GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () {

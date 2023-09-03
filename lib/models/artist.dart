@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Artist {
   String? id;
   String? name;
-  double? rating;
+  double? rating, originalRating;
   String? imagePath;
   String? salonId;
   String? salonName;
@@ -14,6 +14,7 @@ class Artist {
     this.id,
     this.name,
     this.rating,
+    this.originalRating,
     this.imagePath,
     this.salonId,
     this.salonName,
@@ -26,6 +27,7 @@ class Artist {
       id: json['id'],
       name: json['name'],
       rating: json['rating'],
+      originalRating: json['rating'],
       imagePath: json['imagePath'] ?? 'assets/images/artist_dummy_image.svg',
       salonId: json['salonId'],
       salonName: json['salonName'],
