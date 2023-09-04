@@ -234,12 +234,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                           var options = {
                             'key': Keys.razorpay_api_key,
                             'amount': (context
-                                            .read<SalonDetailsProvider>()
-                                            .totalPrice *
-                                        0.18 +
-                                    context
-                                        .read<SalonDetailsProvider>()
-                                        .totalPrice) *
+                                    .read<SalonDetailsProvider>()
+                                    .totalPrice) *
                                 100,
                             'name': 'NAAI',
                             'description': context
@@ -458,54 +454,54 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         ],
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 2.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                StringConstant.tax,
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorsConstant.textDark,
-                                ),
-                              ),
-                              Text(
-                                ' ${StringConstant.gst} 18%',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF47CB7C),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                '+',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: ColorsConstant.textLight,
-                                ),
-                              ),
-                              Text(
-                                ' ₹ ${provider.totalPrice * 0.18}',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorsConstant.textDark,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   margin: EdgeInsets.only(bottom: 2.w),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       Row(
+                    //         children: <Widget>[
+                    //           Text(
+                    //             StringConstant.tax,
+                    //             style: TextStyle(
+                    //               fontSize: 10.sp,
+                    //               fontWeight: FontWeight.w500,
+                    //               color: ColorsConstant.textDark,
+                    //             ),
+                    //           ),
+                    //           Text(
+                    //             ' ${StringConstant.gst} 18%',
+                    //             style: TextStyle(
+                    //               fontSize: 12.sp,
+                    //               fontWeight: FontWeight.w500,
+                    //               color: Color(0xFF47CB7C),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       Row(
+                    //         children: <Widget>[
+                    //           Text(
+                    //             '+',
+                    //             style: TextStyle(
+                    //               fontSize: 12.sp,
+                    //               color: ColorsConstant.textLight,
+                    //             ),
+                    //           ),
+                    //           Text(
+                    //             ' ₹ ${provider.totalPrice * 0.18}',
+                    //             style: TextStyle(
+                    //               fontSize: 12.sp,
+                    //               fontWeight: FontWeight.w500,
+                    //               color: ColorsConstant.textDark,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -531,7 +527,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       ),
                     ),
                     Text(
-                      ' ₹ ${provider.totalPrice * 0.18 + provider.totalPrice}',
+                      ' ₹ ${provider.totalPrice}',
+                      // ' ₹ ${provider.totalPrice * 0.18 + provider.totalPrice}',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
