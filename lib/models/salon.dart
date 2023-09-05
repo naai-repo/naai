@@ -4,7 +4,7 @@ import 'package:naai/models/user.dart';
 class SalonData {
   String? id;
   HomeLocation? address;
-  double? rating;
+  double? rating, originalRating;
   String? name;
   String? imagePath;
   String? salonType;
@@ -16,6 +16,7 @@ class SalonData {
     this.id,
     this.address,
     this.rating,
+    this.originalRating,
     this.name,
     this.imagePath,
     this.salonType,
@@ -32,6 +33,7 @@ class SalonData {
       address: HomeLocation.fromFirestore(docData['address'] ?? {}),
       name: docData['name'],
       rating: docData['rating'],
+      originalRating: docData['rating'],
       imagePath: docData['imagePath'] ?? 'assets/images/salon_dummy_image.png',
       salonType: docData['salonType'],
       timing: Timing.fromFirestore(docData['timing'] ?? {}),

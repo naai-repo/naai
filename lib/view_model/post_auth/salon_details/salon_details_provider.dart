@@ -27,7 +27,7 @@ class SalonDetailsProvider with ChangeNotifier {
   List<Gender> _selectedGendersFilter = [];
   List<Services> _selectedServiceCategories = [];
   List<ServiceDetail> _serviceList = [];
-  List<Review> _salonReviewList = [];
+  // List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
   List<Artist> _artistList = [];
   // List<String> _currentBooking.serviceIds = [];
@@ -66,8 +66,8 @@ class SalonDetailsProvider with ChangeNotifier {
   List<Services> get selectedServiceCategories => _selectedServiceCategories;
   List<ServiceDetail> get serviceList => _serviceList;
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
-  List<Artist> get artistList => _artistList;
-  List<Review> get salonReviewList => _salonReviewList;
+  // List<Artist> get artistList => _artistList;
+  // List<Review> get salonReviewList => _salonReviewList;
   // List<String> get selectedServices => _currentBooking.serviceIds;
 
   List<int> get artistAvailabilityToDisplay => _artistAvailabilityToDisplay;
@@ -103,7 +103,7 @@ class SalonDetailsProvider with ChangeNotifier {
     await getArtistList(context);
     await Future.wait([
       getServiceList(context),
-      getSalonReviewsList(context),
+      // getSalonReviewsList(context),
     ]).onError(
       (error, stackTrace) =>
           ReusableWidgets.showFlutterToast(context, '$error'),
@@ -154,8 +154,12 @@ class SalonDetailsProvider with ChangeNotifier {
   }
 
   /// Get the name of the artist whose [artistId] is given
-  String getSelectedArtistName(String artistId) {
-    return artistList.firstWhere((element) => element.id == artistId).name ??
+  String getSelectedArtistName(String artistId, BuildContext context) {
+    return context
+            .read<HomeProvider>()
+            .artistList
+            .firstWhere((element) => element.id == artistId)
+            .name ??
         '';
   }
 
@@ -428,6 +432,7 @@ class SalonDetailsProvider with ChangeNotifier {
     Loader.showLoader(context);
     Review review = Review(
       salonId: selectedSalonData.id,
+      salonName: selectedSalonData.name,
       comment: text,
       createdAt: DateTime.now(),
       userId: context.read<HomeProvider>().userData.id,
@@ -436,11 +441,16 @@ class SalonDetailsProvider with ChangeNotifier {
     );
 
     try {
-      await DatabaseService().addReview(reviewData: review).onError(
+      await DatabaseService()
+          .addReview(
+            reviewData: review,
+          )
+          .onError(
             (FirebaseException error, stackTrace) =>
                 throw ExceptionHandling(message: error.message ?? ""),
           );
-      _salonReviewList.add(review);
+      context.read<HomeProvider>().addReview(review);
+      context.read<HomeProvider>().changeRatings(context, notify: true);
       Loader.hideLoader(context);
     } catch (e) {
       Loader.hideLoader(context);
@@ -467,15 +477,14 @@ class SalonDetailsProvider with ChangeNotifier {
   }
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
-  Future<void> getSalonReviewsList(BuildContext context) async {
-    try {
-      _salonReviewList =
-          await DatabaseService().getSalonReviewsList(_selectedSalonData.id);
-    } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
-    }
-    notifyListeners();
-  }
+  // Future<void> getSalonReviewsList(BuildContext context) async {
+  //   try {
+  //     _salonReviewList = context.read<HomeProvider>().reviewList;
+  //   } catch (e) {
+  //     ReusableWidgets.showFlutterToast(context, '$e');
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<void> createBooking(
     BuildContext context,
@@ -655,6 +664,24 @@ class SalonDetailsProvider with ChangeNotifier {
   /// Clear the value of [_selectedServiceCategories]
   void clearSelectedServiceCategories() {
     _selectedServiceCategories.clear();
+    notifyListeners();
+  }
+
+  Future<void> addPreferedSalon(BuildContext context, String? salonId) async {
+    if (salonId == null) return;
+    context.read<HomeProvider>().userData.preferredSalon!.add(salonId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
+    notifyListeners();
+  }
+
+  Future<void> removePreferedSalon(
+      BuildContext context, String? salonId) async {
+    context.read<HomeProvider>().userData.preferredSalon!.remove(salonId);
+    await DatabaseService().updateUserData(
+      data: context.read<HomeProvider>().userData.toMap(),
+    );
     notifyListeners();
   }
 }

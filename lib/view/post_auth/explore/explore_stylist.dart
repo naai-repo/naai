@@ -11,6 +11,7 @@ import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -207,8 +208,7 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                       children: <Widget>[
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment
@@ -255,8 +255,7 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                         ),
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment
@@ -303,10 +302,44 @@ class _ExploreScreenState extends State<ExploreStylist>
                                             ),
                                             Align(
                                               alignment: Alignment.topRight,
-                                              child: SvgPicture.asset(
-                                                ImagePathConstant.saveIcon,
-                                                color: const Color(0xFF212121),
-                                                height: 3.h,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  if (context
+                                                      .read<HomeProvider>()
+                                                      .userData
+                                                      .preferredArtist!
+                                                      .contains(artist.id)) {
+                                                    provider
+                                                        .removePreferedArtist(
+                                                      context,
+                                                      artist.id,
+                                                    );
+                                                  } else {
+                                                    provider.addPreferedArtist(
+                                                      context,
+                                                      artist.id,
+                                                    );
+                                                  }
+                                                },
+                                                child: SvgPicture.asset(
+                                                  context
+                                                          .read<HomeProvider>()
+                                                          .userData
+                                                          .preferredArtist!
+                                                          .contains(artist.id)
+                                                      ? ImagePathConstant
+                                                          .saveIconFill
+                                                      : ImagePathConstant
+                                                          .saveIcon,
+                                                  color: context
+                                                          .read<HomeProvider>()
+                                                          .userData
+                                                          .preferredArtist!
+                                                          .contains(artist.id)
+                                                      ? ColorsConstant.appColor
+                                                      : const Color(0xFF212121),
+                                                  height: 3.h,
+                                                ),
                                               ),
                                             ),
                                           ],

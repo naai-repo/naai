@@ -76,22 +76,43 @@ class ExploreProvider with ChangeNotifier {
   }
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
-  Future<void> getSalonList(BuildContext context) async {
+  Future<void> getSalonList(BuildContext context,
+      {bool justDistance = false}) async {
     try {
-      _salonData = await DatabaseService().getSalonList();
+      if (!justDistance) _salonData = await DatabaseService().getSalonList();
+      // print(context.read<HomeProvider>().userData.toMap());
+      final latitude =
+          context.read<HomeProvider>().userData.homeLocation != null
+              ? context
+                  .read<HomeProvider>()
+                  .userData
+                  .homeLocation!
+                  .geoLocation!
+                  .latitude
+              : context.read<HomeProvider>().userCurrentLatLng.latitude;
+      final longitude =
+          context.read<HomeProvider>().userData.homeLocation != null
+              ? context
+                  .read<HomeProvider>()
+                  .userData
+                  .homeLocation!
+                  .geoLocation!
+                  .longitude
+              : context.read<HomeProvider>().userCurrentLatLng.longitude;
+
       _salonData.forEach((element) {
         element.distanceFromUserAsString = "NA";
         if (element.address!.geoLocation != null) {
           element.distanceFromUser = element.address!.calculateDistance(
-            context.read<HomeProvider>().userCurrentLatLng.latitude,
-            context.read<HomeProvider>().userCurrentLatLng.longitude,
+            latitude,
+            longitude,
             element.address!.geoLocation!.latitude,
             element.address!.geoLocation!.longitude,
           );
           element.distanceFromUserAsString =
               '${element.address!.calculateDistance(
-                    context.read<HomeProvider>().userCurrentLatLng.latitude,
-                    context.read<HomeProvider>().userCurrentLatLng.longitude,
+                    latitude,
+                    longitude,
                     element.address!.geoLocation!.latitude,
                     element.address!.geoLocation!.longitude,
                   ).toStringAsFixed(2)}km';

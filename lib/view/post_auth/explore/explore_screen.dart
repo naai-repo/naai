@@ -457,7 +457,13 @@ class _ExploreScreenState extends State<ExploreScreen>
                         }
                       },
                       child: SvgPicture.asset(
-                        ImagePathConstant.saveIcon,
+                        context
+                                .read<HomeProvider>()
+                                .userData
+                                .preferredArtist!
+                                .contains(artist.id)
+                            ? ImagePathConstant.saveIconFill
+                            : ImagePathConstant.saveIcon,
                         color: context
                                 .read<HomeProvider>()
                                 .userData

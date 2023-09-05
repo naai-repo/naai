@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
@@ -10,8 +11,10 @@ import 'package:naai/utils/style_constant.dart';
 import 'package:naai/view/post_auth/salon_details/salon_review_container.dart';
 import 'package:naai/view/widgets/contact_and_interaction_widget.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
+import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -267,100 +270,111 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
             SizedBox(height: 2.h),
             SizedBox(
               height: 11.h,
-              child: ListView.builder(
+              child: ListView(
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: provider.artistList.length,
-                itemBuilder: (context, index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(1.5.h),
-                    child: GestureDetector(
-                      onTap: () {
-                        provider.setSelectedArtistIndex(context, index: index);
-                        Navigator.pushNamed(
-                          context,
-                          NamedRoutes.barberProfileRoute,
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          bottom: 0.5.h,
-                          left: index == 0 ? 0 : 2.5.w,
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 3.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
+                children: context
+                    .read<HomeProvider>()
+                    .artistList
+                    .where((artist) =>
+                        artist.salonId == provider.selectedSalonData.id)
+                    .toList()
+                    .asMap()
+                    .map((index, artist) => MapEntry(
+                        index,
+                        ClipRRect(
                           borderRadius: BorderRadius.circular(1.5.h),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade100,
-                              spreadRadius: 0.1,
-                              blurRadius: 20,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4.h),
-                              child: Container(
-                                height: 7.h,
-                                width: 7.h,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/salon_dummy_image.png',
-                                  fit: BoxFit.cover,
-                                ),
+                          child: GestureDetector(
+                            onTap: () {
+                              provider.setSelectedArtistIndex(context,
+                                  index: index);
+                              Navigator.pushNamed(
+                                context,
+                                NamedRoutes.barberProfileRoute,
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                bottom: 0.5.h,
+                                left: index == 0 ? 0 : 2.5.w,
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 3.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(1.5.h),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade100,
+                                    spreadRadius: 0.1,
+                                    blurRadius: 20,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(4.h),
+                                    child: Container(
+                                      height: 7.h,
+                                      width: 7.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.asset(
+                                        'assets/images/salon_dummy_image.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        artist.name ?? "",
+                                        style: TextStyle(
+                                          fontSize: 11.sp,
+                                          color: ColorsConstant.textDark,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: List<Widget>.generate(
+                                          5,
+                                          (i) => (i >
+                                                  int.parse(artist.rating
+                                                              ?.round()
+                                                              .toString() ??
+                                                          "0") -
+                                                      1)
+                                              ? SvgPicture.asset(
+                                                  ImagePathConstant.starIcon,
+                                                  color:
+                                                      ColorsConstant.greyStar,
+                                                  height: 2.h,
+                                                )
+                                              : SvgPicture.asset(
+                                                  ImagePathConstant.starIcon,
+                                                  color:
+                                                      ColorsConstant.yellowStar,
+                                                  height: 2.h,
+                                                ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(width: 3.w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  provider.artistList[index].name ?? "",
-                                  style: TextStyle(
-                                    fontSize: 11.sp,
-                                    color: ColorsConstant.textDark,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: List<Widget>.generate(
-                                    5,
-                                    (i) => (i >
-                                            int.parse(provider.artistList[index]
-                                                        .rating
-                                                        ?.round()
-                                                        .toString() ??
-                                                    "0") -
-                                                1)
-                                        ? SvgPicture.asset(
-                                            ImagePathConstant.starIcon,
-                                            color: ColorsConstant.greyStar,
-                                            height: 2.h,
-                                          )
-                                        : SvgPicture.asset(
-                                            ImagePathConstant.starIcon,
-                                            color: ColorsConstant.yellowStar,
-                                            height: 2.h,
-                                          ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+                          ),
+                        )))
+                    .values
+                    .toList(),
               ),
             ),
           ],
@@ -427,7 +441,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                       ),
                       SizedBox(width: 2.w),
                       Text(
-                        "${provider.selectedSalonData.rating}",
+                        (provider.selectedSalonData.rating ?? 0)
+                            .toStringAsFixed(1),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12.sp,
@@ -449,13 +464,20 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               ),
             ),
             salonAddress(
-                address:
-                    provider.selectedSalonData.address?.addressString ?? ""),
+              address: provider.selectedSalonData.address?.addressString ?? "",
+              geoPoint: provider.selectedSalonData.address!.geoLocation!,
+            ),
             salonTiming(),
             ContactAndInteractionWidget(
               iconOnePath: ImagePathConstant.phoneIcon,
               iconTwoPath: ImagePathConstant.shareIcon,
-              iconThreePath: ImagePathConstant.saveIcon,
+              iconThreePath: !context
+                      .read<HomeProvider>()
+                      .userData
+                      .preferredSalon!
+                      .contains(provider.selectedSalonData.id)
+                  ? ImagePathConstant.saveIcon
+                  : ImagePathConstant.saveIconFill,
               iconFourPath: ImagePathConstant.instagramIcon,
               onTapIconOne: () => launchUrl(
                 Uri(
@@ -463,10 +485,29 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                   path: '+919717950608',
                 ),
               ),
-              onTapIconTwo: () => print('Two'),
-              onTapIconThree: () => print('Three'),
-              onTapIconFour: () =>
-                  launchUrl(Uri.parse('https://www.instagram.com/naaiindia')),
+              onTapIconTwo: () => Share.share(
+                "https://play.google.com/apps/internaltest/4700441013010444632",
+              ),
+              onTapIconThree: () {
+                if (!context
+                    .read<HomeProvider>()
+                    .userData
+                    .preferredSalon!
+                    .contains(provider.selectedSalonData.id)) {
+                  provider.addPreferedSalon(
+                    context,
+                    provider.selectedSalonData.id,
+                  );
+                } else {
+                  provider.removePreferedSalon(
+                    context,
+                    provider.selectedSalonData.id,
+                  );
+                }
+              },
+              onTapIconFour: () => launchUrl(
+                Uri.parse('https://www.instagram.com/naaiindia'),
+              ),
               backgroundColor: ColorsConstant.lightAppColor,
             ),
             SizedBox(height: 2.h),
@@ -552,7 +593,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
     );
   }
 
-  Widget salonAddress({required String address}) {
+  Widget salonAddress({required String address, required GeoPoint geoPoint}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 1.5.h),
       child: Row(
@@ -569,14 +610,31 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 3.w, bottom: 1.w),
-            child: SvgPicture.asset(
-              ImagePathConstant.goToLocationIcon,
+          InkWell(
+            onTap: () {
+              navigateTo(
+                geoPoint.latitude,
+                geoPoint.longitude,
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 3.w, bottom: 1.w),
+              child: SvgPicture.asset(
+                ImagePathConstant.goToLocationIcon,
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  static void navigateTo(double lat, double lng) async {
+    var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch ${uri.toString()}';
+    }
   }
 }

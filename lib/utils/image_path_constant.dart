@@ -47,6 +47,8 @@ class ImagePathConstant {
       UtilityFunctions.getImagePath(imageTitle: 'share_icon.svg');
   static final String saveIcon =
       UtilityFunctions.getImagePath(imageTitle: 'save_icon.svg');
+  static final String saveIconFill =
+      UtilityFunctions.getImagePath(imageTitle: 'save_icon_fill.svg');
   static final String instagramIcon =
       UtilityFunctions.getImagePath(imageTitle: 'instagram_icon.svg');
   static final String addYourReviewIcon =
