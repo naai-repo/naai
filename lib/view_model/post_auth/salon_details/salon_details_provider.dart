@@ -406,7 +406,6 @@ class SalonDetailsProvider with ChangeNotifier {
         _totalPrice += service.price ?? 0;
       }
     }
-
     notifyListeners();
   }
 
