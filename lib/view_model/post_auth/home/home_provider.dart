@@ -100,11 +100,8 @@ class HomeProvider with ChangeNotifier {
     }
     Loader.showLoader(context);
 
-    var _locationData = await _mapLocation.getLocation().timeout(
-          const Duration(seconds: 7),
-          onTimeout: () => UtilityFunctions.locationApiTimeout(context,
-              message: StringConstant.locationApiTookTooLong),
-        );
+    var _locationData = await _mapLocation.getLocation();
+    
     _userCurrentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
 
@@ -273,11 +270,7 @@ class HomeProvider with ChangeNotifier {
     }
 
     Loader.showLoader(context);
-    var _locationData = await _mapLocation.getLocation().timeout(
-          const Duration(seconds: 7),
-          onTimeout: () => UtilityFunctions.locationApiTimeout(context,
-              message: StringConstant.locationApiTookTooLong),
-        );
+    var _locationData = await _mapLocation.getLocation();
 
     LatLng currentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
@@ -496,11 +489,7 @@ class HomeProvider with ChangeNotifier {
       _permissionGranted = await _mapLocation.requestPermission();
     }
 
-    var _locationData = await _mapLocation.getLocation().timeout(
-          const Duration(seconds: BaseClient.TIME_OUT_DURATION),
-          onTimeout: () => UtilityFunctions.locationApiTimeout(context,
-              message: StringConstant.locationApiTookTooLong),
-        );
+    var _locationData = await _mapLocation.getLocation();
 
     return LatLng(_locationData.latitude!, _locationData.longitude!);
   }
