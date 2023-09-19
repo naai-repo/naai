@@ -62,6 +62,7 @@ class SalonDetailsProvider with ChangeNotifier {
   PageController _salonImageCarouselController = PageController();
 
   //============= GETTERS =============//
+  List<Artist> get artistList => _artistList;
   List<Gender> get selectedGendersFilter => _selectedGendersFilter;
   List<Services> get selectedServiceCategories => _selectedServiceCategories;
   List<ServiceDetail> get serviceList => _serviceList;
