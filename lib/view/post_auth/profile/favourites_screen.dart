@@ -86,533 +86,8 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
                       color: Colors.white,
                       padding: EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
                       child: selectedTab == 0
-                          ? Column(
-                              children: [
-                                GridView(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.zero,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 100 / 125,
-                                    crossAxisSpacing: 4.w,
-                                    mainAxisSpacing: 1.h,
-                                  ),
-                                  children: provider.artistList
-                                      .where((element) => context
-                                          .read<HomeProvider>()
-                                          .userData
-                                          .preferredArtist!
-                                          .contains(element.id))
-                                      .toList()
-                                      .asMap()
-                                      .entries
-                                      .map((e) {
-                                    int index = e.key;
-                                    Artist artist = e.value;
-                                    return GestureDetector(
-                                      onTap: () {
-                                        context
-                                            .read<BarberProvider>()
-                                            .setArtistDataFromHome(
-                                              artist,
-                                            );
-                                        Navigator.pushNamed(
-                                          context,
-                                          NamedRoutes.barberProfileRoute,
-                                        );
-                                      },
-                                      child: CurvedBorderedCard(
-                                        borderColor: const Color(0xFFDBDBDB),
-                                        fillColor: index.isEven
-                                            ? const Color(0xFF212121)
-                                            : Colors.white,
-                                        child: Container(
-                                          padding: EdgeInsets.all(3.w),
-                                          constraints:
-                                              BoxConstraints(maxWidth: 45.w),
-                                          width: 45.w,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 4.w),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Column(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  0.5.h),
-                                                          child: CircleAvatar(
-                                                            radius: 5.h,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                              'assets/images/salon_dummy_image.png',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          artist.name ?? '',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            color: index.isOdd
-                                                                ? ColorsConstant
-                                                                    .textDark
-                                                                : Colors.white,
-                                                            fontSize: 13.sp,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          artist.salonName ??
-                                                              '',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            color:
-                                                                ColorsConstant
-                                                                    .textLight,
-                                                            fontSize: 10.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .bottomCenter,
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: <Widget>[
-                                                          Text.rich(
-                                                            TextSpan(
-                                                              children: <
-                                                                  InlineSpan>[
-                                                                WidgetSpan(
-                                                                  alignment:
-                                                                      PlaceholderAlignment
-                                                                          .baseline,
-                                                                  baseline:
-                                                                      TextBaseline
-                                                                          .ideographic,
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    ImagePathConstant
-                                                                        .locationIconAlt,
-                                                                    color: ColorsConstant
-                                                                        .purpleDistance,
-                                                                    height: 2.h,
-                                                                  ),
-                                                                ),
-                                                                WidgetSpan(
-                                                                  child: SizedBox(
-                                                                      width:
-                                                                          1.w),
-                                                                ),
-                                                                TextSpan(
-                                                                  text: provider
-                                                                      .salonData
-                                                                      .firstWhere((element) =>
-                                                                          element
-                                                                              .id ==
-                                                                          artist
-                                                                              .salonId)
-                                                                      .distanceFromUserAsString,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        10.sp,
-                                                                    color: ColorsConstant
-                                                                        .purpleDistance,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Text.rich(
-                                                            TextSpan(
-                                                              children: <
-                                                                  InlineSpan>[
-                                                                WidgetSpan(
-                                                                  alignment:
-                                                                      PlaceholderAlignment
-                                                                          .baseline,
-                                                                  baseline:
-                                                                      TextBaseline
-                                                                          .ideographic,
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    ImagePathConstant
-                                                                        .starIcon,
-                                                                    color: ColorsConstant
-                                                                        .greenRating,
-                                                                  ),
-                                                                ),
-                                                                WidgetSpan(
-                                                                  child: SizedBox(
-                                                                      width:
-                                                                          1.w),
-                                                                ),
-                                                                TextSpan(
-                                                                  text: artist
-                                                                      .rating
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        10.sp,
-                                                                    color: ColorsConstant
-                                                                        .greenRating,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    if (context
-                                                        .read<HomeProvider>()
-                                                        .userData
-                                                        .preferredArtist!
-                                                        .contains(artist.id)) {
-                                                      provider
-                                                          .removePreferedArtist(
-                                                        context,
-                                                        artist.id,
-                                                      );
-                                                    } else {
-                                                      provider
-                                                          .addPreferedArtist(
-                                                        context,
-                                                        artist.id,
-                                                      );
-                                                    }
-                                                  },
-                                                  child: SvgPicture.asset(
-                                                    ImagePathConstant.saveIcon,
-                                                    color: context
-                                                            .read<
-                                                                HomeProvider>()
-                                                            .userData
-                                                            .preferredArtist!
-                                                            .contains(artist.id)
-                                                        ? ColorsConstant
-                                                            .appColor
-                                                        : index.isOdd
-                                                            ? const Color(
-                                                                0xFF212121)
-                                                            : Colors.white,
-                                                    height: 3.h,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            )
-                          : Column(
-                              children: provider.salonData
-                                  .where((element) => context
-                                      .read<HomeProvider>()
-                                      .userData
-                                      .preferredSalon!
-                                      .contains(element.id))
-                                  .map((preferredSalon) => Container(
-                                        color: Colors.white,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            FocusManager.instance.primaryFocus!
-                                                .unfocus();
-                                            provider.setSelectedSalonIndex(
-                                                context,
-                                                index: provider.salonData
-                                                    .indexOf(preferredSalon));
-                                            Navigator.pushNamed(context,
-                                                NamedRoutes.salonDetailsRoute);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Stack(
-                                                  children: <Widget>[
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      child: Image.asset(
-                                                          preferredSalon
-                                                                  .imagePath ??
-                                                              ''),
-                                                    ),
-                                                    Positioned(
-                                                      top: 8,
-                                                      right: 8,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          if (!context
-                                                              .read<
-                                                                  HomeProvider>()
-                                                              .userData
-                                                              .preferredSalon!
-                                                              .contains(
-                                                                  preferredSalon
-                                                                      .id)) {
-                                                            provider
-                                                                .addPreferedSalon(
-                                                                    context,
-                                                                    preferredSalon
-                                                                        .id);
-                                                          } else {
-                                                            provider
-                                                                .removePreferedSalon(
-                                                                    context,
-                                                                    preferredSalon
-                                                                        .id);
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.white,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          child: Icon(
-                                                            context
-                                                                    .read<
-                                                                        HomeProvider>()
-                                                                    .userData
-                                                                    .preferredSalon!
-                                                                    .contains(
-                                                                        preferredSalon
-                                                                            .id)
-                                                                ? CupertinoIcons
-                                                                    .heart_fill
-                                                                : CupertinoIcons
-                                                                    .heart,
-                                                            size: 20,
-                                                            color:
-                                                                ColorsConstant
-                                                                    .appColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                SizedBox(height: 1.4.h),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      preferredSalon.name ?? '',
-                                                      style: TextStyle(
-                                                        color: ColorsConstant
-                                                            .textDark,
-                                                        fontSize: 15.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '${preferredSalon.address?.addressString}',
-                                                      style: TextStyle(
-                                                        color: ColorsConstant
-                                                            .greySalonAddress,
-                                                        fontSize: 11.sp,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 1.2.h),
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        ColorfulInformationCard(
-                                                          imagePath:
-                                                              ImagePathConstant
-                                                                  .locationIconAlt,
-                                                          text:
-                                                              '${preferredSalon.distanceFromUserAsString}',
-                                                          color: ColorsConstant
-                                                              .purpleDistance,
-                                                        ),
-                                                        SizedBox(width: 3.w),
-                                                        ColorfulInformationCard(
-                                                          imagePath:
-                                                              ImagePathConstant
-                                                                  .starIcon,
-                                                          text:
-                                                              '${preferredSalon.rating}',
-                                                          color: ColorsConstant
-                                                              .greenRating,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 1.5.h),
-                                                Row(
-                                                  children: <Widget>[
-                                                    TimeDateCard(
-                                                      child: Text.rich(
-                                                        TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: "Mon - Fri",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    ColorsConstant
-                                                                        .textDark,
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text: "  |  ",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    ColorsConstant
-                                                                        .textDark,
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  "10 AM-11 PM",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    ColorsConstant
-                                                                        .textDark,
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 2.w),
-                                                    TimeDateCard(
-                                                      child: Text.rich(
-                                                        TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: "Tues",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    ColorsConstant
-                                                                        .textDark,
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text: "  |  ",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    ColorsConstant
-                                                                        .textDark,
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text: "Closed",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    ColorsConstant
-                                                                        .textDark,
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 1.h),
-                                                preferredSalon ==
-                                                        provider.salonData
-                                                            .where((element) => context
-                                                                .read<
-                                                                    HomeProvider>()
-                                                                .userData
-                                                                .preferredSalon!
-                                                                .contains(
-                                                                    element.id))
-                                                            .last
-                                                    ? SizedBox(height: 10.h)
-                                                    : Divider(
-                                                        thickness: 1,
-                                                        color: ColorsConstant
-                                                            .divider,
-                                                      ),
-                                                SizedBox(height: 1.h),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ))
-                                  .toList(),
-                            ),
+                          ? preferredArtistList()
+                          : preferredSalonList(),
                     ),
                   ),
                 ],
@@ -623,6 +98,417 @@ class _FavourtieScreenState extends State<FavourtieScreen> {
         );
       },
     );
+  }
+
+  Widget preferredArtistList() {
+    return Consumer<ExploreProvider>(builder: (context, provider, child) {
+      return Column(
+        children: <Widget>[
+          GridView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 100 / 125,
+              crossAxisSpacing: 4.w,
+              mainAxisSpacing: 1.h,
+            ),
+            children: provider.artistList
+                .where((element) => context
+                    .read<HomeProvider>()
+                    .userData
+                    .preferredArtist!
+                    .contains(element.id))
+                .toList()
+                .asMap()
+                .entries
+                .map((e) {
+              int index = e.key;
+              Artist artist = e.value;
+              return GestureDetector(
+                onTap: () {
+                  context.read<BarberProvider>().setArtistDataFromHome(
+                        artist,
+                      );
+                  Navigator.pushNamed(
+                    context,
+                    NamedRoutes.barberProfileRoute,
+                  );
+                },
+                child: CurvedBorderedCard(
+                  borderColor: const Color(0xFFDBDBDB),
+                  fillColor:
+                      index.isEven ? const Color(0xFF212121) : Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.all(3.w),
+                    constraints: BoxConstraints(maxWidth: 45.w),
+                    width: 45.w,
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(0.5.h),
+                                    child: CircleAvatar(
+                                      radius: 5.h,
+                                      backgroundImage: AssetImage(
+                                        'assets/images/salon_dummy_image.png',
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    artist.name ?? '',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: index.isOdd
+                                          ? ColorsConstant.textDark
+                                          : Colors.white,
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    artist.salonName ?? '',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: ColorsConstant.textLight,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text.rich(
+                                      TextSpan(
+                                        children: <InlineSpan>[
+                                          WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.baseline,
+                                            baseline: TextBaseline.ideographic,
+                                            child: SvgPicture.asset(
+                                              ImagePathConstant.locationIconAlt,
+                                              color:
+                                                  ColorsConstant.purpleDistance,
+                                              height: 2.h,
+                                            ),
+                                          ),
+                                          WidgetSpan(
+                                            child: SizedBox(width: 1.w),
+                                          ),
+                                          TextSpan(
+                                            text: provider.salonData
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    artist.salonId)
+                                                .distanceFromUserAsString,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10.sp,
+                                              color:
+                                                  ColorsConstant.purpleDistance,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: <InlineSpan>[
+                                          WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.baseline,
+                                            baseline: TextBaseline.ideographic,
+                                            child: SvgPicture.asset(
+                                              ImagePathConstant.starIcon,
+                                              color: ColorsConstant.greenRating,
+                                            ),
+                                          ),
+                                          WidgetSpan(
+                                            child: SizedBox(width: 1.w),
+                                          ),
+                                          TextSpan(
+                                            text: artist.rating.toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10.sp,
+                                              color: ColorsConstant.greenRating,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: InkWell(
+                            onTap: () {
+                              if (context
+                                  .read<HomeProvider>()
+                                  .userData
+                                  .preferredArtist!
+                                  .contains(artist.id)) {
+                                provider.removePreferedArtist(
+                                  context,
+                                  artist.id,
+                                );
+                              } else {
+                                provider.addPreferedArtist(
+                                  context,
+                                  artist.id,
+                                );
+                              }
+                            },
+                            child: SvgPicture.asset(
+                              ImagePathConstant.saveIcon,
+                              color: context
+                                      .read<HomeProvider>()
+                                      .userData
+                                      .preferredArtist!
+                                      .contains(artist.id)
+                                  ? ColorsConstant.appColor
+                                  : index.isOdd
+                                      ? const Color(0xFF212121)
+                                      : Colors.white,
+                              height: 3.h,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget preferredSalonList() {
+    return Consumer<ExploreProvider>(builder: (context, provider, child) {
+      return Column(
+        children: provider.salonData
+            .where((element) => context
+                .read<HomeProvider>()
+                .userData
+                .preferredSalon!
+                .contains(element.id))
+            .map((preferredSalon) => Container(
+                  color: Colors.white,
+                  child: GestureDetector(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus!.unfocus();
+                      provider.setSelectedSalonIndex(context,
+                          index: provider.salonData.indexOf(preferredSalon));
+                      Navigator.pushNamed(
+                          context, NamedRoutes.salonDetailsRoute);
+                    },
+                    child: Container(
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Stack(
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child:
+                                    Image.asset(preferredSalon.imagePath ?? ''),
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: InkWell(
+                                  onTap: () {
+                                    if (!context
+                                        .read<HomeProvider>()
+                                        .userData
+                                        .preferredSalon!
+                                        .contains(preferredSalon.id)) {
+                                      provider.addPreferedSalon(
+                                          context, preferredSalon.id);
+                                    } else {
+                                      provider.removePreferedSalon(
+                                          context, preferredSalon.id);
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      context
+                                              .read<HomeProvider>()
+                                              .userData
+                                              .preferredSalon!
+                                              .contains(preferredSalon.id)
+                                          ? CupertinoIcons.heart_fill
+                                          : CupertinoIcons.heart,
+                                      size: 20,
+                                      color: ColorsConstant.appColor,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 1.4.h),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                preferredSalon.name ?? '',
+                                style: TextStyle(
+                                  color: ColorsConstant.textDark,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '${preferredSalon.address?.addressString}',
+                                style: TextStyle(
+                                  color: ColorsConstant.greySalonAddress,
+                                  fontSize: 11.sp,
+                                ),
+                              ),
+                              SizedBox(height: 1.2.h),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  ColorfulInformationCard(
+                                    imagePath:
+                                        ImagePathConstant.locationIconAlt,
+                                    text:
+                                        '${preferredSalon.distanceFromUserAsString}',
+                                    color: ColorsConstant.purpleDistance,
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  ColorfulInformationCard(
+                                    imagePath: ImagePathConstant.starIcon,
+                                    text: '${preferredSalon.rating}',
+                                    color: ColorsConstant.greenRating,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 1.5.h),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              TimeDateCard(
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: StringConstant.timings,
+                                        style: TextStyle(
+                                          color: ColorsConstant.textDark,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "  |  ",
+                                        style: TextStyle(
+                                          color: ColorsConstant.textDark,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            "${provider.formatTime(preferredSalon.timing!.opening ?? 0)} - ${provider.formatTime(preferredSalon.timing!.closing ?? 0)}",
+                                        style: TextStyle(
+                                          color: ColorsConstant.textDark,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 2.w),
+                              TimeDateCard(
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: StringConstant.closed,
+                                        style: TextStyle(
+                                          color: ColorsConstant.textDark,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "  |  ",
+                                        style: TextStyle(
+                                          color: ColorsConstant.textDark,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: preferredSalon.closingDay,
+                                        style: TextStyle(
+                                          color: ColorsConstant.textDark,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 1.h),
+                          preferredSalon ==
+                                  provider.salonData
+                                      .where((element) => context
+                                          .read<HomeProvider>()
+                                          .userData
+                                          .preferredSalon!
+                                          .contains(element.id))
+                                      .last
+                              ? SizedBox(height: 10.h)
+                              : Divider(
+                                  thickness: 1,
+                                  color: ColorsConstant.divider,
+                                ),
+                          SizedBox(height: 1.h),
+                        ],
+                      ),
+                    ),
+                  ),
+                ))
+            .toList(),
+      );
+    });
   }
 
   Widget aristAndSalonTabBar() {

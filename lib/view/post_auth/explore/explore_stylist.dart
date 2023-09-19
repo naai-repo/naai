@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
-import 'package:naai/utils/components/red_button_with_text.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';

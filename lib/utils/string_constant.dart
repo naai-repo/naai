@@ -3,6 +3,9 @@ class StringConstant {
   static const String imageBaseDirectory = 'assets/images/';
   static const String splashScreenText = 'redefining your salon experience';
   static const String artist = 'Artist';
+  static const String timings = "Timings";
+  static const String closed = "Closed";
+  static const String generalContantNumber = "+919205328688";
 
   // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';

@@ -14,7 +14,6 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -287,8 +286,12 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                           borderRadius: BorderRadius.circular(1.5.h),
                           child: GestureDetector(
                             onTap: () {
+                              int indexOfArtistOnList = context
+                                  .read<HomeProvider>()
+                                  .artistList
+                                  .indexOf(artist);
                               provider.setSelectedArtistIndex(context,
-                                  index: index);
+                                  index: indexOfArtistOnList);
                               Navigator.pushNamed(
                                 context,
                                 NamedRoutes.barberProfileRoute,
@@ -482,11 +485,13 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               onTapIconOne: () => launchUrl(
                 Uri(
                   scheme: 'tel',
-                  path: '+919717950608',
+                  path: StringConstant.generalContantNumber,
                 ),
               ),
-              onTapIconTwo: () => Share.share(
-                "https://play.google.com/apps/internaltest/4700441013010444632",
+              onTapIconTwo: () => launchUrl(
+                Uri.parse(
+                  "https://play.google.com/store/apps/details?id=com.naai.flutterApp",
+                ),
               ),
               onTapIconThree: () {
                 if (!context
@@ -506,7 +511,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 }
               },
               onTapIconFour: () => launchUrl(
-                Uri.parse('https://www.instagram.com/naaiindia'),
+                Uri.parse(provider.selectedSalonData.instagramLink ??
+                    'https://www.instagram.com/naaiindia'),
               ),
               backgroundColor: ColorsConstant.lightAppColor,
             ),
@@ -519,84 +525,89 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   }
 
   Widget salonTiming() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 3.h),
-      child: Row(
-        children: <Widget>[
-          TimeDateCard(
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Mon - Fri",
-                    style: TextStyle(
-                      color: ColorsConstant.textDark,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+      return Padding(
+        padding: EdgeInsets.only(bottom: 3.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TimeDateCard(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: StringConstant.timings,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: " | ",
-                    style: TextStyle(
-                      color: ColorsConstant.textLight,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+                    TextSpan(
+                      text: " | ",
+                      style: TextStyle(
+                        color: ColorsConstant.textLight,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: "10 AM-11 PM",
-                    style: TextStyle(
-                      color: ColorsConstant.textDark,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+                    TextSpan(
+                      text:
+                          "${provider.formatTime(provider.selectedSalonData.timing!.opening ?? 0)} - ${provider.formatTime(provider.selectedSalonData.timing!.closing ?? 0)}",
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 2.w),
-          TimeDateCard(
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Tues",
-                    style: TextStyle(
-                      color: ColorsConstant.textDark,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+            SizedBox(height: 2.w),
+            TimeDateCard(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: StringConstant.closed,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: " | ",
-                    style: TextStyle(
-                      color: ColorsConstant.textLight,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+                    TextSpan(
+                      text: "  |  ",
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: "Closed",
-                    style: TextStyle(
-                      color: ColorsConstant.textDark,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+                    TextSpan(
+                      text: provider.selectedSalonData.closingDay,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget salonAddress({required String address, required GeoPoint geoPoint}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 1.5.h),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Flexible(
             child: Text(

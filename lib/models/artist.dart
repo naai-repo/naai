@@ -9,6 +9,7 @@ class Artist {
   String? salonName;
   Availability? availability;
   double? distanceFromUser;
+  String? instagramLink;
 
   Artist({
     this.id,
@@ -19,6 +20,7 @@ class Artist {
     this.salonId,
     this.salonName,
     this.availability,
+    this.instagramLink,
   });
 
   factory Artist.fromDocumentSnapshot(DocumentSnapshot docData) {
@@ -32,6 +34,7 @@ class Artist {
       salonId: json['salonId'],
       salonName: json['salonName'],
       availability: Availability.fromFirestore(json['availability'] ?? {}),
+      instagramLink: json['instagramLink'],
     );
   }
 

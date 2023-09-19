@@ -349,6 +349,20 @@ class SalonDetailsProvider with ChangeNotifier {
     return timeString;
   }
 
+  String formatTime(int timeInSeconds) {
+    int hours = (timeInSeconds ~/ 3600) % 12;
+    int minutes = ((timeInSeconds % 3600) ~/ 60);
+    String amPm = (timeInSeconds ~/ 43200) == 0 ? 'AM' : 'PM';
+
+    if (hours == 0) {
+      hours = 12;
+    }
+
+    String formattedTime =
+        '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')} $amPm';
+    return formattedTime;
+  }
+
   /// Set the current status of scheduling flow
   void setSchedulingStatus({
     bool onSelectStaff = false,
@@ -464,13 +478,15 @@ class SalonDetailsProvider with ChangeNotifier {
   /// Get the list of services provided by the selected salon
   Future<void> getServiceList(BuildContext context) async {
     List<String> _artistIdList = _artistList.map((e) => e.id ?? '').toList();
-    try {
-      _serviceList = await DatabaseService().getServiceList(_artistIdList);
-      print(_serviceList);
-      _filteredServiceList.clear();
-      _filteredServiceList.addAll(_serviceList);
-    } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
+    if (_artistIdList.isNotEmpty) {
+      try {
+        _serviceList = await DatabaseService().getServiceList(_artistIdList);
+        print(_serviceList);
+        _filteredServiceList.clear();
+        _filteredServiceList.addAll(_serviceList);
+      } catch (e) {
+        ReusableWidgets.showFlutterToast(context, '$e');
+      }
     }
     notifyListeners();
   }

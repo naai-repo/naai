@@ -17,7 +17,6 @@ import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -141,7 +140,9 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
               ],
             ),
             bottomNavigationBar: Visibility(
-              visible: Provider.of<SalonDetailsProvider>(context, listen: true).totalPrice > 0,
+              visible: Provider.of<SalonDetailsProvider>(context, listen: true)
+                      .totalPrice >
+                  0,
               child: Container(
                 margin: EdgeInsets.only(
                   bottom: 2.h,
@@ -245,10 +246,12 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: context.read<BarberProvider>().filteredServiceList.length,
+                  itemCount:
+                      context.read<BarberProvider>().filteredServiceList.length,
                   itemBuilder: (context, index) {
-                    ServiceDetail? serviceDetail =
-                        context.read<BarberProvider>().filteredServiceList[index];
+                    ServiceDetail? serviceDetail = context
+                        .read<BarberProvider>()
+                        .filteredServiceList[index];
                     bool isAdded = provider.currentBooking.serviceIds
                             ?.contains(serviceDetail.id) ??
                         false;
@@ -928,11 +931,12 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
             onTapIconOne: () => launchUrl(
               Uri(
                 scheme: 'tel',
-                path: '+919717950608',
+                path: StringConstant.generalContantNumber,
               ),
             ),
-            onTapIconTwo: () => Share.share(
-              "https://play.google.com/apps/internaltest/4700441013010444632",
+            onTapIconTwo: () => launchUrl(
+              Uri.parse(barberProvider.artist.instagramLink ??
+                  'https://www.instagram.com/naaiindia'),
             ),
             onTapIconThree: () {
               if (context
