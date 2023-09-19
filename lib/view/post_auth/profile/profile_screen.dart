@@ -9,6 +9,7 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -107,24 +108,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ImagePathConstant.bookingHistoryIcon,
                                   optionTitle: StringConstant.bookingHistory,
                                 ),
-                                profileOptions(
-                                  onTap: () => print('tapped'),
-                                  imagePath: ImagePathConstant.referralIcon,
-                                  optionTitle: StringConstant.referral,
-                                ),
-                                profileOptions(
-                                  onTap: () => print('tapped'),
-                                  imagePath:
-                                      ImagePathConstant.salonRegistrationIcon,
-                                  optionTitle: StringConstant.salonRegistration,
-                                ),
+                                // profileOptions(
+                                //   onTap: () => print('tapped'),
+                                //   imagePath: ImagePathConstant.referralIcon,
+                                //   optionTitle: StringConstant.referral,
+                                // ),
+                                // profileOptions(
+                                //   onTap: () => print('tapped'),
+                                //   imagePath:
+                                //       ImagePathConstant.salonRegistrationIcon,
+                                //   optionTitle: StringConstant.salonRegistration,
+                                // ),
                                 // profileOptions(
                                 //   onTap: () => print('tapped'),
                                 //   imagePath: ImagePathConstant.settingsIcon,
                                 //   optionTitle: StringConstant.settings,
                                 // ),
                                 profileOptions(
-                                  onTap: () => print('tapped'),
+                                  onTap: () => launchUrl(
+                                    Uri.parse(
+                                        'https://www.instagram.com/naaiindia'),
+                                  ),
                                   imagePath: ImagePathConstant.informationIcon,
                                   optionTitle: StringConstant.more,
                                 ),
