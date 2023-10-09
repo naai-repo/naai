@@ -32,10 +32,10 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cloud_firestore: 4.3.1
+  cloud_firestore: 4.9.3
   cupertino_icons: 1.0.2
-  firebase_auth: 4.2.5
-  firebase_core: 2.15.0
+  firebase_auth: 4.10.1
+  firebase_core: 2.17.0
   flutter_phoenix: 1.1.0
   flutter_svg: 1.1.6
   flutter_typeahead: 4.0.0
@@ -55,6 +55,8 @@ dependencies:
   smooth_page_indicator: 1.0.0
   syncfusion_flutter_datepicker: 20.4.54
   url_launcher: 6.1.11
+  image_picker: 1.0.4
+  firebase_storage: 11.2.8
 
   # Git dependencies
   flutter_launcher_icons:
@@ -67,7 +69,7 @@ dependencies:
       ref: 8c9f47b
   salomon_bottom_bar:
     git:
-      url: https://github.com/TiffApps/salomon_bottom_bar
+      url: https://github.com/lukepighetti/salomon_bottom_bar
       ref: main
 
 flutter_icons:

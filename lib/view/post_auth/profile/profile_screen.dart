@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/utils/colors_constant.dart';
@@ -10,6 +12,8 @@ import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -19,6 +23,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  // List<XFile>? _mediaFileList;
+  //
+  // void _setImageFileListFromFile(XFile? value) {
+  //   _mediaFileList = value == null ? null : <XFile>[value];
+  // }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -27,10 +38,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
+  // Future<void> getLostData() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final LostDataResponse response = await picker.retrieveLostData();
+  //   if (response.isEmpty) {
+  //     return;
+  //   }
+  //   final XFile? imageFile = response.file;
+  //   if (imageFile != null) {
+  //     _setImageFileListFromFile(imageFile);
+  //   } else {
+  //     print(response.exception);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(
       builder: (context, provider, child) {
+        // String? networkImageUrl = provider.userData.image!;
         return Scaffold(
           body: Stack(
             children: <Widget>[
@@ -70,11 +96,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                CircleAvatar(
-                                  radius: 7.h,
-                                  backgroundImage: AssetImage(
-                                    'assets/images/salon_dummy_image.png',
-                                  ),
+                                Stack(
+                                  alignment: Alignment.bottomRight,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 7.h,
+                                      backgroundImage: provider.imageUrl.isNotEmpty ?  NetworkImage(provider.imageUrl) as ImageProvider
+                                          : NetworkImage(provider.userData.image!.isNotEmpty ? provider.userData.image! : 'https://firebasestorage.googleapis.com/v0/b/naai-5d31f.appspot.com/o/user_images%2Fsalon_dummy_image.png?alt=media&token=ceb17927-8a85-4f22-8908-6f16acdb2e40&_gl=1*jxkn7y*_ga*MTQ0NjM3MTQzMy4xNjk2Njg1MTk3*_ga_CW55HF8NVT*MTY5NjgzMTkzNS44LjEuMTY5NjgzMjEyNy41OC4wLjA.')
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        context.read<ProfileProvider>().uploadProfileImage(context);
+                                      },
+                                      child: Container(
+                                        height: 7.h,
+                                        width: 7.w,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.black,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white70,
+                                          // border: Border.fromBorderSide(LinearBorder.top())
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(width: 4.w),
                                 userDetailsWithEditButton(),
@@ -199,6 +247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget userDetailsWithEditButton() {
+
     return Consumer<ProfileProvider>(builder: (context, provider, child) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,23 +272,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              // SizedBox(width: 3.w),
-              // Container(
-              //   padding: EdgeInsets.all(1.1.h),
-              //   decoration: BoxDecoration(
-              //     shape: BoxShape.circle,
-              //     color: Colors.white,
-              //     boxShadow: [
-              //       BoxShadow(
-              //         offset: Offset(2, 2),
-              //         color: Colors.grey.shade300,
-              //         spreadRadius: 0.5,
-              //         blurRadius: 15,
-              //       ),
-              //     ],
-              //   ),
-              //   child: SvgPicture.asset(
-              //     ImagePathConstant.pencilIcon,
+              SizedBox(width: 3.w),
+              // GestureDetector(
+              //   onTap: () async {
+              //     context.read<ProfileProvider>().uploadProfileImage(context);
+              //   },
+              //   child: Container(
+              //     padding: EdgeInsets.all(1.1.h),
+              //     decoration: BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Colors.white,
+              //       boxShadow: [
+              //         BoxShadow(
+              //           offset: Offset(2, 2),
+              //           color: Colors.grey.shade300,
+              //           spreadRadius: 0.5,
+              //           blurRadius: 15,
+              //         ),
+              //       ],
+              //     ),
+              //     child: SvgPicture.asset(
+              //       ImagePathConstant.pencilIcon,
+              //     ),
               //   ),
               // ),
             ],

@@ -18,11 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
-  List<String> imagePaths = [
-    'assets/images/salon_dummy_image.png',
-    'assets/images/salon_dummy_image.png',
-    'assets/images/salon_dummy_image.png',
-  ];
+  List<String>? _imageList = [];
 
   List<Gender> _selectedGendersFilter = [];
   List<Services> _selectedServiceCategories = [];
@@ -70,6 +66,7 @@ class SalonDetailsProvider with ChangeNotifier {
   // List<Artist> get artistList => _artistList;
   // List<Review> get salonReviewList => _salonReviewList;
   // List<String> get selectedServices => _currentBooking.serviceIds;
+  List<String>? get imageList => _imageList;
 
   List<int> get artistAvailabilityToDisplay => _artistAvailabilityToDisplay;
   List<int> get artistAvailabilityForCalculation =>
@@ -100,7 +97,7 @@ class SalonDetailsProvider with ChangeNotifier {
   void initSalonDetailsData(BuildContext context) async {
     Loader.showLoader(context);
     setSelectedSalonData(context);
-
+    await getImageList(context);
     await getArtistList(context);
     await Future.wait([
       getServiceList(context),
@@ -534,6 +531,16 @@ class SalonDetailsProvider with ChangeNotifier {
       }
     } catch (e) {
       Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+    notifyListeners();
+  }
+
+  /// Get the list of selected salon image and save it in [_salonData] and [_filteredSalonData]
+  Future<void> getImageList(BuildContext context) async {
+    try {
+      _imageList = await DatabaseService().getSalonimages(_selectedSalonData.id!);
+    } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();

@@ -141,6 +141,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   }
 
   Widget imageCarousel() {
+
     return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
       return Stack(
         alignment: Alignment.bottomCenter,
@@ -151,21 +152,22 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               physics: BouncingScrollPhysics(),
               controller: provider.salonImageCarouselController,
               children: <Widget>[
-                ...provider.imagePaths.map((imageUrl) {
-                  return Image.asset(
+                ...provider.imageList!.map((imageUrl) {
+                  return Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
                   );
                 }),
+
               ],
             ),
           ),
-          (provider.imagePaths.length) > 1
+          (provider.imageList!.length) > 1
               ? Padding(
                   padding: EdgeInsets.only(bottom: 2.h),
                   child: SmoothPageIndicator(
                     controller: provider.salonImageCarouselController,
-                    count: provider.imagePaths.length,
+                    count: provider.imageList!.length,
                     effect: ExpandingDotsEffect(
                       activeDotColor: ColorsConstant.appColor,
                       dotHeight: 2.w,

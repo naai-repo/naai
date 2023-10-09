@@ -115,6 +115,7 @@ class AuthenticationProvider with ChangeNotifier {
           name: user.displayName,
           gmailId: user.email,
           id: user.uid,
+          image: user.photoURL
         ),
         docId: user.uid,
       );

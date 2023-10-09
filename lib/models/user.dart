@@ -7,6 +7,7 @@ class UserModel {
   String? gmailId;
   String? appleId;
   String? gender;
+  String? image;
   List<String>? preferredSalon;
   List<String>? preferredArtist;
   HomeLocation? homeLocation;
@@ -22,6 +23,7 @@ class UserModel {
     this.gender,
     this.homeLocation,
     this.id,
+    this.image
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +37,7 @@ class UserModel {
       'homeLocation': homeLocation == null ? null : homeLocation?.toMap(),
       'id': id,
       'gender': gender,
+      'image':image,
     };
   }
 
@@ -47,6 +50,7 @@ class UserModel {
     gmailId = map['gmailId'];
     appleId = map['appleId'];
     gender = map['gender'];
+    image = map['image'];
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
     preferredArtist = List<String>.from(map['preferredArtist'] ?? []);
     homeLocation = map['homeLocation'] == null
