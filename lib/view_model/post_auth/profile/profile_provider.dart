@@ -102,7 +102,7 @@ class ProfileProvider with ChangeNotifier {
   /// Get user data from [UserProvider]
   void getUserDataFromUserProvider(BuildContext context) {
     _userData = context.read<HomeProvider>().userData;
-    _imageUrl = context.read<HomeProvider>().userData.image!;
+    _imageUrl = context.read<HomeProvider>().userData.image! == '' ? 'https://firebasestorage.googleapis.com/v0/b/naai-5d31f.appspot.com/o/user_images%2Fsample_user_img.jpg?alt=media&token=a4f1602d-f70c-4aea-b6da-ee54f9e4c2d5':context.read<HomeProvider>().userData.image!; //|| context.read<HomeProvider>().userData.image
     notifyListeners();
   }
 
