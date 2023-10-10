@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
-  List<String>? _imageList = [];
+  List<String> _imageList = [];
 
   List<Gender> _selectedGendersFilter = [];
   List<Services> _selectedServiceCategories = [];
@@ -66,7 +66,7 @@ class SalonDetailsProvider with ChangeNotifier {
   // List<Artist> get artistList => _artistList;
   // List<Review> get salonReviewList => _salonReviewList;
   // List<String> get selectedServices => _currentBooking.serviceIds;
-  List<String>? get imageList => _imageList;
+  List<String> get imageList => _imageList;
 
   List<int> get artistAvailabilityToDisplay => _artistAvailabilityToDisplay;
   List<int> get artistAvailabilityForCalculation =>
@@ -97,7 +97,7 @@ class SalonDetailsProvider with ChangeNotifier {
   void initSalonDetailsData(BuildContext context) async {
     Loader.showLoader(context);
     setSelectedSalonData(context);
-    await getImageList(context);
+    await getImageList(context,_selectedSalonData.id!);
     await getArtistList(context);
     await Future.wait([
       getServiceList(context),
@@ -329,6 +329,23 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  ///Get the list of image for current
+  Future<void> getImageList(
+      BuildContext context,
+        String salonId,
+      ) async {
+    Loader.showLoader(context);
+    try {
+       _imageList = _selectedSalonData.imageList!.cast();
+      Loader.hideLoader(context);
+    } catch (e) {
+      Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(context, '$e');
+    }
+
+    notifyListeners();
+  }
+
   /// For a given seconds data which signifies total seconds passed in a day till now,
   /// get the corresponding time stamp of it.
   /// Note: 12:00 AM is considered as 0 seconds
@@ -489,7 +506,11 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
+
+
+
+
+  // /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   // Future<void> getSalonReviewsList(BuildContext context) async {
   //   try {
   //     _salonReviewList = context.read<HomeProvider>().reviewList;
@@ -536,15 +557,6 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Get the list of selected salon image and save it in [_salonData] and [_filteredSalonData]
-  Future<void> getImageList(BuildContext context) async {
-    try {
-      _imageList = await DatabaseService().getSalonimages(_selectedSalonData.id!);
-    } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
-    }
-    notifyListeners();
-  }
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   Future<void> getArtistList(BuildContext context) async {

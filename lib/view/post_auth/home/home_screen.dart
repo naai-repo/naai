@@ -560,6 +560,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           rating: artist.rating ?? 0,
                           salonName: artist.salonName ?? '',
                           artistId: artist.id ?? '',
+                          imagePath: artist.imagePath!,
                           color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
                             context
@@ -589,6 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           rating: artist.rating ?? 0,
                           salonName: artist.salonName ?? '',
                           artistId: artist.id ?? '',
+                          imagePath: artist.imagePath!,
                           color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
                             context
@@ -619,6 +621,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String salonName,
     required String artistId,
     required Color color,
+    required String imagePath,
     required Function() onTap,
   }) {
     return GestureDetector(
@@ -656,8 +659,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     : BorderRadius.vertical(
                         top: Radius.circular(3.h),
                       ),
-                child: Image.asset(
-                  'assets/images/salon_dummy_image.png',
+                child: Image.network(
+                  imagePath,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -817,8 +820,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.horizontal(
                                 right: Radius.circular(1.h),
                               ),
-                              child: Image.asset(
-                                salon.imagePath ?? '',
+                              child: Image.network(
+                                salon.imageList![0].toString() ?? '',
                                 fit: BoxFit.cover,
                               ),
                             ),

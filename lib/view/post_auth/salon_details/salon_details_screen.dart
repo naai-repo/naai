@@ -152,7 +152,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               physics: BouncingScrollPhysics(),
               controller: provider.salonImageCarouselController,
               children: <Widget>[
-                ...provider.imageList!.map((imageUrl) {
+                ...provider.imageList.map((imageUrl) {
                   return Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
@@ -162,7 +162,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               ],
             ),
           ),
-          (provider.imageList!.length) > 1
+          (provider.imageList.length) > 1
               ? Padding(
                   padding: EdgeInsets.only(bottom: 2.h),
                   child: SmoothPageIndicator(

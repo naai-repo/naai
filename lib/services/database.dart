@@ -93,15 +93,15 @@ class DatabaseService {
     return SalonData.fromDocumentSnapshot(querySnapshot.docs.first);
   }
 
-  /// Fetch the salon image list
-  Future<List<String>?> getSalonimages(String salonId) async {
-    salonCollection
-        .doc(salonId)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-        return documentSnapshot['imageList'];
-    });
-  }
+  // /// Fetch the salon image list
+  // Future<List<String>?> getSalonimages(String salonId) async {
+  //   salonCollection
+  //       .doc(salonId)
+  //       .get()
+  //       .then((DocumentSnapshot documentSnapshot) {
+  //       return documentSnapshot['imageList'];
+  //   });
+  // }
 
 
   /// Fetch the services list for a given salon from [FirebaseFirestore]

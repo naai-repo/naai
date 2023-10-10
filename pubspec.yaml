@@ -57,6 +57,7 @@ dependencies:
   url_launcher: 6.1.11
   image_picker: 1.0.4
   firebase_storage: 11.2.8
+  carousel_slider: 4.2.1
 
   # Git dependencies
   flutter_launcher_icons:
