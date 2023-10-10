@@ -775,7 +775,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   ),
                   child: CircleAvatar(
                     radius: 7.h,
-                    backgroundImage: NetworkImage(barberProvider.artist.imagePath!.isNotEmpty ? barberProvider.artist.imagePath!: 'https://firebasestorage.googleapis.com/v0/b/naai-5d31f.appspot.com/o/user_images%2Fsalon_dummy_image.png?alt=media&token=ceb17927-8a85-4f22-8908-6f16acdb2e40&_gl=1*1rgoeig*_ga*MTQ0NjM3MTQzMy4xNjk2Njg1MTk3*_ga_CW55HF8NVT*MTY5Njg2Mzg0Ny4xMS4xLjE2OTY4NjU2OTcuNTEuMC4w'),
+                    backgroundImage: NetworkImage(barberProvider.artist.imagePath!) as ImageProvider,
                   ),
                 ),
               ),

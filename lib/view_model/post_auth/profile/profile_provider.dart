@@ -102,6 +102,7 @@ class ProfileProvider with ChangeNotifier {
   /// Get user data from [UserProvider]
   void getUserDataFromUserProvider(BuildContext context) {
     _userData = context.read<HomeProvider>().userData;
+    _imageUrl = context.read<HomeProvider>().userData.image!;
     notifyListeners();
   }
 

@@ -50,7 +50,7 @@ class UserModel {
     gmailId = map['gmailId'];
     appleId = map['appleId'];
     gender = map['gender'];
-    image = map['image'];
+    image = map['image'] ;
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
     preferredArtist = List<String>.from(map['preferredArtist'] ?? []);
     homeLocation = map['homeLocation'] == null

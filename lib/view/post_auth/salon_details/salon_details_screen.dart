@@ -326,8 +326,8 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                       ),
-                                      child: Image.asset(
-                                        'assets/images/salon_dummy_image.png',
+                                      child: Image.network(
+                                        artist.imagePath!,
                                         fit: BoxFit.cover,
                                       ),
                                     ),

@@ -240,6 +240,7 @@ class AuthenticationProvider with ChangeNotifier {
         gender: _selectedGender,
         homeLocation: HomeLocation(),
         id: _userId,
+        image: 'https://firebasestorage.googleapis.com/v0/b/naai-5d31f.appspot.com/o/user_images%2Fsalon_dummy_image.png?alt=media&token=ceb17927-8a85-4f22-8908-6f16acdb2e40&_gl=1*jxkn7y*_ga*MTQ0NjM3MTQzMy4xNjk2Njg1MTk3*_ga_CW55HF8NVT*MTY5NjgzMTkzNS44LjEuMTY5NjgzMjEyNy41OC4wLjA.'
       ),
       docId: _userId ?? '',
     );

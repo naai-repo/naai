@@ -30,7 +30,7 @@ class Artist {
       name: json['name'],
       rating: json['rating'],
       originalRating: json['rating'],
-      imagePath: json['imagePath'] ?? 'https://firebasestorage.googleapis.com/v0/b/naai-5d31f.appspot.com/o/artist_images%2Fsample_artist_img.jpg?alt=media&token=2ff916a5-f2ae-40c7-b9fa-da0472938036&_gl=1*zfoq0v*_ga*MTQ0NjM3MTQzMy4xNjk2Njg1MTk3*_ga_CW55HF8NVT*MTY5NjkxMTQ1Ni4xNS4xLjE2OTY5MTQyOTYuMTAuMC4w',
+      imagePath: json['imagePath'] ?? 'https://firebasestorage.googleapis.com/v0/b/naai-5d31f.appspot.com/o/artist_images%2Fsample_artist_img.jpg?alt=media&token=2ff916a5-f2ae-40c7-b9fa-da0472938036&_gl=1*zfoq0v*_ga*MTQ0NjM3MTQzMy4xNjk2Njg1MTk3*_ga_CW55HF8NVT*MTY5NjkxMTQ1Ni4xNS4xLjE2OTY5MTQyOTYuMTAuMC4w' ,
       salonId: json['salonId'],
       salonName: json['salonName'],
       availability: Availability.fromFirestore(json['availability'] ?? {}),
