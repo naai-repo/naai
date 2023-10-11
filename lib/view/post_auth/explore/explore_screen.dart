@@ -1,3 +1,6 @@
+
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,8 +19,10 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({Key? key}) : super(key: key);
@@ -341,8 +346,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                               padding: EdgeInsets.all(0.5.h),
                               child: CircleAvatar(
                                 radius: 5.h,
-                                backgroundImage: AssetImage(
-                                  'assets/images/salon_dummy_image.png',
+                                backgroundImage: NetworkImage(
+                                  artist.imagePath!,
                                 ),
                               ),
                             ),
@@ -563,54 +568,124 @@ class _ExploreScreenState extends State<ExploreScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: Image.asset(
-                            provider.filteredSalonData[index].imagePath ?? ''),
-                      ),
-                      Positioned(
-                        top: 1.h,
-                        right: 1.h,
-                        child: InkWell(
-                          onTap: () {
-                            if (!context
-                                .read<HomeProvider>()
-                                .userData
-                                .preferredSalon!
-                                .contains(
-                                    provider.filteredSalonData[index].id)) {
-                              provider.addPreferedSalon(context,
-                                  provider.filteredSalonData[index].id);
-                            } else {
-                              provider.removePreferedSalon(context,
-                                  provider.filteredSalonData[index].id);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(1.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              context
-                                      .read<HomeProvider>()
-                                      .userData
-                                      .preferredSalon!
-                                      .contains(
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      viewportFraction: 1.0,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 3),
+                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn
+                    ),
+                    items: provider.filteredSalonData[index].imageList!.map((imageUrl) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Stack(
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.network(
+                                  imageUrl,
+                                  height: 35.h,
+                                  width: SizerUtil.width,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              Positioned(
+                                top: 1.h,
+                                right: 1.h,
+                                child: InkWell(
+                                  onTap: () {
+                                    if (!context
+                                        .read<HomeProvider>()
+                                        .userData
+                                        .preferredSalon!
+                                        .contains(
+                                        provider.filteredSalonData[index].id)) {
+                                      provider.addPreferedSalon(context,
+                                          provider.filteredSalonData[index].id);
+                                    } else {
+                                      provider.removePreferedSalon(context,
+                                          provider.filteredSalonData[index].id);
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(1.w),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      context
+                                          .read<HomeProvider>()
+                                          .userData
+                                          .preferredSalon!
+                                          .contains(
                                           provider.filteredSalonData[index].id)
-                                  ? CupertinoIcons.heart_fill
-                                  : CupertinoIcons.heart,
-                              size: 2.5.h,
-                              color: ColorsConstant.appColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                                          ? CupertinoIcons.heart_fill
+                                          : CupertinoIcons.heart,
+                                      size: 2.5.h,
+                                      color: ColorsConstant.appColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ) ;
+                        },
+                      );
+                    }).toList(),
                   ),
+                  // Stack(
+                  //   children: <Widget>[
+                  //     ClipRRect(
+                  //       borderRadius: BorderRadius.circular(5),
+                  //       child: Image.network(
+                  //         provider.filteredSalonData[index].imageList![0],
+                  //         height: 35.h,
+                  //         fit: BoxFit.cover,
+                  //       ),
+                  //     ),
+                  //     Positioned(
+                  //       top: 1.h,
+                  //       right: 1.h,
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //           if (!context
+                  //               .read<HomeProvider>()
+                  //               .userData
+                  //               .preferredSalon!
+                  //               .contains(
+                  //               provider.filteredSalonData[index].id)) {
+                  //             provider.addPreferedSalon(context,
+                  //                 provider.filteredSalonData[index].id);
+                  //           } else {
+                  //             provider.removePreferedSalon(context,
+                  //                 provider.filteredSalonData[index].id);
+                  //           }
+                  //         },
+                  //         child: Container(
+                  //           padding: EdgeInsets.all(1.w),
+                  //           decoration: BoxDecoration(
+                  //             color: Colors.white,
+                  //             shape: BoxShape.circle,
+                  //           ),
+                  //           child: Icon(
+                  //             context
+                  //                 .read<HomeProvider>()
+                  //                 .userData
+                  //                 .preferredSalon!
+                  //                 .contains(
+                  //                 provider.filteredSalonData[index].id)
+                  //                 ? CupertinoIcons.heart_fill
+                  //                 : CupertinoIcons.heart,
+                  //             size: 2.5.h,
+                  //             color: ColorsConstant.appColor,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 1.4.h),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -5,6 +5,7 @@ import 'package:naai/models/service_detail.dart';
 import 'package:naai/services/database.dart';
 import 'package:naai/utils/enums.dart';
 import 'package:naai/utils/loading_indicator.dart';
+import 'package:naai/utils/shared_preferences/shared_keys.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -101,7 +102,7 @@ class ExploreProvider with ChangeNotifier {
   Future<void> getSalonList(BuildContext context,
       {bool justDistance = false}) async {
     try {
-      if (!justDistance) _salonData = await DatabaseService().getSalonList();
+      if (!justDistance) _salonData = await DatabaseService().getSalonList(SharedKeys.userId);
       // print(context.read<HomeProvider>().userData.toMap());
       final latitude =
           context.read<HomeProvider>().userData.homeLocation != null

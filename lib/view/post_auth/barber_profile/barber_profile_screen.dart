@@ -781,9 +781,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   ),
                   child: CircleAvatar(
                     radius: 7.h,
-                    backgroundImage: AssetImage(
-                      'assets/images/salon_dummy_image.png',
-                    ),
+                    backgroundImage: NetworkImage(barberProvider.artist.imagePath!) as ImageProvider,
                   ),
                 ),
               ),

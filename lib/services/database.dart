@@ -51,8 +51,28 @@ class DatabaseService {
         );
   }
 
+  /// Check if a document field with this userId exists or not.
+  /// Returns [true] if the document field exists, otherwise returns [false]
+  Future createNewField({required String uid, required String field, required String defaultValue}) async{
+    DocumentReference docRef  = await userCollection.doc(uid);
+    DocumentSnapshot snapshot = await docRef.get();
+    final docData = snapshot.data() as Map<String, dynamic>;
+    if (snapshot.exists && !docData.containsKey(field)) {
+      // Update the document with the new field
+      docRef.set({field: defaultValue}, SetOptions(merge: true))
+          .then((_) {
+        print('New field added successfully');
+      }).catchError((error) {
+        print('Error adding new field: $error');
+      });
+
+    } else {
+      print('User not exist!');
+    }
+  }
+
   /// Fetch the salon list from [FirebaseFirestore]
-  Future<List<SalonData>> getSalonList() async {
+  Future<List<SalonData>> getSalonList(String salonId) async {
     QuerySnapshot querySnapshot = await salonCollection.get().onError(
       (error, stackTrace) {
         throw Exception(error);
@@ -72,6 +92,17 @@ class DatabaseService {
     );
     return SalonData.fromDocumentSnapshot(querySnapshot.docs.first);
   }
+
+  // /// Fetch the salon image list
+  // Future<List<String>?> getSalonimages(String salonId) async {
+  //   salonCollection
+  //       .doc(salonId)
+  //       .get()
+  //       .then((DocumentSnapshot documentSnapshot) {
+  //       return documentSnapshot['imageList'];
+  //   });
+  // }
+
 
   /// Fetch the services list for a given salon from [FirebaseFirestore]
   Future<List<ServiceDetail>> getServiceList(List<String> artistIdList) async {
