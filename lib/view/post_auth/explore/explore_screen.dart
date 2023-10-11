@@ -561,6 +561,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Stack(
                     children: <Widget>[
@@ -650,14 +651,15 @@ class _ExploreScreenState extends State<ExploreScreen>
                     ],
                   ),
                   SizedBox(height: 1.5.h),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       TimeDateCard(
                         child: Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: "Mon - Fri",
+                                text: StringConstant.timings,
                                 style: TextStyle(
                                   color: ColorsConstant.textDark,
                                   fontSize: 10.sp,
@@ -673,7 +675,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                                 ),
                               ),
                               TextSpan(
-                                text: "10 AM-11 PM",
+                                text:
+                                    "${provider.formatTime(provider.filteredSalonData[index].timing!.opening ?? 0)} - ${provider.formatTime(provider.filteredSalonData[index].timing!.closing ?? 0)}",
                                 style: TextStyle(
                                   color: ColorsConstant.textDark,
                                   fontSize: 10.sp,
@@ -684,13 +687,13 @@ class _ExploreScreenState extends State<ExploreScreen>
                           ),
                         ),
                       ),
-                      SizedBox(width: 2.w),
+                      SizedBox(height: 2.w),
                       TimeDateCard(
                         child: Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: "Tues",
+                                text: StringConstant.closed,
                                 style: TextStyle(
                                   color: ColorsConstant.textDark,
                                   fontSize: 10.sp,
@@ -706,7 +709,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                 ),
                               ),
                               TextSpan(
-                                text: "Closed",
+                                text: provider.filteredSalonData[index].closingDay,
                                 style: TextStyle(
                                   color: ColorsConstant.textDark,
                                   fontSize: 10.sp,

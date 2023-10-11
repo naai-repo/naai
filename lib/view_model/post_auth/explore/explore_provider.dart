@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class ExploreProvider with ChangeNotifier {
   TextEditingController _salonSearchController = TextEditingController();
+  TextEditingController _artistSearchController = TextEditingController();
 
   List<FilterType> _selectedFilterTypeList = [];
   List<SalonData> _salonData = [];
@@ -24,11 +25,32 @@ class ExploreProvider with ChangeNotifier {
 
   //============= GETTERS =============//
   TextEditingController get salonSearchController => _salonSearchController;
+  TextEditingController get artistSearchController => _artistSearchController;
 
   List<FilterType> get selectedFilterTypeList => _selectedFilterTypeList;
   List<SalonData> get salonData => _salonData;
   List<SalonData> get filteredSalonData => _filteredSalonData;
   List<Artist> get artistList => _artistList;
+
+  String formatTime(int timeInSeconds) {
+    int hours = (timeInSeconds ~/ 3600) % 12;
+    int minutes = ((timeInSeconds % 3600) ~/ 60);
+    String amPm = (timeInSeconds ~/ 43200) == 0 ? 'AM' : 'PM';
+
+    if (hours == 0) {
+      hours = 12;
+    }
+
+    String formattedTime =
+        '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')} $amPm';
+    return formattedTime;
+  }
+
+  /// Reset [_artistSearchController]
+  void resetStylistSearchBar() {
+    _artistSearchController.clear();
+    notifyListeners();
+  }
 
   /// Set selected filter
   void setSelectedFilter(FilterType filterType) {

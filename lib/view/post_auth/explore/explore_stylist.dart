@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/curved_bordered_card.dart';
-import 'package:naai/utils/components/red_button_with_text.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/string_constant.dart';
@@ -19,10 +18,10 @@ class ExploreStylist extends StatefulWidget {
   const ExploreStylist({Key? key}) : super(key: key);
 
   @override
-  State<ExploreStylist> createState() => _ExploreScreenState();
+  State<ExploreStylist> createState() => _ExploreStylistState();
 }
 
-class _ExploreScreenState extends State<ExploreStylist>
+class _ExploreStylistState extends State<ExploreStylist>
     with SingleTickerProviderStateMixin {
   late TabController homeScreenController;
 
@@ -86,27 +85,27 @@ class _ExploreScreenState extends State<ExploreStylist>
                                     ],
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: RedButtonWithText(
-                                    buttonText: StringConstant.filter,
-                                    textColor: ColorsConstant.appColor,
-                                    fontSize: 10.sp,
-                                    border: Border.all(
-                                        color: ColorsConstant.appColor),
-                                    icon: SvgPicture.asset(
-                                        ImagePathConstant.filterIcon),
-                                    fillColor: ColorsConstant.lightAppColor,
-                                    borderRadius: 3.h,
-                                    onTap: () {},
-                                    shouldShowBoxShadow: false,
-                                    isIconSuffix: true,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 1.5.w,
-                                      horizontal: 2.5.w,
-                                    ),
-                                  ),
-                                ),
+                                // GestureDetector(
+                                //   onTap: () {},
+                                //   child: RedButtonWithText(
+                                //     buttonText: StringConstant.filter,
+                                //     textColor: ColorsConstant.appColor,
+                                //     fontSize: 10.sp,
+                                //     border: Border.all(
+                                //         color: ColorsConstant.appColor),
+                                //     icon: SvgPicture.asset(
+                                //         ImagePathConstant.filterIcon),
+                                //     fillColor: ColorsConstant.lightAppColor,
+                                //     borderRadius: 3.h,
+                                //     onTap: () {},
+                                //     shouldShowBoxShadow: false,
+                                //     isIconSuffix: true,
+                                //     padding: EdgeInsets.symmetric(
+                                //       vertical: 1.5.w,
+                                //       horizontal: 2.5.w,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                             SizedBox(height: 2.h),
@@ -208,7 +207,8 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                       children: <Widget>[
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <InlineSpan>[
+                                                            children: <
+                                                                InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment
@@ -255,7 +255,8 @@ class _ExploreScreenState extends State<ExploreStylist>
                                                         ),
                                                         Text.rich(
                                                           TextSpan(
-                                                            children: <InlineSpan>[
+                                                            children: <
+                                                                InlineSpan>[
                                                               WidgetSpan(
                                                                 alignment:
                                                                     PlaceholderAlignment
@@ -364,37 +365,53 @@ class _ExploreScreenState extends State<ExploreStylist>
     });
   }
 
-  MediaQuery titleSearchBarWithLocation() {
-    return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      child: SliverAppBar(
-        elevation: 10,
-        automaticallyImplyLeading: false,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(3.h),
-            topRight: Radius.circular(3.h),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        pinned: true,
-        floating: true,
-        title: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-          child: Container(
-            padding: EdgeInsets.only(top: 3.h),
-            child: Text(
-              StringConstant.exploreStylists,
-              style: StyleConstant.headingTextStyle,
+  Widget titleSearchBarWithLocation() {
+    return Consumer<ExploreProvider>(builder: (context, provider, child) {
+      return MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: SliverAppBar(
+          elevation: 10,
+          automaticallyImplyLeading: false,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(3.h),
+              topRight: Radius.circular(3.h),
             ),
           ),
-        ),
-        centerTitle: false,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(13.h),
-          child: Consumer<ExploreProvider>(builder: (context, provider, child) {
-            return TabBar(
+          backgroundColor: Colors.white,
+          pinned: true,
+          floating: true,
+          title: Row(
+            children: <Widget>[
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  provider.resetStylistSearchBar();
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 4.h, 2.h, 1.h),
+                  child: SvgPicture.asset(
+                    ImagePathConstant.leftArrowIcon,
+                    color: ColorsConstant.textDark,
+                    height: 2.h,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 3.h),
+                child: Text(
+                  StringConstant.exploreStylists,
+                  style: StyleConstant.headingTextStyle,
+                ),
+              ),
+            ],
+          ),
+          centerTitle: false,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(13.h),
+            child: TabBar(
               controller: homeScreenController,
               indicatorColor: Colors.white,
               tabs: <Widget>[
@@ -404,7 +421,7 @@ class _ExploreScreenState extends State<ExploreStylist>
                   child: Padding(
                     padding: EdgeInsets.only(top: 4.3.h, bottom: 2.h),
                     child: TextFormField(
-                      controller: provider.salonSearchController,
+                      controller: provider.artistSearchController,
                       cursorColor: ColorsConstant.appColor,
                       style: StyleConstant.searchTextStyle,
                       textInputAction: TextInputAction.done,
@@ -418,11 +435,11 @@ class _ExploreScreenState extends State<ExploreStylist>
                   ),
                 ),
               ],
-            );
-          }),
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget appScreenCommonBackground() {

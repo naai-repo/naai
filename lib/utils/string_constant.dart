@@ -3,6 +3,9 @@ class StringConstant {
   static const String imageBaseDirectory = 'assets/images/';
   static const String splashScreenText = 'redefining your salon experience';
   static const String artist = 'Artist';
+  static const String timings = "Timings";
+  static const String closed = "Closed";
+  static const String generalContantNumber = "+919205328688";
 
   // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';
@@ -128,7 +131,7 @@ class StringConstant {
   static const String tax = 'TAX';
   static const String gst = 'GST';
   static const String grandTotal = 'GRAND TOTAL';
-  static const String payNow = 'Pay now';
+  static const String payNow = 'Confirm';
   static const String billTotal = 'Bill total';
   static const String bookingConfirmed = 'Booking Confirmed!';
   static const String bookingConfirmedSubtext = 'Now sit back and relax';

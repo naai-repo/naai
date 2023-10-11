@@ -68,6 +68,9 @@ class RoutingFunctions {
       case NamedRoutes.createBookingRoute:
         target = CreateBookingScreen();
         break;
+      case NamedRoutes.createBookingRoute2:
+        target = CreateBookingScreen2();
+        break;
       case NamedRoutes.reviewsRoute:
         target = ReviewsScreen();
         break;

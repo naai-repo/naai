@@ -11,6 +11,9 @@ class SalonData {
   Timing? timing;
   String? distanceFromUserAsString;
   double? distanceFromUser;
+  String? instagramLink;
+  String? googleMapsLink;
+  String? closingDay;
 
   SalonData({
     this.id,
@@ -23,6 +26,9 @@ class SalonData {
     this.timing,
     this.distanceFromUserAsString,
     this.distanceFromUser,
+    this.instagramLink,
+    this.googleMapsLink,
+    this.closingDay,
   });
 
   factory SalonData.fromDocumentSnapshot(DocumentSnapshot data) {
@@ -37,6 +43,9 @@ class SalonData {
       imagePath: docData['imagePath'] ?? 'assets/images/salon_dummy_image.png',
       salonType: docData['salonType'],
       timing: Timing.fromFirestore(docData['timing'] ?? {}),
+      instagramLink: docData['instagramLink'],
+      googleMapsLink: docData['googleMapsLink'],
+      closingDay: docData['closingDay']
     );
   }
 

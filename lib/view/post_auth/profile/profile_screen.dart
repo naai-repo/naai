@@ -9,6 +9,7 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -107,24 +108,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ImagePathConstant.bookingHistoryIcon,
                                   optionTitle: StringConstant.bookingHistory,
                                 ),
+                                // profileOptions(
+                                //   onTap: () => print('tapped'),
+                                //   imagePath: ImagePathConstant.referralIcon,
+                                //   optionTitle: StringConstant.referral,
+                                // ),
+                                // profileOptions(
+                                //   onTap: () => print('tapped'),
+                                //   imagePath:
+                                //       ImagePathConstant.salonRegistrationIcon,
+                                //   optionTitle: StringConstant.salonRegistration,
+                                // ),
+                                // profileOptions(
+                                //   onTap: () => print('tapped'),
+                                //   imagePath: ImagePathConstant.settingsIcon,
+                                //   optionTitle: StringConstant.settings,
+                                // ),
                                 profileOptions(
-                                  onTap: () => print('tapped'),
-                                  imagePath: ImagePathConstant.referralIcon,
-                                  optionTitle: StringConstant.referral,
-                                ),
-                                profileOptions(
-                                  onTap: () => print('tapped'),
-                                  imagePath:
-                                      ImagePathConstant.salonRegistrationIcon,
-                                  optionTitle: StringConstant.salonRegistration,
-                                ),
-                                profileOptions(
-                                  onTap: () => print('tapped'),
-                                  imagePath: ImagePathConstant.settingsIcon,
-                                  optionTitle: StringConstant.settings,
-                                ),
-                                profileOptions(
-                                  onTap: () => print('tapped'),
+                                  onTap: () => launchUrl(
+                                    Uri.parse(
+                                        'https://www.instagram.com/naaiindia'),
+                                  ),
                                   imagePath: ImagePathConstant.informationIcon,
                                   optionTitle: StringConstant.more,
                                 ),
@@ -198,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Consumer<ProfileProvider>(builder: (context, provider, child) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,7 +213,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(provider.userData.name ?? '',
                       style: StyleConstant.textDark15sp600Style),
                   Text(
-                    provider.userData.phoneNumber ?? '',
+                    provider.userData.phoneNumber ??
+                        provider.userData.gmailId ??
+                        '',
                     style: TextStyle(
                       color: ColorsConstant.textLight,
                       fontSize: 10.sp,
@@ -217,46 +223,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              SizedBox(width: 3.w),
-              Container(
-                padding: EdgeInsets.all(1.1.h),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(2, 2),
-                      color: Colors.grey.shade300,
-                      spreadRadius: 0.5,
-                      blurRadius: 15,
-                    ),
-                  ],
-                ),
-                child: SvgPicture.asset(
-                  ImagePathConstant.pencilIcon,
-                ),
-              ),
+              // SizedBox(width: 3.w),
+              // Container(
+              //   padding: EdgeInsets.all(1.1.h),
+              //   decoration: BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     color: Colors.white,
+              //     boxShadow: [
+              //       BoxShadow(
+              //         offset: Offset(2, 2),
+              //         color: Colors.grey.shade300,
+              //         spreadRadius: 0.5,
+              //         blurRadius: 15,
+              //       ),
+              //     ],
+              //   ),
+              //   child: SvgPicture.asset(
+              //     ImagePathConstant.pencilIcon,
+              //   ),
+              // ),
             ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.8.h),
-            margin: EdgeInsets.only(top: 1.5.h),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: ColorsConstant.incompleteProfileBoxBorderColor,
-              ),
-              borderRadius: BorderRadius.circular(1.h),
-              color: ColorsConstant.incompleteProfileBoxColor,
-            ),
-            child: Text(
-              StringConstant.incompleteProfile,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 10.sp,
-                color: ColorsConstant.textDark,
-              ),
-            ),
-          ),
+          // Container(
+          //   padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.8.h),
+          //   margin: EdgeInsets.only(top: 1.5.h),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(
+          //       color: ColorsConstant.incompleteProfileBoxBorderColor,
+          //     ),
+          //     borderRadius: BorderRadius.circular(1.h),
+          //     color: ColorsConstant.incompleteProfileBoxColor,
+          //   ),
+          //   child: Text(
+          //     StringConstant.incompleteProfile,
+          //     style: TextStyle(
+          //       fontWeight: FontWeight.w500,
+          //       fontSize: 10.sp,
+          //       color: ColorsConstant.textDark,
+          //     ),
+          //   ),
+          // ),
         ],
       );
     });

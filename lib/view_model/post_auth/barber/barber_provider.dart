@@ -10,6 +10,7 @@ import 'package:naai/utils/loading_indicator.dart';
 import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
+import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class BarberProvider with ChangeNotifier {
@@ -45,6 +46,9 @@ class BarberProvider with ChangeNotifier {
   void initArtistData(BuildContext context) async {
     if (_shouldSetArtistData) {
       setArtistData(context);
+    } else {
+      getArtistSalonData(context);
+      context.read<SalonDetailsProvider>().initSalonDetailsData(context);
     }
     await Future.wait([
       // getArtistReviewList(context),
@@ -161,6 +165,16 @@ class BarberProvider with ChangeNotifier {
     } catch (e) {
       ReusableWidgets.showFlutterToast(context, '$e');
     }
+    notifyListeners();
+  }
+
+  void getArtistSalonData(BuildContext context) async {
+    int index = context
+        .read<HomeProvider>()
+        .salonList
+        .indexWhere((element) => element.id == _artist.salonId);
+    context.read<SalonDetailsProvider>().setSelectedSalonIndex(index);
+
     notifyListeners();
   }
 
