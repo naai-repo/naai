@@ -29,6 +29,7 @@ import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/review.dart';
+import '../../../models/service_detail.dart';
 
 class HomeProvider with ChangeNotifier {
   bool _changedLocation = false;
@@ -42,6 +43,7 @@ class HomeProvider with ChangeNotifier {
   List<SalonData> _salonList = [];
   List<Artist> _artistList = [];
   List<Review> _allReviewList = [];
+  List<ServiceDetail> _services = [];
 
   late Symbol _symbol;
 
@@ -60,6 +62,7 @@ class HomeProvider with ChangeNotifier {
   List<SalonData> get salonList => _salonList;
   List<Artist> get artistList => _artistList;
   List<Review> get reviewList => _allReviewList;
+  List<ServiceDetail> get service => _services;
 
   String get addressText => _addressText;
 

@@ -60,9 +60,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.shade400,
-                    blurRadius: 10,
-                    spreadRadius: 0.1,
+                    color: Colors.white,
+                 //   blurRadius: 10,
+                 //   spreadRadius: 0.1,
                   ),
                 ],
               ),

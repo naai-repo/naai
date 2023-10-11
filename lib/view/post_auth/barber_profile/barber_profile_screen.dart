@@ -21,6 +21,8 @@ import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../create_booking/create_booking_screen.dart';
+
 class BarberProfileScreen extends StatefulWidget {
   BarberProfileScreen({Key? key}) : super(key: key);
 
@@ -42,12 +44,12 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<BarberProvider>(
-      builder: (context, provider, child) {
+      builder: (context, barberProvider, child) {
         return WillPopScope(
           onWillPop: () async {
-            provider.clearSearchController();
-            provider.clearSelectedGendersFilter();
-            provider.clearSelectedServiceCategories();
+            barberProvider.clearSearchController();
+            barberProvider.clearSelectedGendersFilter();
+            barberProvider.clearSelectedServiceCategories();
             return true;
           },
           child: Scaffold(
@@ -78,9 +80,9 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                provider.clearSearchController();
-                                provider.clearSelectedGendersFilter();
-                                provider.clearSelectedServiceCategories();
+                                barberProvider.clearSearchController();
+                                barberProvider.clearSelectedGendersFilter();
+                                barberProvider.clearSelectedServiceCategories();
                                 Navigator.pop(context);
                               },
                               child: Padding(
@@ -186,9 +188,13 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                       ],
                     ),
                     VariableWidthCta(
-                      onTap: () => Navigator.pushNamed(
+                      onTap: () => Navigator.push(
                         context,
-                        NamedRoutes.createBookingRoute,
+                        MaterialPageRoute(
+                          builder: (context) => CreateBookingScreen2(
+                            artistName : barberProvider.artist.name ?? '', // Pass the name here
+                          ),
+                        ),
                       ),
                       isActive: true,
                       buttonText: StringConstant.confirmBooking,

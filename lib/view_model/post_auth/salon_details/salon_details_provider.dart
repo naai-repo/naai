@@ -526,7 +526,7 @@ class SalonDetailsProvider with ChangeNotifier {
       await DatabaseService().createBooking(bookingData: _finalData);
       Loader.hideLoader(context);
       context.read<HomeProvider>().getUserBookings(context);
-      if (transactionStatus == "success") {
+      if (transactionStatus == "Paid not yet") {
         Navigator.pushReplacementNamed(
           context,
           NamedRoutes.bookingConfirmedRoute,

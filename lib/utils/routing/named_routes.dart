@@ -16,6 +16,7 @@ class NamedRoutes {
   static const String mapRoute = '/maps';
   static const String barberProfileRoute = '/barber-profile';
   static const String createBookingRoute = '/create-booking';
+  static const String createBookingRoute2 = '/create-booking2';
   // static const String paymentRoute = '/payment';
   static const String reviewsRoute = '/reviews';
   static const String favouritesRoute = '/favourites';

@@ -131,7 +131,7 @@ class StringConstant {
   static const String tax = 'TAX';
   static const String gst = 'GST';
   static const String grandTotal = 'GRAND TOTAL';
-  static const String payNow = 'Pay now';
+  static const String payNow = 'Confirm';
   static const String billTotal = 'Bill total';
   static const String bookingConfirmed = 'Booking Confirmed!';
   static const String bookingConfirmedSubtext = 'Now sit back and relax';
