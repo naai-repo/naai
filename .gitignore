@@ -50,3 +50,5 @@ android/app/google-services.json
 
 # Secret keys
 /lib/utils/keys.dart
+/android/key.properties
+/android/app/upload-keystore.jks

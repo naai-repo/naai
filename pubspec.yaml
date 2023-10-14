@@ -42,7 +42,7 @@ dependencies:
   fluttertoast: 8.1.2
   google_sign_in: 5.4.3
   http: 0.13.5
-  location: 4.4.0
+  location: 5.0.3 #4.4.0 previous
   logger: 1.4.0
   marquee: 2.2.3
   permission_handler: 10.2.0
@@ -53,7 +53,7 @@ dependencies:
   sign_in_with_apple: 4.3.0
   sizer: 2.0.15
   smooth_page_indicator: 1.0.0
-  syncfusion_flutter_datepicker: 20.4.54
+  syncfusion_flutter_datepicker: 23.1.40 #20.4.54
   url_launcher: 6.1.11
   image_picker: 1.0.4
   firebase_storage: 11.2.8
