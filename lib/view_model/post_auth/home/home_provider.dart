@@ -264,7 +264,7 @@ class HomeProvider with ChangeNotifier {
         });
       }
     } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
+      //ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }

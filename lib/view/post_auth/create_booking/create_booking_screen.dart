@@ -1227,18 +1227,10 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             constraints: BoxConstraints(maxHeight: 20.h),
                             child: ListView.separated(
                               shrinkWrap: true,
-                              itemCount: context
-                                  .read<HomeProvider>()
-                                  .artistList
-                                  .where((artist) => artist.salonId == provider.selectedSalonData.id)
-                                  .length,
+                              itemCount: provider.serviceList.length,
                               itemBuilder: (context, index) {
-                                Artist artist = context
-                                    .read<HomeProvider>()
-                                    .artistList
-                                    .where((artist) => artist.salonId == provider.selectedSalonData.id)
-                                  // .where((artist) => artist.category == provider.selectedServiceCategories) // Filter by selected category
-                                    .toList()[index];
+                                Artist artist =
+                                provider.artistList[index];
                                 return GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () {
