@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -26,7 +27,6 @@ import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.d
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 
 import '../../../models/review.dart';
 import '../../../models/service_detail.dart';
@@ -106,7 +106,7 @@ class HomeProvider with ChangeNotifier {
     Loader.showLoader(context);
 
     var _locationData = await _mapLocation.getLocation();
-    
+
     _userCurrentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
 

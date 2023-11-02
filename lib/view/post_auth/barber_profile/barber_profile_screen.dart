@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:naai/models/service_detail.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/components/add_review_component.dart';
@@ -18,7 +19,6 @@ import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.d
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../create_booking/create_booking_screen.dart';
@@ -192,7 +192,8 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreateBookingScreen2(
-                            artistName : barberProvider.artist.name ?? '', // Pass the name here
+                            artistName: barberProvider.artist.name ??
+                                '', // Pass the name here
                           ),
                         ),
                       ),
@@ -781,7 +782,9 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                   ),
                   child: CircleAvatar(
                     radius: 7.h,
-                    backgroundImage: NetworkImage(barberProvider.artist.imagePath!) as ImageProvider,
+                    backgroundImage:
+                        NetworkImage(barberProvider.artist.imagePath!)
+                            as ImageProvider,
                   ),
                 ),
               ),
@@ -846,7 +849,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                         5,
                         (i) => (i >
                                 int.parse(barberProvider.artist.rating
-                                            ?.floor()
+                                            ?.round()
                                             .toString() ??
                                         "0") -
                                     1)

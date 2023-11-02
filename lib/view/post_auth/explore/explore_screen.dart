@@ -1,5 +1,3 @@
-
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +17,8 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
-import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({Key? key}) : super(key: key);
@@ -570,13 +566,13 @@ class _ExploreScreenState extends State<ExploreScreen>
                 children: <Widget>[
                   CarouselSlider(
                     options: CarouselOptions(
-                      viewportFraction: 1.0,
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 3),
-                      autoPlayAnimationDuration: Duration(milliseconds: 800),
-                      autoPlayCurve: Curves.fastOutSlowIn
-                    ),
-                    items: provider.filteredSalonData[index].imageList!.map((imageUrl) {
+                        viewportFraction: 1.0,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn),
+                    items: provider.filteredSalonData[index].imageList!
+                        .map((imageUrl) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Stack(
@@ -588,6 +584,25 @@ class _ExploreScreenState extends State<ExploreScreen>
                                   height: 35.h,
                                   width: SizerUtil.width,
                                   fit: BoxFit.fill,
+                                  // When image is loading from the server it takes some time
+                                  // So we will show progress indicator while loading
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                               Positioned(
@@ -599,8 +614,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                                         .read<HomeProvider>()
                                         .userData
                                         .preferredSalon!
-                                        .contains(
-                                        provider.filteredSalonData[index].id)) {
+                                        .contains(provider
+                                            .filteredSalonData[index].id)) {
                                       provider.addPreferedSalon(context,
                                           provider.filteredSalonData[index].id);
                                     } else {
@@ -616,11 +631,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                                     ),
                                     child: Icon(
                                       context
-                                          .read<HomeProvider>()
-                                          .userData
-                                          .preferredSalon!
-                                          .contains(
-                                          provider.filteredSalonData[index].id)
+                                              .read<HomeProvider>()
+                                              .userData
+                                              .preferredSalon!
+                                              .contains(provider
+                                                  .filteredSalonData[index].id)
                                           ? CupertinoIcons.heart_fill
                                           : CupertinoIcons.heart,
                                       size: 2.5.h,
@@ -630,7 +645,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                 ),
                               ),
                             ],
-                          ) ;
+                          );
                         },
                       );
                     }).toList(),
@@ -784,7 +799,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                                 ),
                               ),
                               TextSpan(
-                                text: provider.filteredSalonData[index].closingDay,
+                                text: provider
+                                    .filteredSalonData[index].closingDay,
                                 style: TextStyle(
                                   color: ColorsConstant.textDark,
                                   fontSize: 10.sp,

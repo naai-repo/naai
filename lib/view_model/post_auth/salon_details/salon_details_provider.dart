@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/booking.dart';
 import 'package:naai/models/review.dart';
@@ -15,7 +16,6 @@ import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
   List<String> _imageList = [];
@@ -97,7 +97,7 @@ class SalonDetailsProvider with ChangeNotifier {
   void initSalonDetailsData(BuildContext context) async {
     Loader.showLoader(context);
     setSelectedSalonData(context);
-    await getImageList(context,_selectedSalonData.id!);
+    await getImageList(context, _selectedSalonData.id!);
     await getArtistList(context);
     await Future.wait([
       getServiceList(context),
@@ -331,12 +331,12 @@ class SalonDetailsProvider with ChangeNotifier {
 
   ///Get the list of image for current
   Future<void> getImageList(
-      BuildContext context,
-        String salonId,
-      ) async {
+    BuildContext context,
+    String salonId,
+  ) async {
     Loader.showLoader(context);
     try {
-       _imageList = _selectedSalonData.imageList!.cast();
+      _imageList = _selectedSalonData.imageList!.cast();
       Loader.hideLoader(context);
     } catch (e) {
       Loader.hideLoader(context);
@@ -506,10 +506,6 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
-
   // /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   // Future<void> getSalonReviewsList(BuildContext context) async {
   //   try {
@@ -556,7 +552,6 @@ class SalonDetailsProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   Future<void> getArtistList(BuildContext context) async {

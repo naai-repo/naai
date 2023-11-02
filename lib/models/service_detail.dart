@@ -28,9 +28,9 @@ class ServiceDetail {
           (category) => category.name.toLowerCase() == data['category']))],
       serviceTitle: data['serviceTitle'],
       price: data['price'].toDouble(),
-      targetGender: data['targetGender'] == 'male'
+      targetGender: data['targetGender'] == 'Men'
           ? Gender.MEN
-          : data['targetGender'] == 'female'
+          : data['targetGender'] == 'Women'
               ? Gender.WOMEN
               : null,
     );
