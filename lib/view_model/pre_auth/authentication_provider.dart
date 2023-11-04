@@ -147,10 +147,10 @@ class AuthenticationProvider with ChangeNotifier {
       ).onError((error, stackTrace) {
         throw Exception('$error');
       });
-
       print(
           "Apple credential ===>\nEmail - ${credential.email}\nid_Token - ${credential.identityToken}\nAuthorization code - ${credential.authorizationCode}\nUser identifier - ${credential.userIdentifier}");
     }
+
   }
 
   /// Method to verify the entered phone number and send an OTP to the user if the
@@ -163,7 +163,10 @@ class AuthenticationProvider with ChangeNotifier {
 
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: _phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) {},
+        verificationCompleted: (PhoneAuthCredential credential) {
+          print("Access TOKEN IS -->${credential.accessToken}"  );
+          print("TOKEN IS -->${credential.token}"  );
+        },
         verificationFailed: (FirebaseException e) {
           _isOtpLoaderActive = false;
           notifyListeners();

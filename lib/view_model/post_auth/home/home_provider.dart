@@ -24,6 +24,7 @@ import 'package:naai/utils/utility_functions.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -96,6 +97,7 @@ class HomeProvider with ChangeNotifier {
   /// Method to trigger all the API functions of home screen
   Future<void> initHome(BuildContext context) async {
     var _serviceEnabled = await _mapLocation.serviceEnabled();
+    var _locationData;
     if (!_serviceEnabled) {
       _serviceEnabled = await _mapLocation.requestService();
     }
@@ -105,7 +107,16 @@ class HomeProvider with ChangeNotifier {
     }
     Loader.showLoader(context);
 
-    var _locationData = await _mapLocation.getLocation();
+    try{
+       _locationData = await _mapLocation.getLocation();
+    }catch(e){
+      var serviceStatus = await Permission.location.serviceStatus;
+      var permissionStatus = await Permission.location.status;
+      if(serviceStatus.isDisabled || permissionStatus.isDenied||permissionStatus.isPermanentlyDenied){
+
+      }
+    }
+
 
     _userCurrentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
@@ -621,7 +632,7 @@ class HomeProvider with ChangeNotifier {
 
   void changeRatings(BuildContext context, {bool notify = false}) {
     salonList.forEach((salon) {
-      double average = salon.originalRating ?? 0;
+      num average = salon.originalRating ?? 0;
       final allReviews = _allReviewList.where(
         (review) => review.salonId == salon.id,
       );

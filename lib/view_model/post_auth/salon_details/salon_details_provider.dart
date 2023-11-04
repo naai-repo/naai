@@ -26,7 +26,7 @@ class SalonDetailsProvider with ChangeNotifier {
   // List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
   List<Artist> _artistList = [];
-  // List<String> _currentBooking.serviceIds = [];
+  //List<String> _currentBooking.serviceIds = [];
 
   /// Used to display artist's availability
   List<int> _artistAvailabilityToDisplay = [];
@@ -45,6 +45,8 @@ class SalonDetailsProvider with ChangeNotifier {
   // TODO: Change this to [false] once multiple artist booking method is finished
   bool _selectedSingleStaff = true;
   bool _selectedMultipleStaff = false;
+
+  bool _selectedMultipleServices = false;//for multiple services added
 
   bool _isOnSelectStaffType = true;
   bool _isOnSelectSlot = false;
@@ -84,6 +86,7 @@ class SalonDetailsProvider with ChangeNotifier {
   bool get isOnPaymentPage => _isOnPaymentPage;
   bool get selectedSingleStaff => _selectedSingleStaff;
   bool get selectedMultipleStaff => _selectedMultipleStaff;
+  bool get selectedMultipleServices => _selectedMultipleServices; // added for getting multiple services
   bool get isNextButtonActive => _isNextButtonActive;
 
   SalonData get selectedSalonData => _selectedSalonData;
@@ -187,6 +190,12 @@ class SalonDetailsProvider with ChangeNotifier {
       _currentBooking.startTime = startTime;
       _currentBooking.endTime = _artistAvailabilityForCalculation[
           indexOfStartTime + (_currentBooking.serviceIds?.length ?? 0) * 2];
+      if(_currentBooking.serviceIds?.length != null && _currentBooking.serviceIds?.length != 1 ){
+        _selectedMultipleServices = true;
+        print("Start time is");
+        print(startTime);
+        //TODO:
+      }
     }
     updateIsNextButtonActive();
     notifyListeners();
@@ -426,6 +435,7 @@ class SalonDetailsProvider with ChangeNotifier {
     if (removeService) {
       _currentBooking.serviceIds?.removeWhere((element) => element == id);
       _totalPrice -= service.price ?? 0;
+
     } else {
       if (_currentBooking.serviceIds?.contains(id) == true) {
         _currentBooking.serviceIds?.remove(id);
@@ -437,6 +447,9 @@ class SalonDetailsProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  /// Set Service Time
+
 
   void setServiceIds({
     required List<String> ids,
@@ -669,6 +682,10 @@ class SalonDetailsProvider with ChangeNotifier {
     _initialAvailability = [];
     _totalPrice = 0;
     _currentBooking.serviceIds = [];
+    // TODO: Make for two services.
+    // Approach get the length of _currentBooking.serviceIds and select that much number of slots
+
+
     notifyListeners();
   }
 
