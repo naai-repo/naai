@@ -67,7 +67,7 @@ class AuthenticationScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 2.h),
-                        if (Platform.isIOS)
+                         if (Platform.isIOS)
                           ReusableWidgets.socialSigninButton(
                             isAppleLogin: true,
                             onTap: () => provider.socialLogin(

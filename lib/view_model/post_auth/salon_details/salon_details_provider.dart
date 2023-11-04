@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:naai/models/artist.dart';
 import 'package:naai/models/booking.dart';
 import 'package:naai/models/review.dart';
@@ -15,7 +16,6 @@ import 'package:naai/view_model/post_auth/barber/barber_provider.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class SalonDetailsProvider with ChangeNotifier {
   List<String> _imageList = [];
@@ -26,7 +26,7 @@ class SalonDetailsProvider with ChangeNotifier {
   // List<Review> _salonReviewList = [];
   List<ServiceDetail> _filteredServiceList = [];
   List<Artist> _artistList = [];
-  // List<String> _currentBooking.serviceIds = [];
+  //List<String> _currentBooking.serviceIds = [];
 
   /// Used to display artist's availability
   List<int> _artistAvailabilityToDisplay = [];
@@ -45,6 +45,8 @@ class SalonDetailsProvider with ChangeNotifier {
   // TODO: Change this to [false] once multiple artist booking method is finished
   bool _selectedSingleStaff = true;
   bool _selectedMultipleStaff = false;
+
+  bool _selectedMultipleServices = false;//for multiple services added
 
   bool _isOnSelectStaffType = true;
   bool _isOnSelectSlot = false;
@@ -84,6 +86,7 @@ class SalonDetailsProvider with ChangeNotifier {
   bool get isOnPaymentPage => _isOnPaymentPage;
   bool get selectedSingleStaff => _selectedSingleStaff;
   bool get selectedMultipleStaff => _selectedMultipleStaff;
+  bool get selectedMultipleServices => _selectedMultipleServices; // added for getting multiple services
   bool get isNextButtonActive => _isNextButtonActive;
 
   SalonData get selectedSalonData => _selectedSalonData;
@@ -97,7 +100,7 @@ class SalonDetailsProvider with ChangeNotifier {
   void initSalonDetailsData(BuildContext context) async {
     Loader.showLoader(context);
     setSelectedSalonData(context);
-    await getImageList(context,_selectedSalonData.id!);
+    await getImageList(context, _selectedSalonData.id!);
     await getArtistList(context);
     await Future.wait([
       getServiceList(context),
@@ -187,6 +190,12 @@ class SalonDetailsProvider with ChangeNotifier {
       _currentBooking.startTime = startTime;
       _currentBooking.endTime = _artistAvailabilityForCalculation[
           indexOfStartTime + (_currentBooking.serviceIds?.length ?? 0) * 2];
+      if(_currentBooking.serviceIds?.length != null && _currentBooking.serviceIds?.length != 1 ){
+        _selectedMultipleServices = true;
+        print("Start time is");
+        print(startTime);
+        //TODO:
+      }
     }
     updateIsNextButtonActive();
     notifyListeners();
@@ -331,12 +340,12 @@ class SalonDetailsProvider with ChangeNotifier {
 
   ///Get the list of image for current
   Future<void> getImageList(
-      BuildContext context,
-        String salonId,
-      ) async {
+    BuildContext context,
+    String salonId,
+  ) async {
     Loader.showLoader(context);
     try {
-       _imageList = _selectedSalonData.imageList!.cast();
+      _imageList = _selectedSalonData.imageList!.cast();
       Loader.hideLoader(context);
     } catch (e) {
       Loader.hideLoader(context);
@@ -426,6 +435,7 @@ class SalonDetailsProvider with ChangeNotifier {
     if (removeService) {
       _currentBooking.serviceIds?.removeWhere((element) => element == id);
       _totalPrice -= service.price ?? 0;
+
     } else {
       if (_currentBooking.serviceIds?.contains(id) == true) {
         _currentBooking.serviceIds?.remove(id);
@@ -437,6 +447,9 @@ class SalonDetailsProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  /// Set Service Time
+
 
   void setServiceIds({
     required List<String> ids,
@@ -506,10 +519,6 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
-
   // /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   // Future<void> getSalonReviewsList(BuildContext context) async {
   //   try {
@@ -556,7 +565,6 @@ class SalonDetailsProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   /// Get the list of salons and save it in [_salonData] and [_filteredSalonData]
   Future<void> getArtistList(BuildContext context) async {
@@ -674,6 +682,10 @@ class SalonDetailsProvider with ChangeNotifier {
     _initialAvailability = [];
     _totalPrice = 0;
     _currentBooking.serviceIds = [];
+    // TODO: Make for two services.
+    // Approach get the length of _currentBooking.serviceIds and select that much number of slots
+
+
     notifyListeners();
   }
 

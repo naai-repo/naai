@@ -141,7 +141,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   }
 
   Widget imageCarousel() {
-
     return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
       return Stack(
         alignment: Alignment.bottomCenter,
@@ -158,7 +157,6 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                     fit: BoxFit.cover,
                   );
                 }),
-
               ],
             ),
           ),
@@ -446,8 +444,10 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                       ),
                       SizedBox(width: 2.w),
                       Text(
-                        (provider.selectedSalonData.rating ?? 0)
+                        // TODO:
+                        (provider.selectedSalonData.originalRating ?? 0)
                             .toStringAsFixed(1),
+
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12.sp,

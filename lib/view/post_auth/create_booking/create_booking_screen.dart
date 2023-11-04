@@ -685,7 +685,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     showArtistSlotDialogue = false;
                                   }),
                                   child: Text(
-                                    StringConstant.ok,
+                                     "Hi ok", //StringConstant.ok,
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.w500,
@@ -726,7 +726,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
             color: Color.fromARGB(255, 214, 214, 214),
           ),
           color: provider.artistAvailabilityToDisplay.contains(element)
-              ? element == (provider.currentBooking.startTime ?? 0)
+              ? element == (provider.currentBooking.startTime)  // Previous in bracket provider.currentBooking.startTime ?? 0
                   ? ColorsConstant.appColor
                   : Colors.white
               : Colors.grey.shade200,
@@ -855,7 +855,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                           children: <Widget>[
                             SizedBox(height: 4.h),
                             Text(
-                              StringConstant.selectTimeSlot,
+                              StringConstant.selectTimeSlot, // This thing need to be correct.
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 11.sp,
@@ -1999,9 +1999,8 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                                       context,
                                       setSelectedTime: true,
                                       startTime: element,
-                                    )
-                                        : null,
-                                    child: timeCard(element),
+                                    ): null,
+                                    child: timeCard(element), //TODO: if selected multiple services == true // timeCard(element) previous
                                   ),
                                 ),
                               )
@@ -2122,7 +2121,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
             color: Color.fromARGB(255, 214, 214, 214),
           ),
           color: provider.artistAvailabilityToDisplay.contains(element)
-              ? element == (provider.currentBooking.startTime ?? 0)
+              ? element == (!context.read<SalonDetailsProvider>().selectedMultipleServices) //Previous
               ? ColorsConstant.appColor
               : Colors.white
               : Colors.grey.shade200,

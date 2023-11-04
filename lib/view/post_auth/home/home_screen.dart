@@ -691,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 1.h),
                   Row(
                     children: List<Widget>.generate(
-                      rating.floor(),
+                      rating.ceil(),
                       (i) => SvgPicture.asset(
                         ImagePathConstant.starIcon,
                         color: ColorsConstant.greyStar,
@@ -797,7 +797,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         imagePath:
                                             ImagePathConstant.locationIconAlt,
                                         text: provider.salonList[index]
-                                            .distanceFromUserAsString!,
+                                            .distanceFromUserAsString ?? 0.toString(),
                                         color: ColorsConstant.purpleDistance,
                                       ),
                                       SizedBox(width: 3.w),
