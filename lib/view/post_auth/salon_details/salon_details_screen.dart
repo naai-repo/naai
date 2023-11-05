@@ -445,7 +445,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                       SizedBox(width: 2.w),
                       Text(
                         // TODO:
-                        (provider.selectedSalonData.originalRating ?? 0)
+                        (provider.selectedSalonData.rating ?? 0)
                             .toStringAsFixed(1),
 
                         style: TextStyle(

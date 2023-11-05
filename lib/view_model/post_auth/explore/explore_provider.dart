@@ -87,7 +87,7 @@ class ExploreProvider with ChangeNotifier {
     }
 
     setApplyServiceFilter(value: false);
-
+    context.read<HomeProvider>().changeRatings(context, notify: true);
     Loader.hideLoader(context);
     notifyListeners();
   }

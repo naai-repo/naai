@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
@@ -21,6 +25,7 @@ import 'package:naai/utils/routing/named_routes.dart';
 import 'package:naai/utils/shared_preferences/shared_preferences_helper.dart';
 import 'package:naai/utils/string_constant.dart';
 import 'package:naai/utils/utility_functions.dart';
+import 'package:naai/view/post_auth/home/home_screen.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
@@ -98,28 +103,57 @@ class HomeProvider with ChangeNotifier {
   Future<void> initHome(BuildContext context) async {
     var _serviceEnabled = await _mapLocation.serviceEnabled();
     var _locationData;
+    var _permissionGranted;
+    var _permissionStatus;
+
     if (!_serviceEnabled) {
-      _serviceEnabled = await _mapLocation.requestService();
-    }
-    var _permissionGranted = await _mapLocation.hasPermission();
-    if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
-    }
-    Loader.showLoader(context);
-
-    try{
-       _locationData = await _mapLocation.getLocation();
-    }catch(e){
-      var serviceStatus = await Permission.location.serviceStatus;
-      var permissionStatus = await Permission.location.status;
-      if(serviceStatus.isDisabled || permissionStatus.isDenied||permissionStatus.isPermanentlyDenied){
-
+      var _serviceEnabledAgain = await _mapLocation.requestService();
+      if (_serviceEnabledAgain == false) {
+        _serviceEnabledAgain = await _mapLocation.requestService();
+        if (_serviceEnabledAgain == false) {
+          _serviceEnabledAgain = await _mapLocation.requestService();
+        }
       }
     }
 
+    _permissionStatus = await _mapLocation.hasPermission();
+    _permissionGranted = await _mapLocation.requestPermission();
+    try {
+      _locationData = await _mapLocation.getLocation();
+      _userCurrentLatLng =
+          LatLng(_locationData.latitude, _locationData.longitude);
 
-    _userCurrentLatLng =
-        LatLng(_locationData.latitude!, _locationData.longitude!);
+    } catch (e) {
+      // if(_permissionGranted != location.PermissionStatus.denied || _permissionGranted != location.PermissionStatus.deniedForever)
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                title: const Text('Location Required!'),
+                message: const Text(
+                  'Please grant location permission, Your location will be used to find out salons near you.',
+                ),
+                actions: <CupertinoActionSheetAction>[
+                  CupertinoActionSheetAction(
+                    child: const Text('Ok'),
+                    onPressed: ()  {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(
+                        context,
+                        NamedRoutes.homeRoute,
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+            semanticsDismissible: true);
+    }
+
+
+
+    // _userCurrentLatLng =
+    //     LatLng(_locationData.latitude, _locationData.longitude);
 
     await Future.wait(
       [
@@ -288,25 +322,59 @@ class HomeProvider with ChangeNotifier {
     this._controller = mapController;
 
     var _serviceEnabled = await _mapLocation.serviceEnabled();
+    var _locationData;
+    var _permissionGranted;
+    var _permissionStatus;
 
     if (!_serviceEnabled) {
-      _serviceEnabled = await _mapLocation.requestService();
-    }
-    var _permissionGranted = await _mapLocation.hasPermission();
-    if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
+      var _serviceEnabledAgain = await _mapLocation.requestService();
+      if (_serviceEnabledAgain == false) {
+        _serviceEnabledAgain = await _mapLocation.requestService();
+        if (_serviceEnabledAgain == false) {
+          _serviceEnabledAgain = await _mapLocation.requestService();
+        }
+      }
     }
 
-    Loader.showLoader(context);
-    var _locationData = await _mapLocation.getLocation();
+    _permissionStatus = await _mapLocation.hasPermission();
+    _permissionGranted = await _mapLocation.requestPermission();
+    try {
+      _locationData = await _mapLocation.getLocation();
+      _userCurrentLatLng =
+          LatLng(_locationData.latitude, _locationData.longitude);
 
-    LatLng currentLatLng =
-        LatLng(_locationData.latitude!, _locationData.longitude!);
+    } catch (e) {
+      // if(_permissionGranted != location.PermissionStatus.denied || _permissionGranted != location.PermissionStatus.deniedForever)
+      showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: const Text('Location Required!'),
+              message: const Text(
+                'Please grant location permission, Your location will be used to find out salons near you.',
+              ),
+              actions: <CupertinoActionSheetAction>[
+                CupertinoActionSheetAction(
+                  child: const Text('Ok'),
+                  onPressed: ()  {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      NamedRoutes.homeRoute,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+          semanticsDismissible: true);
+      _userCurrentLatLng  = LatLng(28.6304, 77.2177);
+    }
 
     await mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: currentLatLng,
+          target: _userCurrentLatLng,
           zoom: 16,
         ),
       ),
@@ -314,14 +382,14 @@ class HomeProvider with ChangeNotifier {
 
     _symbol = await this._controller.addSymbol(
           UtilityFunctions.getCurrentLocationSymbolOptions(
-              latLng: currentLatLng),
+              latLng: _userCurrentLatLng),
         );
 
     Loader.hideLoader(context);
 
     await getFormattedAddressConfirmation(
       context: context,
-      coordinates: currentLatLng,
+      coordinates: _userCurrentLatLng,
     );
   }
 
@@ -509,18 +577,54 @@ class HomeProvider with ChangeNotifier {
   /// Method to fetch the current location of the user using [location] package
   Future<LatLng> fetchCurrentLocation(BuildContext context) async {
     var _serviceEnabled = await _mapLocation.serviceEnabled();
+    var _locationData;
+    var _permissionGranted;
+    var _permissionStatus;
 
     if (!_serviceEnabled) {
-      _serviceEnabled = await _mapLocation.requestService();
-    }
-    var _permissionGranted = await _mapLocation.hasPermission();
-    if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
+      var _serviceEnabledAgain = await _mapLocation.requestService();
+      if (_serviceEnabledAgain == false) {
+        _serviceEnabledAgain = await _mapLocation.requestService();
+        if (_serviceEnabledAgain == false) {
+          _serviceEnabledAgain = await _mapLocation.requestService();
+        }
+      }
     }
 
-    var _locationData = await _mapLocation.getLocation();
-
-    return LatLng(_locationData.latitude!, _locationData.longitude!);
+    _permissionStatus = await _mapLocation.hasPermission();
+    _permissionGranted = await _mapLocation.requestPermission();
+    try {
+      _locationData = await _mapLocation.getLocation();
+      _userCurrentLatLng =
+           LatLng(_locationData.latitude, _locationData.longitude);
+    } catch (e) {
+      if(_permissionGranted != location.PermissionStatus.deniedForever)
+        _userCurrentLatLng = LatLng(28.6304, 77.2177);
+      showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: const Text('Location Required!'),
+              message: const Text(
+                'Please grant location permission, Your location will be used to find out salons near you.',
+              ),
+              actions: <CupertinoActionSheetAction>[
+                CupertinoActionSheetAction(
+                  child: const Text('Ok'),
+                  onPressed: ()  {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      NamedRoutes.homeRoute,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+          semanticsDismissible: true);
+    }
+    return _userCurrentLatLng;
   }
 
   /// Animate the map to given [latLng]
