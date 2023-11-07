@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
@@ -37,6 +39,7 @@ class HomeProvider with ChangeNotifier {
 
   final _mapLocation = location.Location();
   late LatLng _userCurrentLatLng;
+  Position? position;
 
   location.Location get mapLocation => _mapLocation;
   LatLng get userCurrentLatLng => _userCurrentLatLng;
@@ -94,29 +97,91 @@ class HomeProvider with ChangeNotifier {
     );
   }
 
+
+  Future determinePosition(context) async {
+    bool serviceEnabled;
+    LocationPermission  permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      SnackBar(content: Text("Please enable location service"),duration: Duration(seconds: 5));
+    }
+
+    permission = await getPermission();
+    if (permission != LocationPermission.denied &&
+        permission != LocationPermission.deniedForever) {
+      position = await Geolocator.getCurrentPosition();
+    } else {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoActionSheet(
+            title: const Text('Location Required!'),
+            message: const Text(
+                'Please grant location permission, Your location will be used to find out salons near you.'),
+            actions: <CupertinoActionSheetAction>[
+              CupertinoActionSheetAction(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  determinePosition(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+  Future<LocationPermission> getPermission() async {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      final permission = await Geolocator.requestPermission();
+      return permission;
+    } else {
+      return permission;
+    }
+  }
+
   /// Method to trigger all the API functions of home screen
   Future<void> initHome(BuildContext context) async {
     var _serviceEnabled = await _mapLocation.serviceEnabled();
-    var _locationData;
     if (!_serviceEnabled) {
       _serviceEnabled = await _mapLocation.requestService();
     }
     var _permissionGranted = await _mapLocation.hasPermission();
-    if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
-    }
-    Loader.showLoader(context);
 
-    try{
-       _locationData = await _mapLocation.getLocation();
-    }catch(e){
-      var serviceStatus = await Permission.location.serviceStatus;
-      var permissionStatus = await Permission.location.status;
-      if(serviceStatus.isDisabled || permissionStatus.isDenied||permissionStatus.isPermanentlyDenied){
+
+      if (_permissionGranted == location.PermissionStatus.denied || _permissionGranted == location.PermissionStatus.deniedForever) {
+          try {
+            _permissionGranted = await _mapLocation.requestPermission();
+          } catch (e) {
+            try {
+              _permissionGranted = await _mapLocation.requestPermission();
+            } catch (e) {
+              try {
+                _permissionGranted = await _mapLocation.requestPermission();
+              } catch (e) {
+                try {
+                  _permissionGranted = await _mapLocation.requestPermission();
+                } catch (e) {
+                  try {
+                    _permissionGranted = await _mapLocation.requestPermission();
+                  } catch (e) {
+
+                  }
+                }
+              }
+            }
+          }
 
       }
-    }
 
+
+    Loader.showLoader(context);
+
+    var _locationData = await _mapLocation.getLocation();
 
     _userCurrentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
