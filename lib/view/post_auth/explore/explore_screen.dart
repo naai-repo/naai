@@ -549,6 +549,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget salonCard(int index) {
+
     return Consumer<ExploreProvider>(
       builder: (context, provider, child) {
         return Container(
@@ -568,7 +569,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                     options: CarouselOptions(
                         viewportFraction: 1.0,
                         autoPlay: true,
-                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayInterval: Duration(seconds: 10),
                         autoPlayAnimationDuration: Duration(milliseconds: 800),
                         autoPlayCurve: Curves.fastOutSlowIn),
                     items: provider.filteredSalonData[index].imageList!
