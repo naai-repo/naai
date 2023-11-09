@@ -6,6 +6,7 @@ class StringConstant {
   static const String timings = "Timings";
   static const String closed = "Closed";
   static const String generalContantNumber = "+919205328688";
+  static const String salonDetail = "Salon Detail";
 
   // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
 import 'package:logger/logger.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -24,10 +24,10 @@ import 'package:naai/utils/utility_functions.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
 
 import '../../../models/review.dart';
 import '../../../models/service_detail.dart';
@@ -47,6 +47,7 @@ class HomeProvider with ChangeNotifier {
   List<ServiceDetail> _services = [];
 
   late Symbol _symbol;
+  Position ? position;
 
   late MapboxMapController _controller;
 
@@ -96,27 +97,21 @@ class HomeProvider with ChangeNotifier {
 
   /// Method to trigger all the API functions of home screen
   Future<void> initHome(BuildContext context) async {
+
     var _serviceEnabled = await _mapLocation.serviceEnabled();
-    var _locationData;
+    await locationPopUp(context);
     if (!_serviceEnabled) {
-      _serviceEnabled = await _mapLocation.requestService();
+   //   _serviceEnabled = await _mapLocation.requestService();
     }
+   // await requestLocationPermission(context);
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
+     // _permissionGranted = await _mapLocation.requestPermission();
+      await requestLocationPermission(context);
     }
-    Loader.showLoader(context);
+  await Loader.showLoader(context);
 
-    try{
-       _locationData = await _mapLocation.getLocation();
-    }catch(e){
-      var serviceStatus = await Permission.location.serviceStatus;
-      var permissionStatus = await Permission.location.status;
-      if(serviceStatus.isDisabled || permissionStatus.isDenied||permissionStatus.isPermanentlyDenied){
-
-      }
-    }
-
+    var _locationData = await _mapLocation.getLocation();
 
     _userCurrentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
@@ -124,14 +119,14 @@ class HomeProvider with ChangeNotifier {
     await Future.wait(
       [
         getUserDetails(context).whenComplete(
-          () async =>
-              await context.read<ExploreProvider>().getSalonList(context),
+              () async =>
+          await context.read<ExploreProvider>().getSalonList(context),
         ),
         getAllArtists(context),
         getAllReviews(context),
       ],
     ).onError(
-      (error, stackTrace) =>
+          (error, stackTrace) =>
           ReusableWidgets.showFlutterToast(context, '$error'),
     );
 
@@ -145,6 +140,7 @@ class HomeProvider with ChangeNotifier {
         NamedRoutes.setHomeLocationRoute,
       );
     } else {
+
       await getUserBookings(context);
       await getServicesNamesAndPrice(context);
       Loader.hideLoader(context);
@@ -152,6 +148,252 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> requestLocationPermission(BuildContext context) async {
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Location Permission Required'),
+              content: Text('This app requires access to your location for XYZ feature. Please grant the permission.'),
+              actions: [
+                ElevatedButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the pop-up.
+                    // Request location permission again.
+                    _mapLocation.requestPermission();
+                  },
+                ),
+              ],
+            );
+          });
+    }
+  }
+
+  Future locationPopUp(context) async {
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      await showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(35),
+            topRight: Radius.circular(35),
+          ),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      "assets/images/app_logo.png",
+                      height: 80,
+                      width: 80,
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Your location is used to find nearby salons and their add address and track your order",
+                      style: TextStyle(
+                          fontSize: 16.0),
+                    ),
+                  ),
+                  SizedBox(height:20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          child: Text("Continue", style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Geolocator.requestPermission();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  /*
+  Future locationPopUp(context) async {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      await showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(35),
+            topRight: Radius.circular(35),
+          ),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      "assets/images/app_logo.png",
+                      height: 80,
+                      width: 80,
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Your location is used to find nearby salons and their add address and track your order",
+                      style: TextStyle(
+                          fontSize: 16.0),
+                    ),
+                  ),
+                  SizedBox(height:20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          child: Text("Continue", style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            )),
+                          onPressed: () {
+                           Navigator.pop(context);
+                            Geolocator.requestPermission();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+  Position? get currentPosition => position;
+  ValueNotifier<Position?> updatedLocation = ValueNotifier(null);
+
+  Future<LocationPermission> getPermission() async {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      final permission = await Geolocator.requestPermission();
+      return permission;
+    } else {
+      return permission;
+    }
+  }
+  Future determinePosition(context) async {
+
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    await locationPopUp(context);
+//  permission = await getPermission();
+/*
+  if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    // Location permission is not granted, show the locationPopUp.
+    await locationPopUp(context);
+  }
+  */
+    if (!serviceEnabled) {
+    //  snackBar(context, "Please open the location",duration: 5);
+    }
+    // await locationPopUp(context);
+
+    permission = await getPermission();
+    if (permission != LocationPermission.denied &&
+        permission != LocationPermission.deniedForever) {
+      position = await Geolocator.getCurrentPosition();
+    } else {
+      errorDialog(
+        context,
+        message:
+        "You can't use this application without giving Location permission, \nPress ok to giving permission",
+        show: 1,
+        onTap: () {
+          Navigator.pop(context);
+          determinePosition(context);
+        },
+      );
+    }
+  }
+  Future<dynamic> errorDialog(context,
+      {String? message, VoidCallback? onTap, int? show, int? yesNo}) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            children: [
+             Image.asset(
+               "assets/images/app_logo.png",
+                height: 80,
+                width:80,
+              ),
+              SizedBox(height:20.0),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    message ?? '',
+                    maxLines: 5,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 15, color: Colors.black),
+                  )
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            show == 1
+                ? SizedBox(width:0.0)
+                : TextButton(
+                child: Text(yesNo == 1 ? 'No' : 'Cancel',
+                    style: const TextStyle(color: Colors.black)),
+                onPressed: () => Navigator.pop(context)),
+            TextButton(
+                onPressed: onTap,
+                child: Text(yesNo == 1 ? 'Yes' : 'OK',
+                    style: const TextStyle(color: Colors.black))),
+          ],
+        );
+      },
+    );
+  }
+*/
+
 
   /// Fetch the user details from [FirebaseFirestore]
   Future<void> getUserDetails(BuildContext context) async {
@@ -188,7 +430,7 @@ class HomeProvider with ChangeNotifier {
   Future<void> getUserBookings(BuildContext context) async {
     try {
       List<Booking> response =
-          await DatabaseService().getUserBookings(userId: userData.id ?? '');
+      await DatabaseService().getUserBookings(userId: userData.id ?? '');
       _allBookings = response;
       _lastOrNextBooking.clear();
       for (int i = 0; i < response.length; i++) {
@@ -239,7 +481,7 @@ class HomeProvider with ChangeNotifier {
 
   String getTimeAgoString(String? dateTimeString) {
     DateTime dateTime =
-        DateTime.parse(dateTimeString ?? DateTime.now().toString());
+    DateTime.parse(dateTimeString ?? DateTime.now().toString());
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
@@ -275,16 +517,16 @@ class HomeProvider with ChangeNotifier {
         });
       }
     } catch (e) {
-      //ReusableWidgets.showFlutterToast(context, '$e');
+      ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }
 
   /// Initialising map related values as soon as the map is rendered on screen.
   Future<void> onMapCreated(
-    MapboxMapController mapController,
-    BuildContext context,
-  ) async {
+      MapboxMapController mapController,
+      BuildContext context,
+      ) async {
     this._controller = mapController;
 
     var _serviceEnabled = await _mapLocation.serviceEnabled();
@@ -301,7 +543,7 @@ class HomeProvider with ChangeNotifier {
     var _locationData = await _mapLocation.getLocation();
 
     LatLng currentLatLng =
-        LatLng(_locationData.latitude!, _locationData.longitude!);
+    LatLng(_locationData.latitude!, _locationData.longitude!);
 
     await mapController.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -313,9 +555,9 @@ class HomeProvider with ChangeNotifier {
     );
 
     _symbol = await this._controller.addSymbol(
-          UtilityFunctions.getCurrentLocationSymbolOptions(
-              latLng: currentLatLng),
-        );
+      UtilityFunctions.getCurrentLocationSymbolOptions(
+          latLng: currentLatLng),
+    );
 
     Loader.hideLoader(context);
 
@@ -327,13 +569,13 @@ class HomeProvider with ChangeNotifier {
 
   /// Take user to the place, selected from search suggestions
   Future<void> handlePlaceSelectionEvent(
-    Feature place,
-    BuildContext context,
-  ) async {
+      Feature place,
+      BuildContext context,
+      ) async {
     _mapSearchController.text = place.placeName ?? "";
 
     LatLng selectedLatLng =
-        LatLng(place.center?[1] ?? 0.0, place.center?[0] ?? 0.0);
+    LatLng(place.center?[1] ?? 0.0, place.center?[0] ?? 0.0);
 
     await _controller.removeSymbol(_symbol);
 
@@ -361,7 +603,7 @@ class HomeProvider with ChangeNotifier {
     List<Feature> _data = [];
 
     Uri uri = Uri.parse(
-            "${ApiEndpointConstant.mapboxPlacesApi}${_mapSearchController.text}.json")
+        "${ApiEndpointConstant.mapboxPlacesApi}${_mapSearchController.text}.json")
         .replace(queryParameters: UtilityFunctions.mapSearchQueryParameters());
 
     try {
@@ -370,7 +612,7 @@ class HomeProvider with ChangeNotifier {
           .onError((error, stackTrace) => throw Exception(error));
 
       UserLocationModel responseData =
-          UserLocationModel.fromJson(jsonDecode(response.body));
+      UserLocationModel.fromJson(jsonDecode(response.body));
       _data = responseData.features ?? [];
 
       /// [Feature(id: StringConstant.yourCurrentLocation)] is added to show the current
@@ -402,10 +644,10 @@ class HomeProvider with ChangeNotifier {
     );
 
     this._controller.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(target: coordinates, zoom: 16),
-          ),
-        );
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: coordinates, zoom: 16),
+      ),
+    );
 
     await getFormattedAddressConfirmation(
       context: context,
@@ -417,9 +659,9 @@ class HomeProvider with ChangeNotifier {
 
   /// Update the user's location related data in [FirebaseFirestore]
   void updateUserLocation(
-    BuildContext context,
-    LatLng latLng,
-  ) async {
+      BuildContext context,
+      LatLng latLng,
+      ) async {
     UserModel user = UserModel.fromMap(_userData.toMap());
 
     user.homeLocation = HomeLocation();
@@ -432,8 +674,8 @@ class HomeProvider with ChangeNotifier {
     Loader.showLoader(context);
     try {
       await DatabaseService().updateUserData(data: data).onError(
-          (FirebaseException error, stackTrace) =>
-              throw ExceptionHandling(message: error.message ?? ""));
+              (FirebaseException error, stackTrace) =>
+          throw ExceptionHandling(message: error.message ?? ""));
       _changedLocation = true;
       await getUserDetails(context);
       context.read<ExploreProvider>().getSalonList(context, justDistance: true);
@@ -491,7 +733,7 @@ class HomeProvider with ChangeNotifier {
             ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all(ColorsConstant.appColor),
+                MaterialStateProperty.all(ColorsConstant.appColor),
               ),
               onPressed: () => updateUserLocation(context, coordinates),
               child: Text(StringConstant.confirmLocation),
@@ -534,27 +776,27 @@ class HomeProvider with ChangeNotifier {
 
   void populateBookingData(BuildContext context, int index) async {
     await context.read<SalonDetailsProvider>().getSalonData(
-          context,
-          salonId: _lastOrNextBooking[index].salonId!,
-        );
+      context,
+      salonId: _lastOrNextBooking[index].salonId!,
+    );
 
     await context.read<SalonDetailsProvider>().getArtistList(context);
     await context.read<SalonDetailsProvider>().getServiceList(context);
 
     context.read<SalonDetailsProvider>().setServiceIds(
-          ids: _lastOrNextBooking[index].serviceIds!,
-          totalPrice: _lastOrNextBooking[index].totalPrice,
-        );
+      ids: _lastOrNextBooking[index].serviceIds!,
+      totalPrice: _lastOrNextBooking[index].totalPrice,
+    );
 
     context
         .read<SalonDetailsProvider>()
         .setStaffSelectionMethod(selectedSingleStaff: true);
 
     context.read<SalonDetailsProvider>().setBookingData(
-          context,
-          setArtistId: true,
-          artistId: _lastOrNextBooking[index].artistId,
-        );
+      context,
+      setArtistId: true,
+      artistId: _lastOrNextBooking[index].artistId,
+    );
     Navigator.pushNamed(
       context,
       NamedRoutes.createBookingRoute,
@@ -573,7 +815,7 @@ class HomeProvider with ChangeNotifier {
     required int index,
   }) {
     DateTime dateTime =
-        DateTime.parse(dateTimeString ?? DateTime.now().toString());
+    DateTime.parse(dateTimeString ?? DateTime.now().toString());
     _lastOrNextBooking[index].bookingCreatedFor ?? DateTime.now().toString();
     if (getFormattedDate) {
       return DateFormat('MMM dd').format(dateTime);
@@ -634,14 +876,14 @@ class HomeProvider with ChangeNotifier {
     salonList.forEach((salon) {
       num average = salon.originalRating ?? 0;
       final allReviews = _allReviewList.where(
-        (review) => review.salonId == salon.id,
+            (review) => review.salonId == salon.id,
       );
       allReviews.forEach((review) {
         average += review.rating ?? 0;
       });
       average /= (allReviews.length + 1);
       final allArtist = artistList.where(
-        (artist) => artist.salonId == salon.id,
+            (artist) => artist.salonId == salon.id,
       );
       allArtist.forEach((artist) {
         average += artist.originalRating ?? 0;
@@ -652,7 +894,7 @@ class HomeProvider with ChangeNotifier {
     artistList.forEach((artist) {
       double average = artist.originalRating ?? 0;
       final allReviews = _allReviewList.where(
-        (review) => review.artistId != null && review.artistId == artist.id,
+            (review) => review.artistId != null && review.artistId == artist.id,
       );
       allReviews.forEach((review) {
         average += review.rating ?? 0;

@@ -1227,6 +1227,18 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             constraints: BoxConstraints(maxHeight: 20.h),
                             child: ListView.separated(
                               shrinkWrap: true,
+                              /* itemCount: context
+                                  .read<HomeProvider>()
+                                  .artistList
+                                  .where((artist) => artist.salonId == provider.selectedSalonData.id)
+                                  .length,
+                              itemBuilder: (context, index) {
+                                Artist artist = context
+                                    .read<HomeProvider>()
+                                    .artistList
+                                    .where((artist) => artist.salonId == provider.selectedSalonData.id)
+                                  // .where((artist) => artist.category == provider.selectedServiceCategories) // Filter by selected category
+                                    .toList()[index];*/
                               itemCount: provider.serviceList.length,
                               itemBuilder: (context, index) {
                                 Artist artist =
@@ -1415,9 +1427,6 @@ class BookingOverviewPart extends StatelessWidget {
   }
 }
 
-
-
-
 class CreateBookingScreen2 extends StatefulWidget {
   final String? artistName;
   const CreateBookingScreen2({Key? key,this.artistName}) : super(key: key);
@@ -1429,7 +1438,7 @@ class CreateBookingScreen2 extends StatefulWidget {
 class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
   bool singleStaffListExpanded = false;
   bool showArtistSlotDialogue = false;
-//  Razorpay _razorpay = Razorpay();
+  // Razorpay _razorpay = Razorpay();
 
 
 
@@ -1438,9 +1447,6 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<ProfileProvider>().getUserDataFromUserProvider(context);
     });
-  //  _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
- //   _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
- //   _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
   }
 
@@ -1999,8 +2005,9 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                                       context,
                                       setSelectedTime: true,
                                       startTime: element,
-                                    ): null,
-                                    child: timeCard(element), //TODO: if selected multiple services == true // timeCard(element) previous
+                                    )
+                                        : null,
+                                    child: timeCard(element),
                                   ),
                                 ),
                               )
@@ -2080,7 +2087,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                                     showArtistSlotDialogue = false;
                                   }),
                                   child: Text(
-                                    StringConstant.ok,
+                                    "Hi ok", //StringConstant.ok,
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.w500,
@@ -2121,7 +2128,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
             color: Color.fromARGB(255, 214, 214, 214),
           ),
           color: provider.artistAvailabilityToDisplay.contains(element)
-              ? element == (!context.read<SalonDetailsProvider>().selectedMultipleServices) //Previous
+              ? element == (provider.currentBooking.startTime)  // Previous in bracket provider.currentBooking.startTime ?? 0
               ? ColorsConstant.appColor
               : Colors.white
               : Colors.grey.shade200,
@@ -2167,67 +2174,34 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                       CurvedBorderedCard(
                         onTap: () => provider.showDialogue(
                           context,
-                          // Container(
-                          //   height: 35.h,
-                          //   width: 40.h,
-                          //   child: ClipRRect(
-                          //     borderRadius: BorderRadius.circular(5.h),
-                          //     child: SfDateRangePicker(
-                          //       selectionColor: ColorsConstant.appColor,
-                          //       backgroundColor: Colors.white,
-                          //       headerStyle: DateRangePickerHeaderStyle(
-                          //         textAlign: TextAlign.center,
-                          //       ),
-                          //       initialSelectedDate: provider.currentBooking
-                          //           .selectedDateInDateTimeFormat,
-                          //       initialDisplayDate: DateTime.now().toLocal(),
-                          //       showNavigationArrow: true,
-                          //       enablePastDates: false,
-                          //       onSelectionChanged: (date) {
-                          //         provider.setBookingData(
-                          //           context,
-                          //           setSelectedDate: true,
-                          //           selectedDate: date.value,
-                          //         );
-                          //         provider.resetTime();
-                          //         provider.getArtistBooking(context);
-                          //         Navigator.pop(context);
-                          //       },
-                          //       selectionMode:
-                          //       DateRangePickerSelectionMode.single,
-                          //     ),
-                          //   ),
-                          // ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          SizedBox(
                             height: 35.h,
                             width: 40.h,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5.h),
-                              child: SfDateRangePicker(
-                                selectionColor: ColorsConstant.appColor,
-                                backgroundColor: Colors.white,
-                                headerStyle: DateRangePickerHeaderStyle(
-                                  textAlign: TextAlign.center,
-                                ),
-                                initialSelectedDate: provider.currentBooking
-                                    .selectedDateInDateTimeFormat,
-                                initialDisplayDate: DateTime.now().toLocal(),
-                                showNavigationArrow: true,
-                                enablePastDates: false,
-                                onSelectionChanged: (date) {
-                                  provider.setBookingData(
-                                    context,
-                                    setSelectedDate: true,
-                                    selectedDate: date.value,
-                                  );
-                                  provider.resetTime();
-                                  provider.getArtistBooking(context);
-                                  Navigator.pop(context);
-                                },
-                                selectionMode:
-                                DateRangePickerSelectionMode.single,
+                            child: SfDateRangePicker(
+                              view: DateRangePickerView.month,
+                              selectionColor: ColorsConstant.appColor,
+                              backgroundColor: Colors.white,
+                              headerStyle: DateRangePickerHeaderStyle(
+                                textAlign: TextAlign.center,
                               ),
+                              initialSelectedDate: provider.currentBooking
+                                  .selectedDateInDateTimeFormat,
+                              initialDisplayDate: DateTime.now().toLocal(),
+                              showNavigationArrow: true,
+                              enablePastDates: false,
+                              onSelectionChanged: (date) {
+                                provider.setBookingData(
+                                  context,
+                                  setSelectedDate: true,
+                                  selectedDate: date.value,
+                                );
+                                provider.resetTime();
+                                provider.getArtistBooking(context);
+                                Navigator.pop(context);
+                              },
+                              selectionMode:
+                              DateRangePickerSelectionMode.single,
+
                             ),
                           ),
                         ),
@@ -2283,7 +2257,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                           children: <Widget>[
                             SizedBox(height: 4.h),
                             Text(
-                              StringConstant.selectTimeSlot,
+                              StringConstant.selectTimeSlot, // This thing need to be correct.
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 11.sp,
@@ -2357,6 +2331,192 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
       },
     );
   }
+
+  // Widget slotSelectionWidget() {
+  //   return Consumer<SalonDetailsProvider>(
+  //     builder: (context, provider, child) {
+  //       return Padding(
+  //         padding: EdgeInsets.all(2.h),
+  //         child: Column(
+  //           children: <Widget>[
+  //             CurvedBorderedCard(
+  //               removeBottomPadding: false,
+  //               child: Padding(
+  //                 padding: EdgeInsets.symmetric(horizontal: 5.w),
+  //                 child: Column(
+  //                   children: <Widget>[
+  //                     Text(
+  //                       StringConstant.selectData,
+  //                       style: TextStyle(
+  //                         fontWeight: FontWeight.w600,
+  //                         fontSize: 11.sp,
+  //                         color: ColorsConstant.textDark,
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: 2.h),
+  //                     CurvedBorderedCard(
+  //                       onTap: () => provider.showDialogue(
+  //                         context,
+  //                         Container(
+  //                           height: 50.h,
+  //                           width: 100.w,
+  //                           child: ClipRRect(
+  //                             borderRadius: BorderRadius.circular(5.h),
+  //                             child: SfDateRangePicker(
+  //                               selectionColor: ColorsConstant.appColor,
+  //                               backgroundColor: Colors.white,
+  //                               headerStyle: DateRangePickerHeaderStyle(
+  //                                 textAlign: TextAlign.center,
+  //                               ),
+  //                               initialSelectedDate: provider.currentBooking
+  //                                   .selectedDateInDateTimeFormat,
+  //                               initialDisplayDate: DateTime.now().toLocal(),
+  //                               showNavigationArrow: true,
+  //                               enablePastDates: false,
+  //                               onSelectionChanged: (date) {
+  //                                 provider.setBookingData(
+  //                                   context,
+  //                                   setSelectedDate: true,
+  //                                   selectedDate: date.value,
+  //                                 );
+  //                                 provider.resetTime();
+  //                                 provider.getArtistBooking(context);
+  //                                 Navigator.pop(context);
+  //                               },
+  //                               selectionMode:
+  //                               DateRangePickerSelectionMode.single,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       fillColor:
+  //                       provider.currentBooking.selectedDate?.isNotEmpty ==
+  //                           true
+  //                           ? ColorsConstant.appColor
+  //                           : null,
+  //                       removeBottomPadding: false,
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: <Widget>[
+  //                           SvgPicture.asset(
+  //                             ImagePathConstant.calendarIcon,
+  //                             color: provider.currentBooking.selectedDate
+  //                                 ?.isNotEmpty ==
+  //                                 true
+  //                                 ? Colors.white
+  //                                 : null,
+  //                           ),
+  //                           SizedBox(width: 3.w),
+  //                           Text(
+  //                             provider.currentBooking.selectedDate ??
+  //                                 StringConstant.datePlaceholder,
+  //                             style: TextStyle(
+  //                               fontSize: 11.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: provider.currentBooking.selectedDate
+  //                                   ?.isNotEmpty ==
+  //                                   true
+  //                                   ? Colors.white
+  //                                   : ColorsConstant.textLight,
+  //                             ),
+  //                           ),
+  //                           SizedBox(width: 3.w),
+  //                           SvgPicture.asset(
+  //                             ImagePathConstant.downArrow,
+  //                             color: provider.currentBooking.selectedDate
+  //                                 ?.isNotEmpty ==
+  //                                 true
+  //                                 ? Colors.white
+  //                                 : ColorsConstant.textLight,
+  //                             height: 1.h,
+  //                             fit: BoxFit.fitHeight,
+  //                           )
+  //                         ],
+  //                       ),
+  //                       cardSelected: true,
+  //                     ),
+  //                     if (provider.currentBooking.selectedDate?.isNotEmpty ==
+  //                         true)
+  //                       Column(
+  //                         children: <Widget>[
+  //                           SizedBox(height: 4.h),
+  //                           Text(
+  //                             StringConstant.selectTimeSlot,
+  //                             style: TextStyle(
+  //                               fontWeight: FontWeight.w600,
+  //                               fontSize: 11.sp,
+  //                               color: ColorsConstant.textDark,
+  //                             ),
+  //                           ),
+  //                           SizedBox(height: 2.h),
+  //                           CurvedBorderedCard(
+  //                             onTap: () {
+  //                               setState(() {
+  //                                 showArtistSlotDialogue = true;
+  //                               });
+  //                             },
+  //                             fillColor:
+  //                             provider.currentBooking.startTime != null
+  //                                 ? ColorsConstant.appColor
+  //                                 : null,
+  //                             removeBottomPadding: false,
+  //                             child: Row(
+  //                               mainAxisAlignment: MainAxisAlignment.center,
+  //                               children: <Widget>[
+  //                                 SvgPicture.asset(
+  //                                   ImagePathConstant.timeIcon,
+  //                                   color: provider.currentBooking.startTime !=
+  //                                       null
+  //                                       ? Colors.white
+  //                                       : null,
+  //                                 ),
+  //                                 SizedBox(width: 3.w),
+  //                                 Text(
+  //                                   provider.currentBooking.startTime != null
+  //                                       ? provider.convertSecondsToTimeString(
+  //                                       provider.currentBooking
+  //                                           .startTime ??
+  //                                           0) +
+  //                                       ' HRS'
+  //                                       : StringConstant.timePlaceholder,
+  //                                   style: TextStyle(
+  //                                     fontSize: 11.sp,
+  //                                     fontWeight: FontWeight.w500,
+  //                                     color:
+  //                                     provider.currentBooking.startTime !=
+  //                                         null
+  //                                         ? Colors.white
+  //                                         : ColorsConstant.textLight,
+  //                                   ),
+  //                                 ),
+  //                                 SizedBox(width: 3.w),
+  //                                 SvgPicture.asset(
+  //                                   ImagePathConstant.downArrow,
+  //                                   color: provider.currentBooking.startTime !=
+  //                                       null
+  //                                       ? Colors.white
+  //                                       : ColorsConstant.textLight,
+  //                                   height: 1.h,
+  //                                   fit: BoxFit.fitHeight,
+  //                                 )
+  //                               ],
+  //                             ),
+  //                             cardSelected: true,
+  //                           ),
+  //                         ],
+  //                       ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+
 
   Widget schedulingStatus() {
     return Consumer<SalonDetailsProvider>(
@@ -2473,7 +2633,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                             .read<HomeProvider>()
                             .artistList
                             .where((artist) => artist.salonId == provider.selectedSalonData.id)
-                           .where((artist) => artist.name == widget.artistName) // Filter by selected category
+                            .where((artist) => artist.name == widget.artistName) // Filter by selected category
                             .length,
                         itemBuilder: (context, index) {
                           Artist artist = context
@@ -2486,7 +2646,8 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
                               if (provider.currentBooking.artistId ==
-                                  artist.id) {
+                                  artist.id )
+                              {
                                 provider.setBookingData(
                                   context,
                                   setArtistId: true,
@@ -2582,11 +2743,11 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(1.h),
-                child: Image.asset(
-                  provider.selectedSalonData.imagePath ?? '',
-                  height: 15.h,
-                  width: 15.h,
-                  fit: BoxFit.cover,
+                child: Image.network(
+                  provider.selectedSalonData.imageList![0].toString(),
+                  height: 15.h,//15.h
+                  width: 28.w,//15.w
+                  fit: BoxFit.fill,
                 ),
               ),
               SizedBox(width: 2.w),

@@ -35,6 +35,9 @@ class RoutingFunctions {
       case NamedRoutes.authenticationRoute:
         target = AuthenticationScreen();
         break;
+      case NamedRoutes.authenticationRoute2:
+        target = AuthenticationScreen2();
+        break;
       case NamedRoutes.verifyOtpRoute:
         target = VerifyOtpScreen();
         break;

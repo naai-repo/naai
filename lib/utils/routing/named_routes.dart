@@ -3,6 +3,7 @@ class NamedRoutes {
 
   /// Authentication routes
   static const String authenticationRoute = '/auth';
+  static const String authenticationRoute2 = '/auth2';
   static const String verifyOtpRoute = '/verify-otp';
   static const String addUserNameRoute = '/add-user-name';
 
