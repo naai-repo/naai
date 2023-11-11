@@ -808,7 +808,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ColorfulInformationCard(
                                         imagePath: ImagePathConstant.starIcon,
                                         text:
-                                            '${(salon.rating ?? 0).toStringAsFixed(1)}',
+                                            '${(salon.originalRating ?? 0).toStringAsFixed(1)}',
                                         color: ColorsConstant.greenRating,
                                       ),
                                     ],
