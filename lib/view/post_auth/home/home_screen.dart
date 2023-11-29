@@ -983,10 +983,14 @@ class HomeScreen2 extends StatefulWidget {
 class _HomeScreen2State extends State<HomeScreen2> {
   @override
   void initState() {
+
     super.initState();
-   // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //    context.read<HomeProvider>().initHome(context);
- //   });
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<HomeProvider>().initHome(context);
+    });
+
+    // determinePosition(context);
   }
 
   @override
@@ -1564,20 +1568,27 @@ class _HomeScreen2State extends State<HomeScreen2> {
                     child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: 6,
+                      itemCount: (provider.artistList.length / 2).ceil(),
                       itemBuilder: (context, index) {
                         index = 2 * index;
-                        //   Artist artist = provider.artistList[index];
+
+                        Artist artist = provider.artistList[index];
                         return artistCard(
-                          isThin: ((index - 1) / 2).floor().isEven,
-                          name:  'Artist Name',
-                          rating:  0,
-                          salonName:  'Artist Salon Name',
-                          artistId: 'Artist Id',
-                          imagePath: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR1S0Z2cZz7c6seds8lDlfjhTJN-0DguBaHZ7TM2wmw2h9kw8xR',
+                          isThin: (index / 2).floor().isEven,
+                          name: artist.name ?? '',
+                          rating: artist.rating ?? 0,
+                          salonName: artist.salonName ?? '',
+                          artistId: artist.id ?? '',
+                          imagePath: artist.imagePath!,
                           color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
-                            showSignInDialog(context);
+                            context
+                                .read<BarberProvider>()
+                                .setArtistDataFromHome(artist);
+                            Navigator.pushNamed(
+                              context,
+                              NamedRoutes.barberProfileRoute,
+                            );
                           },
                         );
                       },
@@ -1588,20 +1599,26 @@ class _HomeScreen2State extends State<HomeScreen2> {
                     child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: 6,
+                      itemCount: (provider.artistList.length / 2).floor(),
                       itemBuilder: (context, index) {
-                  index = 2 * index;
-                     //   Artist artist = provider.artistList[index];
+                        index = 2 * index + 1;
+                        Artist artist = provider.artistList[index];
                         return artistCard(
-                         isThin: ((index - 1) / 2).floor().isOdd,
-                          name:  'Artist Name',
-                          rating:  0,
-                          salonName:  'Artist Salon Name',
-                          artistId: 'Artist Id',
-                          imagePath: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR1S0Z2cZz7c6seds8lDlfjhTJN-0DguBaHZ7TM2wmw2h9kw8xR',
+                          isThin: ((index - 1) / 2).floor().isOdd,
+                          name: artist.name ?? '',
+                          rating: artist.rating ?? 0,
+                          salonName: artist.salonName ?? '',
+                          artistId: artist.id ?? '',
+                          imagePath: artist.imagePath!,
                           color: ColorsConstant.artistListColors[index % 6],
                           onTap: () {
-                            showSignInDialog(context);
+                            context
+                                .read<BarberProvider>()
+                                .setArtistDataFromHome(artist);
+                            Navigator.pushNamed(
+                              context,
+                              NamedRoutes.barberProfileRoute,
+                            );
                           },
                         );
                       },
@@ -1733,13 +1750,18 @@ class _HomeScreen2State extends State<HomeScreen2> {
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: 6,
-                itemBuilder: (BuildContext context, int index) {
+                itemCount: provider.salonList.length,
+                itemBuilder: (context, index) {
+                  SalonData salon = provider.salonList[index];
 
                   return GestureDetector(
                     onTap: () {
-                        showSignInDialog(context);
-                      },
+                      context
+                          .read<ExploreProvider>()
+                          .setSelectedSalonIndex(context, index: index);
+                      Navigator.pushNamed(
+                          context, NamedRoutes.salonDetailsRoute);
+                    },
                     child: Container(
                       width: 75.w,
                       margin: EdgeInsets.only(right: 5.w),
@@ -1766,7 +1788,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                     CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'Salon Near You',
+                                        salon.name ?? '',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 11.sp,
@@ -1774,7 +1796,9 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                         ),
                                       ),
                                       Text(
-                                       'Men/Female/Unisex',
+                                        salon.salonType == 'Unisex'
+                                            ? '${salon.salonType} Salon'
+                                            : '${salon.salonType}\'s Salon',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 10.sp,
@@ -1791,14 +1815,15 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                       ColorfulInformationCard(
                                         imagePath:
                                         ImagePathConstant.locationIconAlt,
-                                        text: "salon",
+                                        text: provider.salonList[index]
+                                            .distanceFromUserAsString ?? 0.toString(),
                                         color: ColorsConstant.purpleDistance,
                                       ),
                                       SizedBox(width: 3.w),
                                       ColorfulInformationCard(
                                         imagePath: ImagePathConstant.starIcon,
                                         text:
-                                        'Rating',
+                                        '${(salon.rating ?? 0).toStringAsFixed(1)}',
                                         color: ColorsConstant.greenRating,
                                       ),
                                     ],
@@ -1814,8 +1839,8 @@ class _HomeScreen2State extends State<HomeScreen2> {
                               borderRadius: BorderRadius.horizontal(
                                 right: Radius.circular(1.h),
                               ),
-                              child: Image.asset(
-                                'assets/images/salon_dummy_image.png',
+                              child: Image.network(
+                                salon.imageList![0].toString() ?? '',
                                 fit: BoxFit.cover,
                               ),
                             ),
