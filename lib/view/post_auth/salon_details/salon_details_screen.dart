@@ -696,3 +696,730 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
     }
   }
 }
+
+
+class SalonDetailsScreen2 extends StatefulWidget {
+  const SalonDetailsScreen2({Key? key}) : super(key: key);
+
+  @override
+  State<SalonDetailsScreen2> createState() => _SalonDetailsScreen2State();
+}
+
+class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
+  int selectedTab = 0;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<SalonDetailsProvider>().initSalonDetailsData(context);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
+        context.read<SalonDetailsProvider>().clearSearchController();
+        context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
+        return true;
+      },
+      child:
+      Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+        return Scaffold(
+          body: Stack(
+            children: <Widget>[
+              ReusableWidgets.appScreenCommonBackground(),
+              CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: [
+                  ReusableWidgets.transparentFlexibleSpace(),
+                  SliverAppBar(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(3.h),
+                        topRight: Radius.circular(3.h),
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    pinned: true,
+                    floating: true,
+                    leadingWidth: 0,
+                    title: Container(
+                      padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
+                      child: Row(
+                        children: <Widget>[
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(1.h),
+                              child: SvgPicture.asset(
+                                ImagePathConstant.leftArrowIcon,
+                                color: ColorsConstant.textDark,
+                                height: 2.h,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            StringConstant.salonDetail,
+                            style: StyleConstant.headingTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    centerTitle: false,
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      <Widget>[
+                        imageCarousel(),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              salonDetailOverview(),
+                              Divider(
+                                thickness: 5,
+                                height: 0,
+                                color: ColorsConstant.graphicFillDark,
+                              ),
+                              selectedTab == 0
+                                  ? ReusableWidgets.servicesTab()
+                                  : SalonReviewContainer2(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          bottomNavigationBar: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              servicesAndReviewTabBar(),
+              provider.totalPrice > 0
+                  ? Container(
+                margin: EdgeInsets.only(
+                  bottom: 2.h,
+                  right: 5.w,
+                  left: 5.w,
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: 1.h,
+                  horizontal: 3.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1.h),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      offset: Offset(0, 2.0),
+                      color: Colors.grey,
+                      spreadRadius: 0.2,
+                      blurRadius: 15,
+                    ),
+                  ],
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          StringConstant.total,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10.sp,
+                            color: ColorsConstant.textDark,
+                          ),
+                        ),
+                        Text('Rs. ${provider.totalPrice}',
+                            style: StyleConstant.textDark15sp600Style),
+                      ],
+                    ),
+                    VariableWidthCta(
+                      onTap: () {
+                        showSignInDialog(context);
+                      },
+                      isActive: true,
+                      buttonText: StringConstant.confirmBooking,
+                    )
+                  ],
+                ),
+              )
+                  : SizedBox()
+            ],
+          ),
+        );
+      }),
+    );
+  }
+  void showSignInDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(10.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Image.asset(
+                    "assets/images/app_logo.png",
+                    height: 60,
+                    width:60
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Please Sign In",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                "You need to sign in first to see our conditionals",
+                style: TextStyle(fontSize: 16.0),
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        const StadiumBorder(),
+                      ),
+                    ),
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(width: 8.0),
+                  TextButton(
+                    child: Text("OK",style: TextStyle( color:Colors.black,)),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        NamedRoutes.authenticationRoute2,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget imageCarousel() {
+    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+      return Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          SizedBox(
+            height: 35.h,
+            child: PageView(
+              physics: BouncingScrollPhysics(),
+              controller: provider.salonImageCarouselController,
+              children: <Widget>[
+                ...provider.imageList.map((imageUrl) {
+                  return Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  );
+                }),
+              ],
+            ),
+          ),
+          (provider.imageList.length) > 1
+              ? Padding(
+            padding: EdgeInsets.only(bottom: 2.h),
+            child: SmoothPageIndicator(
+              controller: provider.salonImageCarouselController,
+              count: provider.imageList!.length,
+              effect: ExpandingDotsEffect(
+                activeDotColor: ColorsConstant.appColor,
+                dotHeight: 2.w,
+                dotWidth: 2.w,
+                spacing: 2.w,
+              ),
+            ),
+          )
+              : SizedBox(),
+          Positioned(
+            top: 5.h,
+            right: 0,
+            left: 0,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    //   onTap: () => Navigator.pop(context),
+                    child: Padding(
+                      padding: EdgeInsets.all(1.h),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(1.h),
+                    child: SvgPicture.asset(
+                      ImagePathConstant.burgerIcon,
+                      color: Colors.white,
+                      height: 2.5.h,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget servicesAndReviewTabBar() {
+    return Container(
+      height: 7.h,
+      color: Colors.white,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          bottomNavigationBar: Container(
+            color: Colors.white,
+            child: TabBar(
+              labelColor: ColorsConstant.appColor,
+              indicatorColor: ColorsConstant.appColor,
+              unselectedLabelColor: ColorsConstant.divider,
+              indicatorSize: TabBarIndicatorSize.tab,
+              onTap: (tabIndex) => setState(() {
+                selectedTab = tabIndex;
+              }),
+              tabs: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 1.h),
+                  child: Tab(
+                    child: Text(StringConstant.services.toUpperCase()),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 1.h),
+                  child: Tab(
+                    child: Text(StringConstant.reviews.toUpperCase()),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget availableStaffList() {
+    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+      return Padding(
+        padding: EdgeInsets.only(top: 2.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              StringConstant.availableStaff,
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: ColorsConstant.blackAvailableStaff,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            SizedBox(
+              height: 11.h,
+              child: ListView(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                children: context
+                    .read<HomeProvider>()
+                    .artistList
+                    .where((artist) =>
+                artist.salonId == provider.selectedSalonData.id)
+                    .toList()
+                    .asMap()
+                    .map((index, artist) => MapEntry(
+                    index,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(1.5.h),
+                      child: GestureDetector(
+                        onTap: () {
+                          int indexOfArtistOnList = context
+                              .read<HomeProvider>()
+                              .artistList
+                              .indexOf(artist);
+                          provider.setSelectedArtistIndex(context,
+                              index: indexOfArtistOnList);
+                          Navigator.pushNamed(
+                            context,
+                            NamedRoutes.barberProfileRoute,
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            bottom: 0.5.h,
+                            left: index == 0 ? 0 : 2.5.w,
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 3.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(1.5.h),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade100,
+                                spreadRadius: 0.1,
+                                blurRadius: 20,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4.h),
+                                child: Container(
+                                  height: 7.h,
+                                  width: 7.h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image.network(
+                                    artist.imagePath!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    artist.name ?? "",
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      color: ColorsConstant.textDark,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: List<Widget>.generate(
+                                      5,
+                                          (i) => (i >
+                                          int.parse(artist.rating
+                                              ?.round()
+                                              .toString() ??
+                                              "0") -
+                                              1)
+                                          ? SvgPicture.asset(
+                                        ImagePathConstant.starIcon,
+                                        color:
+                                        ColorsConstant.greyStar,
+                                        height: 2.h,
+                                      )
+                                          : SvgPicture.asset(
+                                        ImagePathConstant.starIcon,
+                                        color:
+                                        ColorsConstant.yellowStar,
+                                        height: 2.h,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )))
+                    .values
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget salonDetailOverview() {
+    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+      return Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 1.h,
+          horizontal: 5.w,
+        ),
+        margin: EdgeInsets.symmetric(
+          vertical: 2.h,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(1.h),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 50.w,
+                  child: Text(
+                    provider.selectedSalonData.name ?? "",
+                    style: TextStyle(
+                      color: ColorsConstant.textDark,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Container(
+                  constraints: BoxConstraints(minWidth: 15.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 0.8.h,
+                    horizontal: 1.5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorsConstant.greenRating,
+                    borderRadius: BorderRadius.circular(0.5.h),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFF000000).withOpacity(0.14),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        ImagePathConstant.starIcon,
+                        color: Colors.white,
+                        height: 2.h,
+                      ),
+                      SizedBox(width: 2.w),
+                      Text(
+                        // TODO:
+                        (provider.selectedSalonData.originalRating ?? 0)
+                            .toStringAsFixed(1),
+
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 0.5.h),
+            Text(
+              provider.selectedSalonData.salonType ?? "",
+              style: TextStyle(
+                color: ColorsConstant.textLight,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            salonAddress(
+              address: provider.selectedSalonData.address?.addressString ?? "",
+              geoPoint: provider.selectedSalonData.address!.geoLocation!,
+            ),
+            salonTiming(),
+            ContactAndInteractionWidget(
+              iconOnePath: ImagePathConstant.phoneIcon,
+              iconTwoPath: ImagePathConstant.shareIcon,
+              iconThreePath:  ImagePathConstant.saveIcon,
+                 // : ImagePathConstant.saveIconFill,
+              iconFourPath: ImagePathConstant.instagramIcon,
+              onTapIconOne: () => launchUrl(
+                Uri(
+                  scheme: 'tel',
+                  path: StringConstant.generalContantNumber,
+                ),
+              ),
+              onTapIconTwo: () => launchUrl(
+                Uri.parse(
+                  "https://play.google.com/store/apps/details?id=com.naai.flutterApp",
+                ),
+              ),
+              onTapIconThree: () {
+              showSignInDialog(context);
+              },
+              onTapIconFour: () => launchUrl(
+                Uri.parse(provider.selectedSalonData.instagramLink ??
+                    'https://www.instagram.com/naaiindia'),
+              ),
+              backgroundColor: ColorsConstant.lightAppColor,
+            ),
+            SizedBox(height: 2.h),
+            availableStaffList(),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget salonTiming() {
+    return Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+      return Padding(
+        padding: EdgeInsets.only(bottom: 3.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TimeDateCard(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: StringConstant.timings,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " | ",
+                      style: TextStyle(
+                        color: ColorsConstant.textLight,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                      "${provider.formatTime(provider.selectedSalonData.timing!.opening ?? 0)} - ${provider.formatTime(provider.selectedSalonData.timing!.closing ?? 0)}",
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 2.w),
+            TimeDateCard(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: StringConstant.closed,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "  |  ",
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(
+                      text: provider.selectedSalonData.closingDay,
+                      style: TextStyle(
+                        color: ColorsConstant.textDark,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget salonAddress({required String address, required GeoPoint geoPoint}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 1.5.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Flexible(
+            child: Text(
+              "$address,  ",
+              style: TextStyle(
+                color: ColorsConstant.textLight,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w400,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              navigateTo(
+                geoPoint.latitude,
+                geoPoint.longitude,
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 3.w, bottom: 1.w),
+              child: SvgPicture.asset(
+                ImagePathConstant.goToLocationIcon,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void navigateTo(double lat, double lng) async {
+    var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch ${uri.toString()}';
+    }
+  }
+}

@@ -321,3 +321,145 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 }
+
+class ProfileScreen2 extends StatefulWidget {
+  ProfileScreen2({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen2> createState() => _ProfileScreen2State();
+}
+
+class _ProfileScreen2State extends State<ProfileScreen2> {
+
+  // List<XFile>? _mediaFileList;
+  //
+  // void _setImageFileListFromFile(XFile? value) {
+  //   _mediaFileList = value == null ? null : <XFile>[value];
+  // }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<ProfileProvider>().getUserDataFromUserProvider(context);
+    });
+    super.initState();
+  }
+
+  // Future<void> getLostData() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final LostDataResponse response = await picker.retrieveLostData();
+  //   if (response.isEmpty) {
+  //     return;
+  //   }
+  //   final XFile? imageFile = response.file;
+  //   if (imageFile != null) {
+  //     _setImageFileListFromFile(imageFile);
+  //   } else {
+  //     print(response.exception);
+  //   }
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ProfileProvider>(
+      builder: (context, provider, child) {
+
+        return Scaffold(
+          body: Stack(
+            children: <Widget>[
+              ReusableWidgets.appScreenCommonBackground(),
+              CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: [
+                  ReusableWidgets.transparentFlexibleSpace(),
+                  SliverAppBar(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(3.h),
+                        topRight: Radius.circular(3.h),
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    pinned: true,
+                    floating: true,
+                    title: Container(
+                      padding: EdgeInsets.only(bottom: 2.h),
+                      child: Text(
+                        StringConstant.yourProfile,
+                        style: StyleConstant.headingTextStyle,
+                      ),
+                    ),
+                    centerTitle: false,
+                  ),
+                  SliverFillRemaining(
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding:
+                        EdgeInsets.only(top: 2.h, right: 5.w, left: 5.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                             Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Image.asset(
+                                    "assets/images/app_logo.png",
+                                    height: 80,
+                                    width: 80,
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Please create your account to see your profile",
+                                    style: TextStyle(
+                                        fontSize: 16.0),
+                                  ),
+                                ),
+                                SizedBox(height:20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        child: Text("SignIn", style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                                              const StadiumBorder(),
+                                            ),
+                                          ),
+                                        onPressed: () {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            NamedRoutes.authenticationRoute,
+                                          );
+                                        }
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

@@ -84,12 +84,9 @@ class AuthenticationScreen extends StatelessWidget {
                         SizedBox(height: 4.h),
                         ElevatedButton(
                           onPressed: () => {
-                          Navigator.push(
+                          Navigator.pushReplacementNamed(
                           context,
-                          MaterialPageRoute(
-                          builder: (context) => HomeScreen2(
-                          ),
-                          ),
+                          NamedRoutes.bottomNavigationRoute2,
                           ),
                           },
                           style: ButtonStyle(

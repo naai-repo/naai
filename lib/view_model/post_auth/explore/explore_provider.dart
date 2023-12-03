@@ -151,6 +151,10 @@ class ExploreProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
+
+
+
   /// Set the value of [_filteredSalonData] according to the search query entered by user.
   void filterSalonList(String searchText) {
     _filteredSalonData.clear();

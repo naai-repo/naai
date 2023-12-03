@@ -148,7 +148,6 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
   Future<void> requestLocationPermission(BuildContext context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
@@ -172,7 +171,6 @@ class HomeProvider with ChangeNotifier {
           });
     }
   }
-
   Future locationPopUp(context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
@@ -236,171 +234,50 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  /*
-  Future locationPopUp(context) async {
-    final permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      await showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(35),
-            topRight: Radius.circular(35),
-          ),
+  Future<void> initHome2(BuildContext context) async {
+
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+    await locationPopUp(context);
+    if (!_serviceEnabled) {
+      //   _serviceEnabled = await _mapLocation.requestService();
+    }
+    // await requestLocationPermission(context);
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      // _permissionGranted = await _mapLocation.requestPermission();
+      await requestLocationPermission(context);
+    }
+    await Loader.showLoader(context);
+
+    var _locationData = await _mapLocation.getLocation();
+
+    _userCurrentLatLng =
+        LatLng(_locationData.latitude!, _locationData.longitude!);
+
+    await Future.wait(
+      [
+        getUserDetails(context).whenComplete(
+              () async =>
+          await context.read<ExploreProvider>().getSalonList(context),
         ),
-        context: context,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Image.asset(
-                      "assets/images/app_logo.png",
-                      height: 80,
-                      width: 80,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Your location is used to find nearby salons and their add address and track your order",
-                      style: TextStyle(
-                          fontSize: 16.0),
-                    ),
-                  ),
-                  SizedBox(height:20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          child: Text("Continue", style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            )),
-                          onPressed: () {
-                           Navigator.pop(context);
-                            Geolocator.requestPermission();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-  }
-  Position? get currentPosition => position;
-  ValueNotifier<Position?> updatedLocation = ValueNotifier(null);
-
-  Future<LocationPermission> getPermission() async {
-    final permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      final permission = await Geolocator.requestPermission();
-      return permission;
-    } else {
-      return permission;
-    }
-  }
-  Future determinePosition(context) async {
-
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    await locationPopUp(context);
-//  permission = await getPermission();
-/*
-  if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-    // Location permission is not granted, show the locationPopUp.
-    await locationPopUp(context);
-  }
-  */
-    if (!serviceEnabled) {
-    //  snackBar(context, "Please open the location",duration: 5);
-    }
-    // await locationPopUp(context);
-
-    permission = await getPermission();
-    if (permission != LocationPermission.denied &&
-        permission != LocationPermission.deniedForever) {
-      position = await Geolocator.getCurrentPosition();
-    } else {
-      errorDialog(
-        context,
-        message:
-        "You can't use this application without giving Location permission, \nPress ok to giving permission",
-        show: 1,
-        onTap: () {
-          Navigator.pop(context);
-          determinePosition(context);
-        },
-      );
-    }
-  }
-  Future<dynamic> errorDialog(context,
-      {String? message, VoidCallback? onTap, int? show, int? yesNo}) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            children: [
-             Image.asset(
-               "assets/images/app_logo.png",
-                height: 80,
-                width:80,
-              ),
-              SizedBox(height:20.0),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    message ?? '',
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 15, color: Colors.black),
-                  )
-                ],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            show == 1
-                ? SizedBox(width:0.0)
-                : TextButton(
-                child: Text(yesNo == 1 ? 'No' : 'Cancel',
-                    style: const TextStyle(color: Colors.black)),
-                onPressed: () => Navigator.pop(context)),
-            TextButton(
-                onPressed: onTap,
-                child: Text(yesNo == 1 ? 'Yes' : 'OK',
-                    style: const TextStyle(color: Colors.black))),
-          ],
-        );
-      },
+        getAllArtists(context),
+        getAllReviews(context),
+      ],
     );
+    _salonList = [...context.read<ExploreProvider>().salonData];
+    changeRatings(context);
+      await getUserBookings(context);
+      await getServicesNamesAndPrice(context);
+      Loader.hideLoader(context);
+    notifyListeners();
   }
-*/
-
 
   /// Fetch the user details from [FirebaseFirestore]
   Future<void> getUserDetails(BuildContext context) async {
     try {
       _userData = await DatabaseService().getUserDetails();
     } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
+    //  ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }
@@ -412,7 +289,7 @@ class HomeProvider with ChangeNotifier {
       _artistList.sort((a, b) => ((a.rating ?? 0) - (b.rating ?? 0)).toInt());
       context.read<ExploreProvider>().setArtistList(_artistList);
     } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
+     // ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }
@@ -421,7 +298,7 @@ class HomeProvider with ChangeNotifier {
     try {
       _allReviewList = await DatabaseService().getAllReviews();
     } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
+     // ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }
@@ -478,6 +355,7 @@ class HomeProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
 
   String getTimeAgoString(String? dateTimeString) {
     DateTime dateTime =
@@ -854,7 +732,7 @@ class HomeProvider with ChangeNotifier {
 
   /// Get the address text from the user's home location
   String? getHomeAddressText() {
-    return userData.homeLocation?.addressString;
+    return userData.homeLocation?.addressString??"Delhi" ;
   }
 
   /// Dispose [_controller] when the map is unmounted

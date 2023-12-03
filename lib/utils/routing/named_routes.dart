@@ -9,13 +9,17 @@ class NamedRoutes {
 
   /// Post-authetication routes
   static const String bottomNavigationRoute = '/bottom-navigation';
+  static const String bottomNavigationRoute2 = '/bottom-navigation2';
   static const String exploreRoute = '/explore';
   static const String exploreStylistRoute = '/explore-stylist';
+  static const String exploreStylistRoute2 = '/explore-stylist2';
   static const String homeRoute = '/home';
   static const String salonDetailsRoute = '/salon-details';
+  static const String salonDetailsRoute2 = '/salon-details2';
   static const String setHomeLocationRoute = '/set-home-location';
   static const String mapRoute = '/maps';
   static const String barberProfileRoute = '/barber-profile';
+  static const String barberProfileRoute2 = '/barber-profile2';
   static const String createBookingRoute = '/create-booking';
   static const String createBookingRoute2 = '/create-booking2';
   // static const String paymentRoute = '/payment';

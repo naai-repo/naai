@@ -47,17 +47,26 @@ class RoutingFunctions {
       case NamedRoutes.bottomNavigationRoute:
         target = BottomNavigationScreen();
         break;
+      case NamedRoutes.bottomNavigationRoute2:
+        target = BottomNavigationScreen2();
+        break;
       case NamedRoutes.exploreRoute:
         target = ExploreScreen();
         break;
       case NamedRoutes.exploreStylistRoute:
         target = ExploreStylist();
         break;
+      case NamedRoutes.exploreStylistRoute2:
+        target = ExploreStylist2();
+        break;
       case NamedRoutes.homeRoute:
         target = HomeScreen();
         break;
       case NamedRoutes.salonDetailsRoute:
         target = SalonDetailsScreen();
+        break;
+      case NamedRoutes.salonDetailsRoute2:
+        target = SalonDetailsScreen2();
         break;
       case NamedRoutes.setHomeLocationRoute:
         target = SetHomeLocationScreen();
@@ -67,6 +76,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.barberProfileRoute:
         target = BarberProfileScreen();
+        break;
+      case NamedRoutes.barberProfileRoute2:
+        target = BarberProfileScreen2();
         break;
       case NamedRoutes.createBookingRoute:
         target = CreateBookingScreen();

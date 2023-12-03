@@ -42,9 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<HomeProvider>().initHome(context);
     });
-
-   // determinePosition(context);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -467,17 +467,24 @@ class _HomeScreenState extends State<HomeScreen> {
           color: ColorsConstant.graphicFillDark,
         ),
         child: LayoutBuilder(builder: (context, constraints) {
+          String addressToShow =
+              Provider.of<HomeProvider>(context, listen: true)
+                  .userData
+                  .homeLocation
+                  ?.addressString ??
+                  "";
+
+          // Ensure the default value is assigned correctly
+          print('Address to show: $addressToShow');
+
           bool _shouldScroll = (TextPainter(
-                text: TextSpan(
-                    text: Provider.of<HomeProvider>(context, listen: true)
-                            .userData
-                            .homeLocation
-                            ?.addressString ??
-                        "",
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
-                    )),
+            text: TextSpan(
+              text: addressToShow,
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
                 maxLines: 1,
                 textScaleFactor: MediaQuery.of(context).textScaleFactor,
                 textDirection: TextDirection.ltr,
@@ -972,7 +979,6 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 
-
 class HomeScreen2 extends StatefulWidget {
   const HomeScreen2({Key? key}) : super(key: key);
 
@@ -987,11 +993,11 @@ class _HomeScreen2State extends State<HomeScreen2> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<HomeProvider>().initHome(context);
+      context.read<HomeProvider>().initHome2(context);
     });
-
-    // determinePosition(context);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -1402,9 +1408,10 @@ class _HomeScreen2State extends State<HomeScreen2> {
 
   Widget searchLocationBar() {
     return GestureDetector(
-      onTap: () => {
-          showSignInDialog(context),
-      },
+      onTap: () => Navigator.pushNamed(
+        context,
+        NamedRoutes.setHomeLocationRoute,
+      ),
       child: Container(
         margin: EdgeInsets.only(top: 4.h, bottom: 2.h),
         padding: EdgeInsets.all(0.5.h),
@@ -1413,17 +1420,24 @@ class _HomeScreen2State extends State<HomeScreen2> {
           color: ColorsConstant.graphicFillDark,
         ),
         child: LayoutBuilder(builder: (context, constraints) {
+          String addressToShow =
+              Provider.of<HomeProvider>(context, listen: true)
+                  .userData
+                  .homeLocation
+                  ?.addressString ??
+                  "";
+
+          // Ensure the default value is assigned correctly
+          print('Address to show: $addressToShow');
+
           bool _shouldScroll = (TextPainter(
             text: TextSpan(
-                text: Provider.of<HomeProvider>(context, listen: true)
-                    .userData
-                    .homeLocation
-                    ?.addressString ??
-                    "",
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                )),
+              text: addressToShow,
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             maxLines: 1,
             textScaleFactor: MediaQuery.of(context).textScaleFactor,
             textDirection: TextDirection.ltr,
@@ -1460,7 +1474,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                   ),
                 )
                     : Text(
-                    "Your Location",
+                  "${context.read<HomeProvider>().getHomeAddressText()}",
                   style: TextStyle(
                     color: ColorsConstant.textLight,
                     fontSize: 10.sp,
@@ -1474,75 +1488,6 @@ class _HomeScreen2State extends State<HomeScreen2> {
       ),
     );
   }
-
-  void showSignInDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(10.0),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Image.asset(
-                  "assets/images/app_logo.png",
-                  height: 60,
-                  width:60
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Please Sign In",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                "You need to sign in first to see our conditionals",
-                style: TextStyle(fontSize: 16.0),
-              ),
-              SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        const StadiumBorder(),
-                      ),
-                    ),
-                    child: Text("Cancel"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  SizedBox(width: 8.0),
-                  TextButton(
-                    child: Text("OK",style: TextStyle( color:Colors.black,)),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        NamedRoutes.authenticationRoute2,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
 
   Widget ourStylist() {
     return Consumer<HomeProvider>(builder: (context, provider, child) {
@@ -1587,7 +1532,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                 .setArtistDataFromHome(artist);
                             Navigator.pushNamed(
                               context,
-                              NamedRoutes.barberProfileRoute,
+                              NamedRoutes.barberProfileRoute2,
                             );
                           },
                         );
@@ -1617,7 +1562,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                 .setArtistDataFromHome(artist);
                             Navigator.pushNamed(
                               context,
-                              NamedRoutes.barberProfileRoute,
+                              NamedRoutes.barberProfileRoute2,
                             );
                           },
                         );
@@ -1760,7 +1705,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                           .read<ExploreProvider>()
                           .setSelectedSalonIndex(context, index: index);
                       Navigator.pushNamed(
-                          context, NamedRoutes.salonDetailsRoute);
+                          context, NamedRoutes.salonDetailsRoute2);
                     },
                     child: Container(
                       width: 75.w,

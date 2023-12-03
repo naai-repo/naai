@@ -53,9 +53,16 @@ class UserModel {
     image = map['image'] ;
     preferredSalon = List<String>.from(map['preferredSalon'] ?? []);
     preferredArtist = List<String>.from(map['preferredArtist'] ?? []);
-    homeLocation = map['homeLocation'] == null
-        ? null
-        : HomeLocation.fromFirestore(map['homeLocation'] ?? {});
+    if (map['homeLocation'] == null) {
+      // Set default coordinates for a dummy location (Delhi Rohini)
+      homeLocation = HomeLocation(
+        addressString: "Delhi Rohini",
+        geoLocation: HomeLocation.getDummyGeoPoint(28.7094645,77.134957),
+      );
+    } else {
+      homeLocation = HomeLocation.fromFirestore(map['homeLocation'] ?? {});
+    }
+
     id = map['id'];
   }
 }
@@ -64,6 +71,9 @@ class HomeLocation {
   String? addressString;
   GeoPoint? geoLocation;
 
+  static GeoPoint getDummyGeoPoint(double latitude, double longitude) {
+    return GeoPoint(latitude, longitude);
+  }
   HomeLocation({
     this.addressString,
     this.geoLocation,
@@ -71,26 +81,28 @@ class HomeLocation {
 
   Map<String, dynamic> toMap() {
     return {
-      'addressString': addressString,
-      'geoLocation': geoLocation,
+      'geoLocation': geoLocation ??
+          HomeLocation.getDummyGeoPoint(28.7094645,77.134957), // Default coordinates (Delhi)
     };
   }
 
   HomeLocation.fromFirestore(Map<String, dynamic> map) {
     GeoPoint? geoPoint = map['geoLocation'];
-
     addressString = map['addressString'];
-    geoLocation = geoPoint != null
-        ? GeoPoint(geoPoint.latitude, geoPoint.longitude)
-        : null;
+    if (geoPoint == null) {
+       geoLocation = HomeLocation.getDummyGeoPoint(28.7094645,77.134957);
+   addressString = "Delhi";
+    } else {
+      geoLocation = GeoPoint(geoPoint.latitude, geoPoint.longitude);
+    }
   }
 
   double calculateDistance(
-    double startLat,
-    double startLng,
-    double endLat,
-    double endLng,
-  ) {
+      double startLat,
+      double startLng,
+      double endLat,
+      double endLng,
+      ) {
     const int radiusOfEarth = 6371;
 
     double latDifference = radians(endLat - startLat);
