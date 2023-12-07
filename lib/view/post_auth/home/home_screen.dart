@@ -121,8 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       itemBuilder: (context, index) {
                                         return Visibility(
                                           visible: provider
-                                                  .lastOrNextBooking[index]
-                                                  .paymentId !=
+                                                  .lastOrNextBooking[index].transactionStatus !=
                                               null,
                                           child: upcomingBookingCard(index),
                                         );
@@ -467,30 +466,23 @@ class _HomeScreenState extends State<HomeScreen> {
           color: ColorsConstant.graphicFillDark,
         ),
         child: LayoutBuilder(builder: (context, constraints) {
-          String addressToShow =
-              Provider.of<HomeProvider>(context, listen: true)
-                  .userData
-                  .homeLocation
-                  ?.addressString ??
-                  "";
-
-          // Ensure the default value is assigned correctly
-          print('Address to show: $addressToShow');
-
           bool _shouldScroll = (TextPainter(
             text: TextSpan(
-              text: addressToShow,
-              style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-                maxLines: 1,
-                textScaleFactor: MediaQuery.of(context).textScaleFactor,
-                textDirection: TextDirection.ltr,
-              )..layout())
-                  .size
-                  .width >
+                text: Provider.of<HomeProvider>(context, listen: true)
+                    .userData
+                    .homeLocation
+                    ?.addressString ??
+                    "",
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w500,
+                )),
+            maxLines: 1,
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            textDirection: TextDirection.ltr,
+          )..layout())
+              .size
+              .width >
               constraints.maxWidth * 7 / 10;
 
           return Row(
@@ -509,25 +501,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.centerLeft,
                 child: _shouldScroll
                     ? Marquee(
-                        text:
-                            "${context.read<HomeProvider>().getHomeAddressText()}",
-                        velocity: 40.0,
-                        pauseAfterRound: const Duration(seconds: 1),
-                        blankSpace: 30.0,
-                        style: TextStyle(
-                          color: ColorsConstant.textLight,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
+                  text:
+                  "${context.read<HomeProvider>().getHomeAddressText()}",
+                  velocity: 40.0,
+                  pauseAfterRound: const Duration(seconds: 1),
+                  blankSpace: 30.0,
+                  style: TextStyle(
+                    color: ColorsConstant.textLight,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
                     : Text(
-                        "${context.read<HomeProvider>().getHomeAddressText()}",
-                        style: TextStyle(
-                          color: ColorsConstant.textLight,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                  "${context.read<HomeProvider>().getHomeAddressText()}",
+                  style: TextStyle(
+                    color: ColorsConstant.textLight,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
           );
@@ -535,6 +527,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 
   Widget ourStylist() {
     return Consumer<HomeProvider>(builder: (context, provider, child) {
@@ -1463,7 +1456,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                 child: _shouldScroll
                     ? Marquee(
                   text:
-                  "${context.read<HomeProvider>().getHomeAddressText()}",
+                  "${context.read<HomeProvider>().getDummyHomeAddressText()}",
                   velocity: 40.0,
                   pauseAfterRound: const Duration(seconds: 1),
                   blankSpace: 30.0,
@@ -1474,7 +1467,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                   ),
                 )
                     : Text(
-                  "${context.read<HomeProvider>().getHomeAddressText()}",
+                  "${context.read<HomeProvider>().getDummyHomeAddressText()}",
                   style: TextStyle(
                     color: ColorsConstant.textLight,
                     fontSize: 10.sp,

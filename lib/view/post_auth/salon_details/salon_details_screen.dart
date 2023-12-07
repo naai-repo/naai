@@ -1085,7 +1085,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                               index: indexOfArtistOnList);
                           Navigator.pushNamed(
                             context,
-                            NamedRoutes.barberProfileRoute,
+                            NamedRoutes.barberProfileRoute2,
                           );
                         },
                         child: Container(

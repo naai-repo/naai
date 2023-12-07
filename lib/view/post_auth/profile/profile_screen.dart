@@ -440,7 +440,7 @@ class _ProfileScreen2State extends State<ProfileScreen2> {
                                         onPressed: () {
                                           Navigator.pushReplacementNamed(
                                             context,
-                                            NamedRoutes.authenticationRoute,
+                                            NamedRoutes.authenticationRoute2,
                                           );
                                         }
                                       ),

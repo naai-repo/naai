@@ -312,16 +312,6 @@ class _ExploreScreenState extends State<ExploreScreen>
     return Consumer<ExploreProvider>(builder: (context, provider, child) {
       return Padding(
         padding: EdgeInsets.only(right: 4.w),
-        child: GestureDetector(
-          onTap: () {
-            context.read<BarberProvider>().setArtistDataFromHome(
-                  artist,
-                );
-            Navigator.pushNamed(
-              context,
-              NamedRoutes.barberProfileRoute,
-            );
-          },
           child: CurvedBorderedCard(
             borderColor: const Color(0xFFDBDBDB),
             fillColor: index.isEven ? const Color(0xFF212121) : Colors.white,
@@ -329,160 +319,170 @@ class _ExploreScreenState extends State<ExploreScreen>
               padding: EdgeInsets.all(3.w),
               constraints: BoxConstraints(maxWidth: 45.w),
               width: 45.w,
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(0.5.h),
-                              child: CircleAvatar(
-                                radius: 5.h,
-                                backgroundImage: NetworkImage(
-                                  artist.imagePath!,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              artist.name ?? '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: index.isOdd
-                                    ? ColorsConstant.textDark
-                                    : Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              artist.salonName ?? '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: ColorsConstant.textLight,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: GestureDetector(
+                onTap: () {
+                  context.read<BarberProvider>().setArtistDataFromHome(
+                    artist,
+                  );
+                  Navigator.pushNamed(
+                    context,
+                    NamedRoutes.barberProfileRoute,
+                  );
+                },
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
                             children: <Widget>[
-                              Text.rich(
-                                TextSpan(
-                                  children: <InlineSpan>[
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.baseline,
-                                      baseline: TextBaseline.ideographic,
-                                      child: SvgPicture.asset(
-                                        ImagePathConstant.locationIconAlt,
-                                        color: ColorsConstant.purpleDistance,
-                                        height: 2.h,
-                                      ),
-                                    ),
-                                    WidgetSpan(
-                                      child: SizedBox(width: 1.w),
-                                    ),
-                                    TextSpan(
-                                      text: provider.filteredSalonData
-                                          .firstWhere(
-                                            (element) =>
-                                                element.id == artist.salonId,
-                                          )
-                                          .distanceFromUserAsString,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10.sp,
-                                        color: ColorsConstant.purpleDistance,
-                                      ),
-                                    ),
-                                  ],
+                              Padding(
+                                padding: EdgeInsets.all(0.5.h),
+                                child: CircleAvatar(
+                                  radius: 5.h,
+                                  backgroundImage: NetworkImage(
+                                    artist.imagePath!,
+                                  ),
                                 ),
                               ),
-                              Text.rich(
-                                TextSpan(
-                                  children: <InlineSpan>[
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.baseline,
-                                      baseline: TextBaseline.ideographic,
-                                      child: SvgPicture.asset(
-                                        ImagePathConstant.starIcon,
-                                        color: ColorsConstant.greenRating,
-                                      ),
-                                    ),
-                                    WidgetSpan(
-                                      child: SizedBox(width: 1.w),
-                                    ),
-                                    TextSpan(
-                                      text: artist.rating.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10.sp,
-                                        color: ColorsConstant.greenRating,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                artist.name ?? '',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: index.isOdd
+                                      ? ColorsConstant.textDark
+                                      : Colors.white,
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                artist.salonName ?? '',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: ColorsConstant.textLight,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
-                      onTap: () {
-                        if (context
-                            .read<HomeProvider>()
-                            .userData
-                            .preferredArtist!
-                            .contains(artist.id)) {
-                          provider.removePreferedArtist(
-                            context,
-                            artist.id,
-                          );
-                        } else {
-                          provider.addPreferedArtist(
-                            context,
-                            artist.id,
-                          );
-                        }
-                      },
-                      child: SvgPicture.asset(
-                        context
-                                .read<HomeProvider>()
-                                .userData
-                                .preferredArtist!
-                                .contains(artist.id)
-                            ? ImagePathConstant.saveIconFill
-                            : ImagePathConstant.saveIcon,
-                        color: context
-                                .read<HomeProvider>()
-                                .userData
-                                .preferredArtist!
-                                .contains(artist.id)
-                            ? ColorsConstant.appColor
-                            : index.isOdd
-                                ? const Color(0xFF212121)
-                                : Colors.white,
-                        height: 3.h,
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text.rich(
+                                  TextSpan(
+                                    children: <InlineSpan>[
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.baseline,
+                                        baseline: TextBaseline.ideographic,
+                                        child: SvgPicture.asset(
+                                          ImagePathConstant.locationIconAlt,
+                                          color: ColorsConstant.purpleDistance,
+                                          height: 2.h,
+                                        ),
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(width: 1.w),
+                                      ),
+                                      TextSpan(
+                                        text: provider.filteredSalonData
+                                            .firstWhere(
+                                              (element) =>
+                                                  element.id == artist.salonId,
+                                            )
+                                            .distanceFromUserAsString,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10.sp,
+                                          color: ColorsConstant.purpleDistance,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: <InlineSpan>[
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.baseline,
+                                        baseline: TextBaseline.ideographic,
+                                        child: SvgPicture.asset(
+                                          ImagePathConstant.starIcon,
+                                          color: ColorsConstant.greenRating,
+                                        ),
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(width: 1.w),
+                                      ),
+                                      TextSpan(
+                                        text: artist.rating.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10.sp,
+                                          color: ColorsConstant.greenRating,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        onTap: () {
+                          if (context
+                              .read<HomeProvider>()
+                              .userData
+                              .preferredArtist!
+                              .contains(artist.id)) {
+                            provider.removePreferedArtist(
+                              context,
+                              artist.id,
+                            );
+                          } else {
+                            provider.addPreferedArtist(
+                              context,
+                              artist.id,
+                            );
+                          }
+                        },
+                        child: SvgPicture.asset(
+                          context
+                                  .read<HomeProvider>()
+                                  .userData
+                                  .preferredArtist!
+                                  .contains(artist.id)
+                              ? ImagePathConstant.saveIconFill
+                              : ImagePathConstant.saveIcon,
+                          color: context
+                                  .read<HomeProvider>()
+                                  .userData
+                                  .preferredArtist!
+                                  .contains(artist.id)
+                              ? ColorsConstant.appColor
+                              : index.isOdd
+                                  ? const Color(0xFF212121)
+                                  : Colors.white,
+                          height: 3.h,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
       );
     });
   }
@@ -1135,16 +1135,6 @@ class _ExploreScreen2State extends State<ExploreScreen2>
     return Consumer<ExploreProvider>(builder: (context, provider, child) {
       return Padding(
         padding: EdgeInsets.only(right: 4.w),
-        child: GestureDetector(
-          onTap: () {
-            context.read<BarberProvider>().setArtistDataFromHome(
-              artist,
-            );
-            Navigator.pushNamed(
-              context,
-              NamedRoutes.barberProfileRoute,
-            );
-          },
           child: CurvedBorderedCard(
             borderColor: const Color(0xFFDBDBDB),
             fillColor: index.isEven ? const Color(0xFF212121) : Colors.white,
@@ -1152,136 +1142,146 @@ class _ExploreScreen2State extends State<ExploreScreen2>
               padding: EdgeInsets.all(3.w),
               constraints: BoxConstraints(maxWidth: 45.w),
               width: 45.w,
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(0.5.h),
-                              child: CircleAvatar(
-                                radius: 5.h,
-                                backgroundImage: NetworkImage(
-                                  artist.imagePath!,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              artist.name ?? '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: index.isOdd
-                                    ? ColorsConstant.textDark
-                                    : Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              artist.salonName ?? '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: ColorsConstant.textLight,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: GestureDetector(
+                onTap: () {
+                  context.read<BarberProvider>().setArtistDataFromHome(
+                    artist,
+                  );
+                  Navigator.pushNamed(
+                    context,
+                    NamedRoutes.barberProfileRoute2,
+                  );
+                },
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
                             children: <Widget>[
-                              Text.rich(
-                                TextSpan(
-                                  children: <InlineSpan>[
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.baseline,
-                                      baseline: TextBaseline.ideographic,
-                                      child: SvgPicture.asset(
-                                        ImagePathConstant.locationIconAlt,
-                                        color: ColorsConstant.purpleDistance,
-                                        height: 2.h,
-                                      ),
-                                    ),
-                                    WidgetSpan(
-                                      child: SizedBox(width: 1.w),
-                                    ),
-                                    TextSpan(
-                                      text: provider.filteredSalonData
-                                          .firstWhere(
-                                            (element) =>
-                                        element.id == artist.salonId,
-                                      )
-                                          .distanceFromUserAsString,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10.sp,
-                                        color: ColorsConstant.purpleDistance,
-                                      ),
-                                    ),
-                                  ],
+                              Padding(
+                                padding: EdgeInsets.all(0.5.h),
+                                child: CircleAvatar(
+                                  radius: 5.h,
+                                  backgroundImage: NetworkImage(
+                                    artist.imagePath!,
+                                  ),
                                 ),
                               ),
-                              Text.rich(
-                                TextSpan(
-                                  children: <InlineSpan>[
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.baseline,
-                                      baseline: TextBaseline.ideographic,
-                                      child: SvgPicture.asset(
-                                        ImagePathConstant.starIcon,
-                                        color: ColorsConstant.greenRating,
-                                      ),
-                                    ),
-                                    WidgetSpan(
-                                      child: SizedBox(width: 1.w),
-                                    ),
-                                    TextSpan(
-                                      text: artist.rating.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10.sp,
-                                        color: ColorsConstant.greenRating,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                artist.name ?? '',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: index.isOdd
+                                      ? ColorsConstant.textDark
+                                      : Colors.white,
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                artist.salonName ?? '',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: ColorsConstant.textLight,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
-                      onTap: () {
-                         showSignInDialog(context);
-                      },
-                      child: SvgPicture.asset(
-                             ImagePathConstant.saveIcon,
-                        color:
-                             ColorsConstant.appColor,
-                           //  index.isOdd
-                         //   const Color(0xFF212121)
-                         //   Colors.white,
-                        height: 3.h,
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text.rich(
+                                  TextSpan(
+                                    children: <InlineSpan>[
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.baseline,
+                                        baseline: TextBaseline.ideographic,
+                                        child: SvgPicture.asset(
+                                          ImagePathConstant.locationIconAlt,
+                                          color: ColorsConstant.purpleDistance,
+                                          height: 2.h,
+                                        ),
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(width: 1.w),
+                                      ),
+                                      TextSpan(
+                                        text: provider.filteredSalonData
+                                            .firstWhere(
+                                              (element) =>
+                                          element.id == artist.salonId,
+                                        )
+                                            .distanceFromUserAsString,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10.sp,
+                                          color: ColorsConstant.purpleDistance,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: <InlineSpan>[
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.baseline,
+                                        baseline: TextBaseline.ideographic,
+                                        child: SvgPicture.asset(
+                                          ImagePathConstant.starIcon,
+                                          color: ColorsConstant.greenRating,
+                                        ),
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(width: 1.w),
+                                      ),
+                                      TextSpan(
+                                        text: artist.rating.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10.sp,
+                                          color: ColorsConstant.greenRating,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        onTap: () {
+                           showSignInDialog(context);
+                        },
+                        child: SvgPicture.asset(
+                               ImagePathConstant.saveIcon,
+                          color:
+                               ColorsConstant.appColor,
+                             //  index.isOdd
+                           //   const Color(0xFF212121)
+                           //   Colors.white,
+                          height: 3.h,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
       );
     });
   }

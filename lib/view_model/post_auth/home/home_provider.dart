@@ -96,6 +96,7 @@ class HomeProvider with ChangeNotifier {
   }
 
   /// Method to trigger all the API functions of home screen
+
   Future<void> initHome(BuildContext context) async {
 
     var _serviceEnabled = await _mapLocation.serviceEnabled();
@@ -148,6 +149,8 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+
   Future<void> requestLocationPermission(BuildContext context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
@@ -732,6 +735,9 @@ class HomeProvider with ChangeNotifier {
 
   /// Get the address text from the user's home location
   String? getHomeAddressText() {
+    return userData.homeLocation?.addressString ;
+  }
+  String? getDummyHomeAddressText() {
     return userData.homeLocation?.addressString??"Delhi" ;
   }
 

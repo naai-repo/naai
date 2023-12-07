@@ -14,6 +14,8 @@ import 'package:naai/view_model/post_auth/map/map_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../view_model/post_auth/home/home_provider.dart';
+
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
@@ -25,7 +27,8 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<MapProvider>().initializeSymbol();
+   context.read<MapProvider>().initializeSymbol();
+   // context.read<HomeProvider>().initializeSymbol();
   }
 
   @override
@@ -217,7 +220,7 @@ class _MapScreenState extends State<MapScreen> {
       return Stack(
         children: <Widget>[
           MapboxMap(
-            compassEnabled: false,
+           // compassEnabled: true,
             accessToken: Keys.mapbox_public_key,
             initialCameraPosition: const CameraPosition(
                 target: LatLng(28.6304, 77.2177), zoom: 15.0),

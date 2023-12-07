@@ -20,104 +20,106 @@ class AuthenticationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
+    return WillPopScope(
+      onWillPop: () async {
+        // Perform your actions before closing the app (if any)
+        // You can add conditions here if you want to handle back press differently
+        SystemNavigator.pop(animated: true);
+        return true; // Return true to allow back navigation
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
         backgroundColor: Colors.white,
-      ),
-      backgroundColor: Colors.white,
-      body: Consumer<AuthenticationProvider>(
-        builder: (context, provider, child) {
-          return SingleChildScrollView(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
-                    child: Column(
-                      children: <Widget>[
-                        SvgPicture.asset(ImagePathConstant.inAppLogo),
-                        SizedBox(height: 3.h),
-                        Text(
-                          StringConstant.splashScreenText,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w500,
+        body: Consumer<AuthenticationProvider>(
+          builder: (context, provider, child) {
+            return SingleChildScrollView(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset(ImagePathConstant.inAppLogo),
+                          SizedBox(height: 3.h),
+                          Text(
+                            StringConstant.splashScreenText,
+                            style: TextStyle(
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8.h),
-                        mobileNumberTextField(),
-                        SizedBox(height: 4.h),
-                        ReusableWidgets.redFullWidthButton(
-                          buttonText: StringConstant.getOtp,
-                          onTap: () {
-                            FocusManager.instance.primaryFocus!.unfocus();
-                            provider.phoneNumberLogin(context);
-                          },
-                          isActive: provider.isGetOtpButtonActive,
-                        ),
-                        SizedBox(height: 4.h),
-                        authenticationOptionsDivider(),
-                        SizedBox(height: 4.h),
-                        ReusableWidgets.socialSigninButton(
-                          isAppleLogin: false,
-                          onTap: () => provider.socialLogin(
-                            isGoogle: true,
-                            context: context,
+                          SizedBox(height: 8.h),
+                          mobileNumberTextField(),
+                          SizedBox(height: 4.h),
+                          ReusableWidgets.redFullWidthButton(
+                            buttonText: StringConstant.getOtp,
+                            onTap: () {
+                              FocusManager.instance.primaryFocus!.unfocus();
+                              provider.phoneNumberLogin(context);
+                            },
+                            isActive: provider.isGetOtpButtonActive,
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                         if (Platform.isIOS)
+                          SizedBox(height: 4.h),
+                          authenticationOptionsDivider(),
+                          SizedBox(height: 4.h),
+                          if(Platform.isAndroid)
                           ReusableWidgets.socialSigninButton(
-                            isAppleLogin: true,
+                            isAppleLogin: false,
                             onTap: () => provider.socialLogin(
-                              isGoogle: false,
+                              isGoogle: true,
                               context: context,
                             ),
                           ),
-
-                        SizedBox(height: 4.h),
-                        authenticationOptionsDivider(),
-                        SizedBox(height: 4.h),
-                        ElevatedButton(
-                          onPressed: () => {
-                          Navigator.pushReplacementNamed(
-                          context,
-                          NamedRoutes.bottomNavigationRoute2,
-                          ),
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                              const StadiumBorder(),
+                          if(Platform.isAndroid)
+                          SizedBox(height: 4.h),
+                          if(Platform.isAndroid)
+                          authenticationOptionsDivider(),
+                          if(Platform.isAndroid)
+                          SizedBox(height: 4.h),
+                          ElevatedButton(
+                            onPressed: () => {
+                            Navigator.pushReplacementNamed(
+                            context,
+                            NamedRoutes.bottomNavigationRoute2,
+                            ),
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                const StadiumBorder(),
+                              ),
+                            ),
+                            child:Text(
+                              "Continue as a Guest",
+                              style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white
+                              ),
                             ),
                           ),
-                          child:Text(
-                            "Continue as a Guest",
-                            style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (provider.isOtpLoaderActive)
-                    Container(
-                      height: 80.h,
-                      width: 100.h,
-                      color: Colors.white.withOpacity(0.3),
-                      child: Center(
-                        child: CupertinoActivityIndicator(),
+                        ],
                       ),
                     ),
-                ],
+                    if (provider.isOtpLoaderActive)
+                      Container(
+                        height: 80.h,
+                        width: 100.h,
+                        color: Colors.white.withOpacity(0.3),
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -203,81 +205,81 @@ class AuthenticationScreen2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
+    return WillPopScope(
+      onWillPop: () async {
+        // Perform your actions before closing the app (if any)
+        // You can add conditions here if you want to handle back press differently
+        SystemNavigator.pop(animated: true);
+        return true; // Return true to allow back navigation
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
         backgroundColor: Colors.white,
-      ),
-      backgroundColor: Colors.white,
-      body: Consumer<AuthenticationProvider>(
-        builder: (context, provider, child) {
-          return SingleChildScrollView(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
-                    child: Column(
-                      children: <Widget>[
-                        SvgPicture.asset(ImagePathConstant.inAppLogo),
-                        SizedBox(height: 3.h),
-                        Text(
-                          StringConstant.splashScreenText,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w500,
+        body: Consumer<AuthenticationProvider>(
+          builder: (context, provider, child) {
+            return SingleChildScrollView(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset(ImagePathConstant.inAppLogo),
+                          SizedBox(height: 3.h),
+                          Text(
+                            StringConstant.splashScreenText,
+                            style: TextStyle(
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8.h),
-                        mobileNumberTextField(),
-                        SizedBox(height: 4.h),
-                        ReusableWidgets.redFullWidthButton(
-                          buttonText: StringConstant.getOtp,
-                          onTap: () {
-                            FocusManager.instance.primaryFocus!.unfocus();
-                            provider.phoneNumberLogin(context);
-                          },
-                          isActive: provider.isGetOtpButtonActive,
-                        ),
-                        SizedBox(height: 4.h),
-                        authenticationOptionsDivider(),
-                        SizedBox(height: 4.h),
-                        ReusableWidgets.socialSigninButton(
-                          isAppleLogin: false,
-                          onTap: () => provider.socialLogin(
-                            isGoogle: true,
-                            context: context,
+                          SizedBox(height: 8.h),
+                          mobileNumberTextField(),
+                          SizedBox(height: 4.h),
+                          ReusableWidgets.redFullWidthButton(
+                            buttonText: StringConstant.getOtp,
+                            onTap: () {
+                              FocusManager.instance.primaryFocus!.unfocus();
+                              provider.phoneNumberLogin(context);
+                            },
+                            isActive: provider.isGetOtpButtonActive,
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        if (Platform.isIOS)
+                          SizedBox(height: 4.h),
+                          authenticationOptionsDivider(),
+                          SizedBox(height: 4.h),
+                          if (Platform.isAndroid)
                           ReusableWidgets.socialSigninButton(
-                            isAppleLogin: true,
+                            isAppleLogin: false,
                             onTap: () => provider.socialLogin(
-                              isGoogle: false,
+                              isGoogle: true,
                               context: context,
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                  if (provider.isOtpLoaderActive)
-                    Container(
-                      height: 80.h,
-                      width: 100.h,
-                      color: Colors.white.withOpacity(0.3),
-                      child: Center(
-                        child: CupertinoActivityIndicator(),
+                        ],
                       ),
                     ),
-                ],
+                    if (provider.isOtpLoaderActive)
+                      Container(
+                        height: 80.h,
+                        width: 100.h,
+                        color: Colors.white.withOpacity(0.3),
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

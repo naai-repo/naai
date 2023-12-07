@@ -162,9 +162,8 @@ class _ExploreStylistState extends State<ExploreStylist>
                                                               0.5.h),
                                                           child: CircleAvatar(
                                                             radius: 5.h,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                              'assets/images/salon_dummy_image.png',
+                                                            backgroundImage: NetworkImage(
+                                                              artist.imagePath!,
                                                             ),
                                                           ),
                                                         ),
@@ -598,9 +597,8 @@ class _ExploreStylist2State extends State<ExploreStylist2>
                                                                   0.5.h),
                                                               child: CircleAvatar(
                                                                 radius: 5.h,
-                                                                backgroundImage:
-                                                                AssetImage(
-                                                                  'assets/images/salon_dummy_image.png',
+                                                                backgroundImage: NetworkImage(
+                                                                  artist.imagePath!,
                                                                 ),
                                                               ),
                                                             ),
