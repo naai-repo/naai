@@ -1017,10 +1017,12 @@ class BarberProfileScreen2 extends StatefulWidget {
   BarberProfileScreen2({Key? key}) : super(key: key);
   @override
   State<BarberProfileScreen2> createState() => _BarberProfileScreen2State();
+
 }
 
 class _BarberProfileScreen2State extends State<BarberProfileScreen2> {
   int selectedTab = 0;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
