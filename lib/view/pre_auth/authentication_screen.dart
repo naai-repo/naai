@@ -69,20 +69,6 @@ class AuthenticationScreen extends StatelessWidget {
                           SizedBox(height: 4.h),
                           authenticationOptionsDivider(),
                           SizedBox(height: 4.h),
-                          if(Platform.isAndroid)
-                          ReusableWidgets.socialSigninButton(
-                            isAppleLogin: false,
-                            onTap: () => provider.socialLogin(
-                              isGoogle: true,
-                              context: context,
-                            ),
-                          ),
-                          if(Platform.isAndroid)
-                          SizedBox(height: 4.h),
-                          if(Platform.isAndroid)
-                          authenticationOptionsDivider(),
-                          if(Platform.isAndroid)
-                          SizedBox(height: 4.h),
                           ElevatedButton(
                             onPressed: () => {
                             Navigator.pushReplacementNamed(
@@ -250,17 +236,6 @@ class AuthenticationScreen2 extends StatelessWidget {
                               provider.phoneNumberLogin(context);
                             },
                             isActive: provider.isGetOtpButtonActive,
-                          ),
-                          SizedBox(height: 4.h),
-                          authenticationOptionsDivider(),
-                          SizedBox(height: 4.h),
-                          if (Platform.isAndroid)
-                          ReusableWidgets.socialSigninButton(
-                            isAppleLogin: false,
-                            onTap: () => provider.socialLogin(
-                              isGoogle: true,
-                              context: context,
-                            ),
                           ),
                         ],
                       ),
