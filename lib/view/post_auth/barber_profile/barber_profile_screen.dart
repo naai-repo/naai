@@ -1015,7 +1015,6 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
 
 class BarberProfileScreen2 extends StatefulWidget {
   BarberProfileScreen2({Key? key}) : super(key: key);
-
   @override
   State<BarberProfileScreen2> createState() => _BarberProfileScreen2State();
 }
