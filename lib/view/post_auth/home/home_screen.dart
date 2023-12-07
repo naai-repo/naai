@@ -36,9 +36,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<HomeProvider>().initHome(context);
     });
@@ -824,18 +822,54 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          Container(
-                            height: 17.h,
-                            width: 28.w,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.horizontal(
-                                right: Radius.circular(1.h),
+                          Stack(
+                            alignment: AlignmentDirectional.topEnd,
+                            children: [
+                              Container(
+                                height: 17.h,
+                                width: 28.w,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.horizontal(
+                                    right: Radius.circular(1.h),
+                                  ),
+                                  child: Image.network(
+                                    salon.imageList![0].toString() ?? '',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                              child: Image.network(
-                                salon.imageList![0].toString() ?? '',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                              salon.discountPercentage==0||salon.discountPercentage==null?SizedBox():Container(
+                                constraints: BoxConstraints(minWidth: 13.w),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 0.3.h,
+                                  horizontal: 2.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ColorsConstant.appColor,
+                                  borderRadius: BorderRadius.circular(0.5.h),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF000000).withOpacity(0.14),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      '${salon.discountPercentage} %off',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                         ],
                       ),

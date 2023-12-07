@@ -431,6 +431,31 @@ class _ExploreScreenState extends State<ExploreScreen>
                                   ],
                                 ),
                               ),
+                              Text.rich(
+                                TextSpan(
+                                  children: <InlineSpan>[
+                                    WidgetSpan(
+                                      alignment: PlaceholderAlignment.baseline,
+                                      baseline: TextBaseline.ideographic,
+                                      child: SvgPicture.asset(
+                                        ImagePathConstant.starIcon,
+                                        color: ColorsConstant.greenRating,
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: SizedBox(width: 1.w),
+                                    ),
+                                    TextSpan(
+                                      text: artist.rating.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10.sp,
+                                        color: ColorsConstant.greenRating,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -736,6 +761,38 @@ class _ExploreScreenState extends State<ExploreScreen>
                             imagePath: ImagePathConstant.starIcon,
                             text: '${provider.filteredSalonData[index].rating}',
                             color: ColorsConstant.greenRating,
+                          ),
+                          SizedBox(width: 3.w),
+                          provider.filteredSalonData[index].discountPercentage==0||provider.filteredSalonData[index].discountPercentage==null?SizedBox():Container(
+                            constraints: BoxConstraints(minWidth: 13.w),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 0.3.h,
+                              horizontal: 2.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: ColorsConstant.appColor,
+                              borderRadius: BorderRadius.circular(0.5.h),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFF000000).withOpacity(0.14),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  '${provider.filteredSalonData[index].discountPercentage} %off',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

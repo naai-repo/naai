@@ -52,6 +52,12 @@ class StyleConstant {
     color: ColorsConstant.textDark,
     fontWeight: FontWeight.w500,
   );
+  static TextStyle textDark12sp500StyleLineThrough = TextStyle(
+    fontSize: 12.sp,
+    color: ColorsConstant.textDark,
+    fontWeight: FontWeight.w500,
+      decoration: TextDecoration.lineThrough
+  );
 
   static TextStyle textDark15sp600Style = TextStyle(
     fontWeight: FontWeight.w600,

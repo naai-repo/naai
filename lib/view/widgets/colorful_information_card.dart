@@ -55,3 +55,4 @@ class ColorfulInformationCard extends StatelessWidget {
     );
   }
 }
+

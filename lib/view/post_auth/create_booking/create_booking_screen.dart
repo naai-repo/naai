@@ -27,7 +27,7 @@ import 'package:intl/intl.dart';
 import 'booking_confirmed_screen.dart';
 
 class CreateBookingScreen extends StatefulWidget {
-  const CreateBookingScreen({super.key});
+
 
   @override
   State<CreateBookingScreen> createState() => _CreateBookingScreenState();
@@ -203,7 +203,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     color: ColorsConstant.textDark,
                                   ),
                                 ),
-                                Text('Rs. ${provider.totalPrice}',
+                                Text('Rs. ${provider.showPrice==null||provider.showPrice==0 ? provider.totalPrice:provider.showPrice}',
                                     style: StyleConstant.appColorBoldTextStyle),
                               ],
                             ),
@@ -237,9 +237,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             "Paid not yet", // Set your desired transaction status
                             paymentId: null,
                             orderId: null,
-                            errorMessage: null, // Set your desired error message or null
-                    //      );
-
+                            errorMessage: null,
+                            // Set your desired error message or null//      );
                           // After creating the booking, navigate to the BookingConfirmedScreen
                          // Navigator.of(context).push(
                          //   MaterialPageRoute(builder: (context) => BookingConfirmedScreen()),
@@ -322,81 +321,86 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     ...(provider.currentBooking.serviceIds?.map(
                           (element) => Container(
                             margin: EdgeInsets.symmetric(vertical: 2.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Column(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        SvgPicture.asset(
-                                          provider.getServiceDetails(
-                                                    serviceId: element,
-                                                    getGender: true,
-                                                  ) ==
-                                                  Gender.MEN
-                                              ? ImagePathConstant.manIcon
-                                              : ImagePathConstant.womanIcon,
-                                          height: 3.h,
+                                        Row(
+                                          children: <Widget>[
+                                            SvgPicture.asset(
+                                              provider.getServiceDetails(
+                                                        serviceId: element,
+                                                        getGender: true,
+                                                      ) ==
+                                                      Gender.MEN
+                                                  ? ImagePathConstant.manIcon
+                                                  : ImagePathConstant.womanIcon,
+                                              height: 3.h,
+                                            ),
+                                            SizedBox(width: 2.w),
+                                            Text(
+                                              provider.getServiceDetails(
+                                                serviceId: element,
+                                                getServiceName: true,
+                                              ),
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: ColorsConstant.textDark,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(width: 2.w),
+                                        SizedBox(height: 1.w),
                                         Text(
-                                          provider.getServiceDetails(
-                                            serviceId: element,
-                                            getServiceName: true,
-                                          ),
+                                          provider.getSelectedArtistName(
+                                              provider.currentBooking.artistId ??
+                                                  '',
+                                              context),
                                           style: TextStyle(
-                                            fontSize: 12.sp,
+                                            fontSize: 10.sp,
                                             color: ColorsConstant.textDark,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 1.w),
-                                    Text(
-                                      provider.getSelectedArtistName(
-                                          provider.currentBooking.artistId ??
-                                              '',
-                                          context),
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: ColorsConstant.textDark,
-                                      ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          '+',
+                                          style: TextStyle(
+                                            fontSize: 10.sp,
+                                            color: ColorsConstant.textLight,
+                                          ),
+                                        ),
+                                        Text(
+                                          ' ₹ ${provider.getServiceDetails(
+                                            serviceId: element,
+                                            getServiceCharge: true,
+                                          )}',
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: ColorsConstant.textDark,
+                                          ),
+                                        ),
+                                        SizedBox(width: 2.w),
+                                        provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?GestureDetector(
+                                          onTap: () => provider.setSelectedService(
+                                            element,
+                                            removeService: true,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            ImagePathConstant.deleteIcon,
+                                            height: 2.5.h,
+                                          ),
+                                        ):SizedBox(),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      '+',
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: ColorsConstant.textLight,
-                                      ),
-                                    ),
-                                    Text(
-                                      ' ₹ ${provider.getServiceDetails(
-                                        serviceId: element,
-                                        getServiceCharge: true,
-                                      )}',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: ColorsConstant.textDark,
-                                      ),
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    GestureDetector(
-                                      onTap: () => provider.setSelectedService(
-                                        element,
-                                        removeService: true,
-                                      ),
-                                      child: SvgPicture.asset(
-                                        ImagePathConstant.deleteIcon,
-                                        height: 2.5.h,
-                                      ),
-                                    ),
+
                                   ],
                                 ),
                               ],
@@ -404,6 +408,48 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                           ),
                         ) ??
                         []),
+                    provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Text('Discount ',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: ColorsConstant.textDark,
+                              ),
+                            ),
+                            Text('(${provider.selectedSalonData.discountPercentage ?? 0}%)',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                                color: provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?ColorsConstant.appBackgroundColor:ColorsConstant.appColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '-',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: ColorsConstant.textLight,
+                              ),
+                            ),
+                            Text(
+                              ' ₹ ${provider.showPrice==null||provider.showPrice==0?"0":provider.totalPrice-provider.showPrice}',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: ColorsConstant.textDark,
+                              ),
+                            ),
+                            SizedBox(width: 2.w),
+                          ],
+                        ),
+
+                      ],
+                    ),
                     Divider(
                       thickness: 1,
                       color: Color(0xFFD3D3D3),
@@ -432,7 +478,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                 ),
                               ),
                               Text(
-                                ' ₹ ${provider.totalPrice}',
+                                ' ₹ ${provider.showPrice==null||provider.showPrice==0?provider.totalPrice:provider.showPrice}',
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,
@@ -517,7 +563,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       ),
                     ),
                     Text(
-                      ' ₹ ${provider.totalPrice}',
+                      ' ₹ ${provider.showPrice==null||provider.showPrice==0?provider.totalPrice:provider.showPrice}',
                       // ' ₹ ${provider.totalPrice * 0.18 + provider.totalPrice}',
                       style: TextStyle(
                         fontSize: 14.sp,
@@ -1605,7 +1651,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                               color: ColorsConstant.textDark,
                             ),
                           ),
-                          Text('Rs. ${provider.totalPrice}',
+                          Text('Rs. ${provider.showPrice}',
                               style: StyleConstant.appColorBoldTextStyle),
                         ],
                       ),
@@ -1919,7 +1965,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                       ),
                     ),
                     Text(
-                      ' ₹ ${provider.totalPrice}',
+                      ' ₹ ${100}',
                       // ' ₹ ${provider.totalPrice * 0.18 + provider.totalPrice}',
                       style: TextStyle(
                         fontSize: 14.sp,

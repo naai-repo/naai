@@ -60,27 +60,27 @@ class AuthenticationScreen extends StatelessWidget {
                           isActive: provider.isGetOtpButtonActive,
                         ),
                         SizedBox(height: 4.h),
-                        authenticationOptionsDivider(),
-                        SizedBox(height: 4.h),
-                        ReusableWidgets.socialSigninButton(
-                          isAppleLogin: false,
-                          onTap: () => provider.socialLogin(
-                            isGoogle: true,
-                            context: context,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                         if (Platform.isIOS)
-                          ReusableWidgets.socialSigninButton(
-                            isAppleLogin: true,
-                            onTap: () => provider.socialLogin(
-                              isGoogle: false,
-                              context: context,
-                            ),
-                          ),
+                        // authenticationOptionsDivider(),
+                        // SizedBox(height: 4.h),
+                        // ReusableWidgets.socialSigninButton(
+                        //   isAppleLogin: false,
+                        //   onTap: () => provider.socialLogin(
+                        //     isGoogle: true,
+                        //     context: context,
+                        //   ),
+                        // ),
+                        // SizedBox(height: 2.h),
+                        //  if (Platform.isIOS)
+                        //   ReusableWidgets.socialSigninButton(
+                        //     isAppleLogin: true,
+                        //     onTap: () => provider.socialLogin(
+                        //       isGoogle: false,
+                        //       context: context,
+                        //     ),
+                        //   ),
 
-                        SizedBox(height: 4.h),
-                        authenticationOptionsDivider(),
+                        // SizedBox(height: 4.h),
+                        // authenticationOptionsDivider(),
                         SizedBox(height: 4.h),
                         ElevatedButton(
                           onPressed: () => {
@@ -242,25 +242,25 @@ class AuthenticationScreen2 extends StatelessWidget {
                           },
                           isActive: provider.isGetOtpButtonActive,
                         ),
-                        SizedBox(height: 4.h),
-                        authenticationOptionsDivider(),
-                        SizedBox(height: 4.h),
-                        ReusableWidgets.socialSigninButton(
-                          isAppleLogin: false,
-                          onTap: () => provider.socialLogin(
-                            isGoogle: true,
-                            context: context,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        if (Platform.isIOS)
-                          ReusableWidgets.socialSigninButton(
-                            isAppleLogin: true,
-                            onTap: () => provider.socialLogin(
-                              isGoogle: false,
-                              context: context,
-                            ),
-                          ),
+                        // SizedBox(height: 4.h),
+                        // authenticationOptionsDivider(),
+                        // SizedBox(height: 4.h),
+                        // ReusableWidgets.socialSigninButton(
+                        //   isAppleLogin: false,
+                        //   onTap: () => provider.socialLogin(
+                        //     isGoogle: true,
+                        //     context: context,
+                        //   ),
+                        // ),
+                        // SizedBox(height: 2.h),
+                        // if (Platform.isIOS)
+                        //   ReusableWidgets.socialSigninButton(
+                        //     isAppleLogin: true,
+                        //     onTap: () => provider.socialLogin(
+                        //       isGoogle: false,
+                        //       context: context,
+                        //     ),
+                        //   ),
                       ],
                     ),
                   ),

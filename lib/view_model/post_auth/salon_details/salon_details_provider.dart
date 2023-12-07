@@ -39,6 +39,7 @@ class SalonDetailsProvider with ChangeNotifier {
 
   int _selectedSalonIndex = 0;
   double _totalPrice = 0;
+  double _showPrice = 0;
 
   Booking _currentBooking = Booking();
 
@@ -78,6 +79,7 @@ class SalonDetailsProvider with ChangeNotifier {
   int get selectedSalonIndex => _selectedSalonIndex;
 
   double get totalPrice => _totalPrice;
+  double get showPrice => _showPrice;
 
   Booking get currentBooking => _currentBooking;
 
@@ -111,6 +113,11 @@ class SalonDetailsProvider with ChangeNotifier {
     );
 
     Loader.hideLoader(context);
+
+  }
+
+  void setShowPrice(double totalPrice, num discountPercentage){
+    _showPrice = totalPrice - totalPrice*discountPercentage/100;
   }
 
   /// Get details related to a given service.
@@ -731,4 +738,5 @@ class SalonDetailsProvider with ChangeNotifier {
     );
     notifyListeners();
   }
+
 }

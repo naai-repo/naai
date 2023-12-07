@@ -15,6 +15,7 @@ class SalonData {
   String? instagramLink;
   String? googleMapsLink;
   String? closingDay;
+  num? discountPercentage;
 
   SalonData({
     this.id,
@@ -31,6 +32,7 @@ class SalonData {
     this.instagramLink,
     this.googleMapsLink,
     this.closingDay,
+    this.discountPercentage
   });
 
   factory SalonData.fromDocumentSnapshot(DocumentSnapshot data) {
@@ -54,7 +56,9 @@ class SalonData {
         timing: Timing.fromFirestore(docData['timing'] ?? {}),
         instagramLink: docData['instagramLink'],
         googleMapsLink: docData['googleMapsLink'],
-        closingDay: docData['closingDay']);
+        closingDay: docData['closingDay'],
+        discountPercentage: docData['discountPercentage']
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -66,6 +70,7 @@ class SalonData {
       'salonType': salonType,
       'timing': timing!.toJson(),
       'imageList': imageList,
+      'discountPercentage': discountPercentage
     };
   }
 }

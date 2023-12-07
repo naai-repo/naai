@@ -19,6 +19,11 @@ import 'package:naai/view/pre_auth/verify_otp_screen.dart';
 import 'package:naai/view/splash_screen.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 
+class ScreenArguments {
+  num showPrice;
+  ScreenArguments(this.showPrice);
+}
+
 /// Class that contains string constants for all routes used in the app
 class RoutingFunctions {
   /// Handles routes that can't be handled using simple named routes map.
