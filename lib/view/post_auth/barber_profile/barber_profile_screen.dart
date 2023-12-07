@@ -1021,7 +1021,6 @@ class BarberProfileScreen2 extends StatefulWidget {
 
 class _BarberProfileScreen2State extends State<BarberProfileScreen2> {
   int selectedTab = 0;
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
