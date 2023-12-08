@@ -27,6 +27,7 @@ class SalonDetailsScreen extends StatefulWidget {
 
 class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
   int selectedTab = 0;
+  num myShowPrice = 0;
 
   @override
   void initState() {
@@ -47,6 +48,14 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
       },
       child:
           Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+            if (provider.selectedSalonData.discountPercentage == 0 ||
+                provider.selectedSalonData.discountPercentage == null){
+              myShowPrice = provider.totalPrice;
+            }
+            else{
+              provider.setShowPrice(provider.totalPrice, provider.selectedSalonData.discountPercentage!);
+              myShowPrice = provider.showPrice;
+              }
         return Scaffold(
           body: Stack(
             children: <Widget>[
@@ -114,7 +123,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               ),
                               selectedTab == 0
                                   ? ReusableWidgets.servicesTab()
-                                  : SalonReviewContainer(),
+                                  : SalonReviewContainer2(),
                             ],
                           ),
                         ),
@@ -167,15 +176,29 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                                   color: ColorsConstant.textDark,
                                 ),
                               ),
-                              Text('Rs. ${provider.totalPrice}',
+                              Text('Rs.${myShowPrice}',
                                   style: StyleConstant.textDark15sp600Style),
                             ],
                           ),
+                          provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 2.5.h,
+                              ),
+                              Text('${provider.totalPrice}',
+                                  style: StyleConstant
+                                      .textDark12sp500StyleLineThrough),
+                            ],
+                          ),
                           VariableWidthCta(
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              NamedRoutes.createBookingRoute,
-                            ),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                NamedRoutes.createBookingRoute,
+                              );
+                            },
                             isActive: true,
                             buttonText: StringConstant.confirmBooking,
                           )
@@ -236,7 +259,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                 children: <Widget>[
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                 //   onTap: () => Navigator.pop(context),
+                    //   onTap: () => Navigator.pop(context),
                     child: Padding(
                       padding: EdgeInsets.all(1.h),
                     ),
@@ -505,13 +528,53 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               ],
             ),
             SizedBox(height: 0.5.h),
-            Text(
-              provider.selectedSalonData.salonType ?? "",
-              style: TextStyle(
-                color: ColorsConstant.textLight,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  provider.selectedSalonData.salonType ?? "",
+                  style: TextStyle(
+                    color: ColorsConstant.textLight,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Container(
+                  constraints: BoxConstraints(minWidth: 15.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 0.8.h,
+                    horizontal: 1.5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorsConstant.appColor,
+                    borderRadius: BorderRadius.circular(0.5.h),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFF000000).withOpacity(0.14),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        // TODO:
+                        provider.selectedSalonData.discountPercentage
+                            .toString() +
+                            "% off",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             salonAddress(
               address: provider.selectedSalonData.address?.addressString ?? "",
@@ -707,6 +770,7 @@ class SalonDetailsScreen2 extends StatefulWidget {
 
 class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
   int selectedTab = 0;
+  num myShowPrice = 0;
 
   @override
   void initState() {
@@ -718,6 +782,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
@@ -726,7 +791,15 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
         return true;
       },
       child:
-      Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+          Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+            if (provider.selectedSalonData.discountPercentage == 0 ||
+                provider.selectedSalonData.discountPercentage == null){
+              myShowPrice = provider.totalPrice;
+            }
+            else{
+              provider.setShowPrice(provider.totalPrice, provider.selectedSalonData.discountPercentage!);
+              myShowPrice = provider.showPrice;
+            }
         return Scaffold(
           body: Stack(
             children: <Widget>[
@@ -811,56 +884,68 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
               servicesAndReviewTabBar(),
               provider.totalPrice > 0
                   ? Container(
-                margin: EdgeInsets.only(
-                  bottom: 2.h,
-                  right: 5.w,
-                  left: 5.w,
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 1.h,
-                  horizontal: 3.w,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(1.h),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      offset: Offset(0, 2.0),
-                      color: Colors.grey,
-                      spreadRadius: 0.2,
-                      blurRadius: 15,
-                    ),
-                  ],
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          StringConstant.total,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10.sp,
-                            color: ColorsConstant.textDark,
+                      margin: EdgeInsets.only(
+                        bottom: 2.h,
+                        right: 5.w,
+                        left: 5.w,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 1.h,
+                        horizontal: 3.w,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1.h),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            offset: Offset(0, 2.0),
+                            color: Colors.grey,
+                            spreadRadius: 0.2,
+                            blurRadius: 15,
                           ),
-                        ),
-                        Text('Rs. ${provider.totalPrice}',
-                            style: StyleConstant.textDark15sp600Style),
-                      ],
-                    ),
-                    VariableWidthCta(
-                      onTap: () {
-                        showSignInDialog(context);
-                      },
-                      isActive: true,
-                      buttonText: StringConstant.confirmBooking,
+                        ],
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                StringConstant.total,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10.sp,
+                                  color: ColorsConstant.textDark,
+                                ),
+                              ),
+                              Text('Rs.${myShowPrice}',
+                                  style: StyleConstant.textDark15sp600Style),
+                            ],
+                          ),
+                          provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 2.5.h,
+                              ),
+                              Text('${provider.totalPrice}',
+                                  style: StyleConstant
+                                      .textDark12sp500StyleLineThrough),
+                            ],
+                          ),
+                          VariableWidthCta(
+                            onTap: () {
+                              showSignInDialog(context);
+                            },
+                            isActive: true,
+                            buttonText: StringConstant.confirmBooking,
+                          )
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              )
                   : SizedBox()
             ],
           ),
@@ -868,6 +953,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
       }),
     );
   }
+
   void showSignInDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -879,11 +965,8 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
-                child: Image.asset(
-                    "assets/images/app_logo.png",
-                    height: 60,
-                    width:60
-                ),
+                child: Image.asset("assets/images/app_logo.png",
+                    height: 60, width: 60),
               ),
               SizedBox(height: 16.0),
               Align(
@@ -907,7 +990,8 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                 children: [
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         const StadiumBorder(),
                       ),
@@ -919,7 +1003,10 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                   ),
                   SizedBox(width: 8.0),
                   TextButton(
-                    child: Text("OK",style: TextStyle( color:Colors.black,)),
+                    child: Text("OK",
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
@@ -958,18 +1045,18 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
           ),
           (provider.imageList.length) > 1
               ? Padding(
-            padding: EdgeInsets.only(bottom: 2.h),
-            child: SmoothPageIndicator(
-              controller: provider.salonImageCarouselController,
-              count: provider.imageList!.length,
-              effect: ExpandingDotsEffect(
-                activeDotColor: ColorsConstant.appColor,
-                dotHeight: 2.w,
-                dotWidth: 2.w,
-                spacing: 2.w,
-              ),
-            ),
-          )
+                  padding: EdgeInsets.only(bottom: 2.h),
+                  child: SmoothPageIndicator(
+                    controller: provider.salonImageCarouselController,
+                    count: provider.imageList!.length,
+                    effect: ExpandingDotsEffect(
+                      activeDotColor: ColorsConstant.appColor,
+                      dotHeight: 2.w,
+                      dotWidth: 2.w,
+                      spacing: 2.w,
+                    ),
+                  ),
+                )
               : SizedBox(),
           Positioned(
             top: 5.h,
@@ -1068,7 +1155,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                     .read<HomeProvider>()
                     .artistList
                     .where((artist) =>
-                artist.salonId == provider.selectedSalonData.id)
+                        artist.salonId == provider.selectedSalonData.id)
                     .toList()
                     .asMap()
                     .map((index, artist) => MapEntry(
@@ -1141,32 +1228,32 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                                     children: List<Widget>.generate(
                                       5,
                                           (i) => (i >
-                                          int.parse(artist.rating
-                                              ?.round()
-                                              .toString() ??
-                                              "0") -
-                                              1)
-                                          ? SvgPicture.asset(
-                                        ImagePathConstant.starIcon,
-                                        color:
-                                        ColorsConstant.greyStar,
-                                        height: 2.h,
-                                      )
-                                          : SvgPicture.asset(
-                                        ImagePathConstant.starIcon,
-                                        color:
-                                        ColorsConstant.yellowStar,
-                                        height: 2.h,
+                                                  int.parse(artist.rating
+                                                              ?.round()
+                                                              .toString() ??
+                                                          "0") -
+                                                      1)
+                                              ? SvgPicture.asset(
+                                                  ImagePathConstant.starIcon,
+                                                  color:
+                                                      ColorsConstant.greyStar,
+                                                  height: 2.h,
+                                                )
+                                              : SvgPicture.asset(
+                                                  ImagePathConstant.starIcon,
+                                                  color:
+                                                      ColorsConstant.yellowStar,
+                                                  height: 2.h,
+                                                ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    )))
+                        )))
                     .values
                     .toList(),
               ),
@@ -1251,13 +1338,53 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
               ],
             ),
             SizedBox(height: 0.5.h),
-            Text(
-              provider.selectedSalonData.salonType ?? "",
-              style: TextStyle(
-                color: ColorsConstant.textLight,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  provider.selectedSalonData.salonType ?? "",
+                  style: TextStyle(
+                    color: ColorsConstant.textLight,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Container(
+                  constraints: BoxConstraints(minWidth: 15.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 0.8.h,
+                    horizontal: 1.5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorsConstant.appColor,
+                    borderRadius: BorderRadius.circular(0.5.h),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFF000000).withOpacity(0.14),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        // TODO:
+                        provider.selectedSalonData.discountPercentage
+                                .toString() +
+                            "% off",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             salonAddress(
               address: provider.selectedSalonData.address?.addressString ?? "",
@@ -1267,8 +1394,8 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
             ContactAndInteractionWidget(
               iconOnePath: ImagePathConstant.phoneIcon,
               iconTwoPath: ImagePathConstant.shareIcon,
-              iconThreePath:  ImagePathConstant.saveIcon,
-                 // : ImagePathConstant.saveIconFill,
+              iconThreePath: ImagePathConstant.saveIcon,
+              // : ImagePathConstant.saveIconFill,
               iconFourPath: ImagePathConstant.instagramIcon,
               onTapIconOne: () => launchUrl(
                 Uri(
@@ -1282,7 +1409,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                 ),
               ),
               onTapIconThree: () {
-              showSignInDialog(context);
+                showSignInDialog(context);
               },
               onTapIconFour: () => launchUrl(
                 Uri.parse(provider.selectedSalonData.instagramLink ??
@@ -1327,7 +1454,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                     ),
                     TextSpan(
                       text:
-                      "${provider.formatTime(provider.selectedSalonData.timing!.opening ?? 0)} - ${provider.formatTime(provider.selectedSalonData.timing!.closing ?? 0)}",
+                          "${provider.formatTime(provider.selectedSalonData.timing!.opening ?? 0)} - ${provider.formatTime(provider.selectedSalonData.timing!.closing ?? 0)}",
                       style: TextStyle(
                         color: ColorsConstant.textDark,
                         fontSize: 10.sp,
