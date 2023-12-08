@@ -26,6 +26,8 @@ import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../view_model/post_auth/salon_details/salon_details_provider.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -738,10 +740,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   SalonData salon = provider.salonList[index];
                   return GestureDetector(
                     onTap: () {
-                      context
-                          .read<ExploreProvider>()
-                          .setSelectedSalonIndex(context, index: index);
-                      Navigator.pushNamed(
+                      context.read<ExploreProvider>().setSelectedSalonIndex(context, index: index);
+                      context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
+                      context.read<SalonDetailsProvider>().clearSearchController();
+                      context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
+                       Navigator.pushNamed(
                           context, NamedRoutes.salonDetailsRoute);
                     },
                     child: Container(
@@ -1056,28 +1059,6 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                 children: <Widget>[
                                   logoAndNotifications(),
                                   searchLocationBar(),
-                                  // dummyDeal(),
-                                  // Padding(
-                                  //   padding: EdgeInsets.only(top: 2.h),
-                                  //   child: Row(
-                                  //     mainAxisAlignment: MainAxisAlignment.end,
-                                  //     children: <Widget>[
-                                  //       Text(
-                                  //         StringConstant.viewMore,
-                                  //         style: TextStyle(
-                                  //           fontSize: 8.sp,
-                                  //           fontWeight: FontWeight.w600,
-                                  //           color: ColorsConstant.textDark,
-                                  //         ),
-                                  //       ),
-                                  //       SizedBox(width: 1.w),
-                                  //       Icon(
-                                  //         Icons.arrow_forward,
-                                  //         size: 2.h,
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),

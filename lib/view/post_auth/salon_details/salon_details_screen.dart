@@ -44,6 +44,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
         context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
         context.read<SalonDetailsProvider>().clearSearchController();
         context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
+        context.read<SalonDetailsProvider>().clearfilteredServiceList();
         return true;
       },
       child:
@@ -123,7 +124,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                               ),
                               selectedTab == 0
                                   ? ReusableWidgets.servicesTab()
-                                  : SalonReviewContainer2(),
+                                  : SalonReviewContainer(),
                             ],
                           ),
                         ),

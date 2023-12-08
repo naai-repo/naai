@@ -721,6 +721,11 @@ class SalonDetailsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void clearfilteredServiceList () {
+    _filteredServiceList.clear();
+    notifyListeners();
+  }
+
   Future<void> addPreferedSalon(BuildContext context, String? salonId) async {
     if (salonId == null) return;
     context.read<HomeProvider>().userData.preferredSalon!.add(salonId);

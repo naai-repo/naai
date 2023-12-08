@@ -242,4 +242,8 @@ class BarberProvider with ChangeNotifier {
     _selectedServiceCategories.clear();
     notifyListeners();
   }
+  void clearfilteredServiceList () {
+    _filteredServiceList.clear();
+    notifyListeners();
+  }
 }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,8 +66,11 @@ class AuthenticationScreen extends StatelessWidget {
                             isActive: provider.isGetOtpButtonActive,
                           ),
                           SizedBox(height: 4.h),
+                          if(Platform.isIOS)
                           authenticationOptionsDivider(),
+                          if(Platform.isIOS)
                           SizedBox(height: 4.h),
+                          if(Platform.isIOS)
                           ElevatedButton(
                             onPressed: () => {
                             Navigator.pushReplacementNamed(

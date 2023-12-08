@@ -83,6 +83,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                                 barberProvider.clearSearchController();
                                 barberProvider.clearSelectedGendersFilter();
                                 barberProvider.clearSelectedServiceCategories();
+                                barberProvider.clearfilteredServiceList();
                                 Navigator.pop(context);
                               },
                               child: Padding(
