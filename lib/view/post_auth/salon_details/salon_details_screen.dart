@@ -769,6 +769,7 @@ class SalonDetailsScreen2 extends StatefulWidget {
 
 class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
   int selectedTab = 0;
+  num myShowPrice = 0;
 
   @override
   void initState() {
@@ -780,6 +781,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
@@ -789,6 +791,14 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
       },
       child:
           Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+            if (provider.selectedSalonData.discountPercentage == 0 ||
+                provider.selectedSalonData.discountPercentage == null){
+              myShowPrice = provider.totalPrice;
+            }
+            else{
+              provider.setShowPrice(provider.totalPrice, provider.selectedSalonData.discountPercentage!);
+              myShowPrice = provider.showPrice;
+            }
         return Scaffold(
           body: Stack(
             children: <Widget>[
@@ -909,8 +919,20 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                                   color: ColorsConstant.textDark,
                                 ),
                               ),
-                              Text('Rs. ${provider.totalPrice}',
+                              Text('Rs.${myShowPrice}',
                                   style: StyleConstant.textDark15sp600Style),
+                            ],
+                          ),
+                          provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 2.5.h,
+                              ),
+                              Text('${provider.totalPrice}',
+                                  style: StyleConstant
+                                      .textDark12sp500StyleLineThrough),
                             ],
                           ),
                           VariableWidthCta(
@@ -1327,7 +1349,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Container(
+                provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Container(
                   constraints: BoxConstraints(minWidth: 15.w),
                   padding: EdgeInsets.symmetric(
                     vertical: 0.8.h,

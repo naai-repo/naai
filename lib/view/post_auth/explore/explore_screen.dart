@@ -1649,6 +1649,38 @@ class _ExploreScreen2State extends State<ExploreScreen2>
                             text: '${provider.filteredSalonData[index].rating}',
                             color: ColorsConstant.greenRating,
                           ),
+                          SizedBox(width: 3.w),
+                          provider.filteredSalonData[index].discountPercentage==0||provider.filteredSalonData[index].discountPercentage==null?SizedBox():Container(
+                            constraints: BoxConstraints(minWidth: 13.w),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 0.3.h,
+                              horizontal: 2.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: ColorsConstant.appColor,
+                              borderRadius: BorderRadius.circular(0.5.h),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFF000000).withOpacity(0.14),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  '${provider.filteredSalonData[index].discountPercentage} %off',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ],
