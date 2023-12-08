@@ -70,7 +70,7 @@ dependencies:
   mapbox_gl:
     git:
       url: https://github.com/Sipioteo/maps_3_0_0
-      ref: 8c9f47b
+      ref: master
   salomon_bottom_bar:
     git:
       url: https://github.com/lukepighetti/salomon_bottom_bar

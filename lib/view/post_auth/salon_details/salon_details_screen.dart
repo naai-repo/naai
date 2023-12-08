@@ -581,6 +581,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               address: provider.selectedSalonData.address?.addressString ?? "",
               geoPoint: provider.selectedSalonData.address!.geoLocation!,
             ),
+
             salonTiming(),
             ContactAndInteractionWidget(
               iconOnePath: ImagePathConstant.phoneIcon,
