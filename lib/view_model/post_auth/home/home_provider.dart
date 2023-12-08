@@ -140,6 +140,7 @@ class HomeProvider with ChangeNotifier {
         context,
         NamedRoutes.setHomeLocationRoute,
       );
+
     } else {
 
       await getUserBookings(context);

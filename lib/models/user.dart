@@ -1,4 +1,4 @@
-/*
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
@@ -127,7 +127,7 @@ class HomeLocation {
     return degrees * (pi / 180);
   }
 }
-*/
+/*
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
@@ -243,3 +243,5 @@ class HomeLocation {
     return degrees * (pi / 180);
   }
 }
+
+ */

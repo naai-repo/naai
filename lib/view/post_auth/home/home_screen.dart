@@ -77,28 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: <Widget>[
                                   logoAndNotifications(),
                                   searchLocationBar(),
-                                  // dummyDeal(),
-                                  // Padding(
-                                  //   padding: EdgeInsets.only(top: 2.h),
-                                  //   child: Row(
-                                  //     mainAxisAlignment: MainAxisAlignment.end,
-                                  //     children: <Widget>[
-                                  //       Text(
-                                  //         StringConstant.viewMore,
-                                  //         style: TextStyle(
-                                  //           fontSize: 8.sp,
-                                  //           fontWeight: FontWeight.w600,
-                                  //           color: ColorsConstant.textDark,
-                                  //         ),
-                                  //       ),
-                                  //       SizedBox(width: 1.w),
-                                  //       Icon(
-                                  //         Icons.arrow_forward,
-                                  //         size: 2.h,
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),
@@ -1496,6 +1474,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
     );
   }
 
+
   Widget ourStylist() {
     return Consumer<HomeProvider>(builder: (context, provider, child) {
       return Padding(
@@ -1708,10 +1687,11 @@ class _HomeScreen2State extends State<HomeScreen2> {
 
                   return GestureDetector(
                     onTap: () {
-                      context
-                          .read<ExploreProvider>()
-                          .setSelectedSalonIndex(context, index: index);
-                      Navigator.pushNamed(
+                      context.read<ExploreProvider>().setSelectedSalonIndex(context, index: index);
+                     // context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
+                      //context.read<SalonDetailsProvider>().clearSearchController();
+                    //  context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
+                       Navigator.pushNamed(
                           context, NamedRoutes.salonDetailsRoute2);
                     },
                     child: Container(
