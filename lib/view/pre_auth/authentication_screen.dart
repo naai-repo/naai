@@ -67,11 +67,11 @@ class AuthenticationScreen extends StatelessWidget {
                           ),
 
                           SizedBox(height: 4.h),
-                          if(Platform.isIOS)
+                          if(Platform.isAndroid)
                           authenticationOptionsDivider(),
-                          if(Platform.isIOS)
+                          if(Platform.isAndroid)
                           SizedBox(height: 4.h),
-                          if(Platform.isIOS)
+                          if(Platform.isAndroid)
                           ElevatedButton(
                             onPressed: () => {
                             Navigator.pushReplacementNamed(

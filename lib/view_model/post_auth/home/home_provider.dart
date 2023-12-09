@@ -31,6 +31,7 @@ import 'package:intl/intl.dart';
 
 import '../../../models/review.dart';
 import '../../../models/service_detail.dart';
+import '../../../view/post_auth/bottom_navigation_screen.dart';
 
 class HomeProvider with ChangeNotifier {
   bool _changedLocation = false;
@@ -570,7 +571,15 @@ class HomeProvider with ChangeNotifier {
       );
     }
     notifyListeners();
-    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BottomNavigationScreen3(), // Replace NextScreen with your desired screen
+      ),
+    );
+
+
+
   }
 
   /// Get complete address from the provided coordinates

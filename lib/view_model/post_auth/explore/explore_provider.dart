@@ -146,7 +146,7 @@ class ExploreProvider with ChangeNotifier {
       _filteredSalonData.clear();
       _filteredSalonData.addAll(_salonData);
     } catch (e) {
-      ReusableWidgets.showFlutterToast(context, '$e');
+    //  ReusableWidgets.showFlutterToast(context, '$e');
     }
     notifyListeners();
   }

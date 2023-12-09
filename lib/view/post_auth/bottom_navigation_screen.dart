@@ -265,3 +265,131 @@ class _BottomNavigationScreen2State extends State<BottomNavigationScreen2>
     );
   }
 }
+
+
+
+class BottomNavigationScreen3 extends StatefulWidget {
+  BottomNavigationScreen3({Key? key}) : super(key: key);
+
+  @override
+  State<BottomNavigationScreen3> createState() => _BottomNavigationScreen3State();
+}
+
+class _BottomNavigationScreen3State extends State<BottomNavigationScreen3>
+    with WidgetsBindingObserver {
+  late List<Widget> _screens = [
+    HomeScreen(),
+    ExploreScreen(),
+    MapScreen(),
+    ProfileScreen(),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<BottomNavigationProvider>(
+      builder: (context, provider, child) {
+        return WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: Scaffold(
+            extendBody: true,
+            body: _screens[provider.onetimeindex],
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(3.h),
+                  topRight: Radius.circular(3.h),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white,
+                    //   blurRadius: 10,
+                    //   spreadRadius: 0.1,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(3.5.h),
+                  topRight: Radius.circular(3.5.h),
+                ),
+                child: SalomonBottomBar(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 7.w,
+                    vertical: 1.5.h,
+                  ),
+                  currentIndex: provider.onetimeindex,
+                  onTap: (i) => provider.setCurrentScreenIndex(
+                    context: context,
+                    indexValue: i,
+                  ),
+                  items: <SalomonBottomBarItem>[
+                    _bottomWidget(
+                      provider: provider,
+                      tabName: StringConstant.home,
+                      image: ImagePathConstant.homeIcon,
+                      index: 0,
+                    ),
+                    _bottomWidget(
+                      provider: provider,
+                      tabName: StringConstant.explore,
+                      image: ImagePathConstant.exploreIcon,
+                      index: 1,
+                    ),
+                    _bottomWidget(
+                      provider: provider,
+                      tabName: StringConstant.map,
+                      image: ImagePathConstant.mapIcon,
+                      index: 2,
+                    ),
+                    _bottomWidget(
+                      provider: provider,
+                      tabName: StringConstant.profile,
+                      image: ImagePathConstant.profileIcon,
+                      index: 3,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  SalomonBottomBarItem _bottomWidget({
+    required BottomNavigationProvider provider,
+    required String tabName,
+    required String image,
+    required int index,
+  }) {
+    return SalomonBottomBarItem(
+      icon: SvgPicture.asset(
+        image,
+        color: provider.onetimeindex == index
+            ? ColorsConstant.appColor
+            : ColorsConstant.bottomNavIconsDisabled,
+        height: 2.5.h,
+      ),
+      title: Text(
+        tabName,
+        style: StyleConstant.appColorBoldTextStyle,
+      ),
+      selectedColor: ColorsConstant.appColor,
+    );
+  }
+}

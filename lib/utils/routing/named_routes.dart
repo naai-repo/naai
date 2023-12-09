@@ -10,6 +10,8 @@ class NamedRoutes {
   /// Post-authetication routes
   static const String bottomNavigationRoute = '/bottom-navigation';
   static const String bottomNavigationRoute2 = '/bottom-navigation2';
+  static const String bottomNavigationRoute3 = '/bottom-navigation3';
+
   static const String exploreRoute = '/explore';
   static const String exploreStylistRoute = '/explore-stylist';
   static const String exploreStylistRoute2 = '/explore-stylist2';

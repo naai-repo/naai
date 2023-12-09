@@ -19,6 +19,8 @@ import 'package:naai/view/pre_auth/verify_otp_screen.dart';
 import 'package:naai/view/splash_screen.dart';
 import 'package:naai/utils/routing/named_routes.dart';
 
+import '../../view/post_auth/profile/profile_screen.dart';
+
 class ScreenArguments {
   num showPrice;
   ScreenArguments(this.showPrice);
@@ -54,6 +56,9 @@ class RoutingFunctions {
         break;
       case NamedRoutes.bottomNavigationRoute2:
         target = BottomNavigationScreen2();
+        break;
+      case NamedRoutes.bottomNavigationRoute3:
+        target = BottomNavigationScreen3();
         break;
       case NamedRoutes.exploreRoute:
         target = ExploreScreen();

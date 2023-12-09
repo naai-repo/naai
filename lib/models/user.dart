@@ -1,4 +1,4 @@
-
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
@@ -127,7 +127,7 @@ class HomeLocation {
     return degrees * (pi / 180);
   }
 }
-/*
+*/
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
@@ -199,14 +199,12 @@ class HomeLocation {
     this.addressString,
     this.geoLocation,
   });
-
   Map<String, dynamic> toMap() {
     return {
       'addressString': addressString,
       'geoLocation': geoLocation,
     };
   }
-
   HomeLocation.fromFirestore(Map<String, dynamic> map) {
     GeoPoint? geoPoint = map['geoLocation'];
 
@@ -244,4 +242,3 @@ class HomeLocation {
   }
 }
 
- */
