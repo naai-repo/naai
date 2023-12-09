@@ -190,7 +190,7 @@ class AppointmentDetails extends StatelessWidget {
                           StringConstant.invoice,
                           style: StyleConstant.textDark11sp600Style,
                         ),
-                        IconButton(onPressed: generateInvoice, icon: Icon(Icons.save_alt_outlined))
+                        //IconButton(onPressed: generateInvoice, icon: Icon(Icons.save_alt_outlined))
                       ],
                     ),
                     SizedBox(height: 1.h),
@@ -344,8 +344,7 @@ class AppointmentDetails extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => Text(
-                      provider
-                          .lastOrNextBooking[index].bookedServiceNames![index],
+                      provider.lastOrNextBooking[this.index].bookedServiceNames![index],
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 11.sp,
@@ -353,9 +352,7 @@ class AppointmentDetails extends StatelessWidget {
                       ),
                     ),
                     separatorBuilder: (context, index) => Text(', '),
-                    itemCount: provider.lastOrNextBooking[index]
-                            .bookedServiceNames?.length ??
-                        0,
+                    itemCount: provider.lastOrNextBooking[this.index].bookedServiceNames?.length ?? 0,
                   ),
                 )
               ],
