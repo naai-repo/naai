@@ -46,7 +46,7 @@ class Booking {
     this.errorMessage,
     this.salonName,
     this.artistName,
-    this.bookedServiceNames,
+    this.bookedServiceNames ,
     this.totalPrice = 0,
     this.isUpcoming = false,
     this.createdOnString,

@@ -7,6 +7,8 @@ import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.d
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../utils/routing/named_routes.dart';
+
 class BookingConfirmedSreen extends StatelessWidget {
   const BookingConfirmedSreen({super.key});
 
@@ -83,7 +85,10 @@ class BookingConfirmedSreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     provider.resetCurrentBooking();
-                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      NamedRoutes.bottomNavigationRoute,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(1.h),

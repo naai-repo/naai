@@ -190,10 +190,10 @@ class AppointmentDetails extends StatelessWidget {
                           StringConstant.invoice,
                           style: StyleConstant.textDark11sp600Style,
                         ),
-                        IconButton(onPressed: generateInvoice, icon: Icon(Icons.save_alt_outlined))
+                      //  IconButton(onPressed: generateInvoice, icon: Icon(Icons.save_alt_outlined))
                       ],
                     ),
-                    SizedBox(height: 1.h),
+                    SizedBox(height: 4.h),
                     textInRow(
                       textOne: StringConstant.subtotal,
                       textTwo:
@@ -343,9 +343,9 @@ class AppointmentDetails extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => Text(
+                    itemBuilder: (context, index2) => Text(
                       provider
-                          .lastOrNextBooking[index].bookedServiceNames![index],
+                          .lastOrNextBooking[index].bookedServiceNames![index2],
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 11.sp,
