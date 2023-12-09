@@ -67,6 +67,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                   ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
                     elevation: 10,
+                    automaticallyImplyLeading: false,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(3.h),
@@ -809,6 +810,7 @@ class _SalonDetailsScreen2State extends State<SalonDetailsScreen2> {
                 slivers: [
                   ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
+                    automaticallyImplyLeading: false,
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(

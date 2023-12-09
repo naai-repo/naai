@@ -208,11 +208,11 @@ class HomeLocation {
   }
 
   double calculateDistance(
-      double startLat,
-      double startLng,
-      double endLat,
-      double endLng,
-      ) {
+    double startLat,
+    double startLng,
+    double endLat,
+    double endLng,
+  ) {
     const int radiusOfEarth = 6371;
 
     double latDifference = radians(endLat - startLat);

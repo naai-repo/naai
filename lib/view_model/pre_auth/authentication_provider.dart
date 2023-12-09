@@ -138,19 +138,40 @@ class AuthenticationProvider with ChangeNotifier {
 
   /// Triggers Apple authentication flow
   Future<void> appleLogin(BuildContext context) async {
+
     if (Platform.isIOS) {
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
+          
         ],
       ).onError((error, stackTrace) {
         throw Exception('$error');
       });
-      print(
-          "Apple credential ===>\nEmail - ${credential.email}\nid_Token - ${credential.identityToken}\nAuthorization code - ${credential.authorizationCode}\nUser identifier - ${credential.userIdentifier}");
+      AuthCredential appleCredentials = AppleAuthProvider.credential(credential.identityToken!);
+      print("Apple credential ===>\nEmail - ${credential.email}\nid_Token - ${credential.identityToken}\nAuthorization code - ${credential.authorizationCode}\nUser identifier - ${credential.userIdentifier}");
+      User? user = (await FirebaseAuth.instance
+          .signInWithCredential(appleCredentials)
+          .onError((error, stackTrace) {
+        throw Exception('Something went wrong!');
+      }))
+          .user;
+      setUserId(userId: user!.uid);
+      if ((await DatabaseService().checkUserExists(uid: user.uid)) == false) {
+        storeUserDataInCollection(
+          context: context,
+          userData: UserModel(
+              name: user.displayName,
+              gmailId: user.email,
+              id: user.uid,
+              image: user.photoURL
+          ),
+          docId: user.uid,
+        );
+      }
+      notifyListeners();
     }
-
   }
 
   /// Method to verify the entered phone number and send an OTP to the user if the

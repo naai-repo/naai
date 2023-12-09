@@ -1060,7 +1060,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                         return Visibility(
                                           visible: provider
                                               .lastOrNextBooking[index]
-                                              .paymentId !=
+                                              .paymentId ==
                                               null,
                                           child: upcomingBookingCard(index),
                                         );
