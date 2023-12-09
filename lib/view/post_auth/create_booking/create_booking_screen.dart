@@ -90,6 +90,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                   ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
                     elevation: 10,
+                    automaticallyImplyLeading: false,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(3.h),
@@ -731,7 +732,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     showArtistSlotDialogue = false;
                                   }),
                                   child: Text(
-                                     "Hi ok", //StringConstant.ok,
+                                     "ok", //StringConstant.ok,
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.w500,
