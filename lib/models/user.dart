@@ -248,6 +248,7 @@ import 'dart:math';
 class UserModel {
   String? name;
   String? phoneNumber;
+
   String? gmailId;
   String? appleId;
   String? gender;
