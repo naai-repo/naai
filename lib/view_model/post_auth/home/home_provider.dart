@@ -161,7 +161,7 @@ class HomeProvider with ChangeNotifier {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Location Permission Required'),
-              content: Text('This app requires access to your location for XYZ feature. Please grant the permission.'),
+              content: Text('This app requires access to your location for nearby salon. Please grant the permission.'),
               actions: [
                 ElevatedButton(
                   child: Text('OK'),
