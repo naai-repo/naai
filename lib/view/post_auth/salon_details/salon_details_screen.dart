@@ -587,12 +587,10 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
               iconOnePath: ImagePathConstant.phoneIcon,
               iconTwoPath: ImagePathConstant.shareIcon,
               iconThreePath: !context
-                      .read<HomeProvider>()
-                      .userData
-                      .preferredSalon!
-                      .contains(provider.selectedSalonData.id)
-                  ? ImagePathConstant.saveIcon
-                  : ImagePathConstant.saveIconFill,
+                  .read<HomeProvider>()
+                  .userData
+                  .preferredSalon!
+                  .contains(provider.selectedSalonData.id) ? ImagePathConstant.saveIcon:ImagePathConstant.saveIconFill,
               iconFourPath: ImagePathConstant.instagramIcon,
               onTapIconOne: () => launchUrl(
                 Uri(
