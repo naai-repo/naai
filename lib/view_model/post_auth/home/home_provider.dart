@@ -578,8 +578,6 @@ class HomeProvider with ChangeNotifier {
       ),
     );
 
-
-
   }
 
   /// Get complete address from the provided coordinates
@@ -748,7 +746,7 @@ class HomeProvider with ChangeNotifier {
     return userData.homeLocation?.addressString ;
   }
   String? getDummyHomeAddressText() {
-    return userData.homeLocation?.addressString??"Delhi" ;
+    return userData.homeLocation?.addressString??"Your Location will be show when you Sign In" ;
   }
 
   /// Dispose [_controller] when the map is unmounted

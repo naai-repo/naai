@@ -27,7 +27,8 @@ class BottomNavigationProvider with ChangeNotifier {
           );
     }
 
-    _onetimeindex = indexValue;
+    _currentScreenIndex = indexValue;
+    _onetimeindex= indexValue;
     notifyListeners();
   }
 }

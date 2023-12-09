@@ -1392,11 +1392,8 @@ class _HomeScreen2State extends State<HomeScreen2> {
   }
 
   Widget searchLocationBar() {
+
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        NamedRoutes.setHomeLocationRoute,
-      ),
       child: Container(
         margin: EdgeInsets.only(top: 4.h, bottom: 2.h),
         padding: EdgeInsets.all(0.5.h),
