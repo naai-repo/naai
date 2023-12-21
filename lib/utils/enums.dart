@@ -10,6 +10,7 @@ enum Services {
   BEAUTY,
   MAKEUP,
   NAIL,
+
 }
 
 enum StaffType {
@@ -19,4 +20,13 @@ enum StaffType {
 
 enum FilterType {
   Rating,
+}
+
+enum Services2 {
+  HAIR,
+  SPA,
+  Haircut,
+  Beauty,
+  Nails,
+
 }

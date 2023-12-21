@@ -45,6 +45,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
         context.read<SalonDetailsProvider>().clearSearchController();
         context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
         context.read<SalonDetailsProvider>().clearfilteredServiceList();
+        context.read<SalonDetailsProvider>().clearServiceList();
         return true;
       },
       child:
@@ -84,6 +85,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
+
                               Navigator.pop(context);
                             },
                             child: Padding(
@@ -116,7 +118,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              salonDetailOverview(),
+                            salonDetailOverview(),
                               Divider(
                                 thickness: 5,
                                 height: 0,

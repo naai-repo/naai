@@ -547,9 +547,15 @@ class SalonDetailsProvider with ChangeNotifier {
     _currentBooking.salonId = _selectedSalonData.id;
     _currentBooking.userId = context.read<HomeProvider>().userData.id;
     _currentBooking.bookingCreatedOn = DateTime.now().toString();
-    _currentBooking.bookingCreatedFor = DateFormat('dd-MM-yyyy')
-        .parse(_currentBooking.selectedDate ?? '')
-        .toString();
+    DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+    DateTime parsedDate = dateFormat.parse(_currentBooking.selectedDate ?? '');
+    String timeString = convertSecondsToTimeString(_currentBooking.startTime ?? 0);
+    List<String> timeParts = timeString.split(':');
+    DateTime parsedTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, int.parse(timeParts[0]), int.parse(timeParts[1]));
+    String formattedTime = DateFormat('HH:mm').format(parsedTime);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(parsedDate);
+    String combinedDateTime = '$formattedDate $formattedTime';
+    _currentBooking.bookingCreatedFor = combinedDateTime;
     _currentBooking.price = context.read<SalonDetailsProvider>().totalPrice;
     _currentBooking.transactionStatus = transactionStatus;
     _currentBooking.errorMessage = errorMessage;
@@ -723,6 +729,11 @@ class SalonDetailsProvider with ChangeNotifier {
 
   void clearfilteredServiceList () {
     _filteredServiceList.clear();
+    notifyListeners();
+  }
+
+  void clearServiceList () {
+    _serviceList.clear();
     notifyListeners();
   }
 

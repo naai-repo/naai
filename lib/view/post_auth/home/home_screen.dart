@@ -26,6 +26,7 @@ import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../models/service_detail.dart';
 import '../../../view_model/post_auth/salon_details/salon_details_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -1685,9 +1686,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                   return GestureDetector(
                     onTap: () {
                       context.read<ExploreProvider>().setSelectedSalonIndex(context, index: index);
-                     // context.read<SalonDetailsProvider>().clearSelectedGendersFilter();
-                      //context.read<SalonDetailsProvider>().clearSearchController();
-                    //  context.read<SalonDetailsProvider>().clearSelectedServiceCategories();
+
                        Navigator.pushNamed(
                           context, NamedRoutes.salonDetailsRoute2);
                     },
