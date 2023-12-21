@@ -894,6 +894,7 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
               ),
             ],
           ),
+
           SizedBox(height: 3.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
