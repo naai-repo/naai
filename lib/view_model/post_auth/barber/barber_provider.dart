@@ -13,6 +13,8 @@ import 'package:naai/view_model/post_auth/home/home_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/salon.dart';
+
 class BarberProvider with ChangeNotifier {
   int _selectedArtistIndex = 0;
 
@@ -23,7 +25,7 @@ class BarberProvider with ChangeNotifier {
   // List<Review> _artistReviewList = [];
 
   Artist _artist = Artist();
-
+  SalonData _selectedSalonData = SalonData();
   bool _shouldSetArtistData = true;
 
   TextEditingController _searchController = TextEditingController();
@@ -38,7 +40,7 @@ class BarberProvider with ChangeNotifier {
   // List<Review> get artistReviewList => _artistReviewList;
 
   Artist get artist => _artist;
-
+  SalonData get selectedSalonData => _selectedSalonData;
   bool get shouldSetArtistData => _shouldSetArtistData;
 
   TextEditingController get searchController => _searchController;

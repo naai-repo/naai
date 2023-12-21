@@ -32,6 +32,7 @@ class BarberProfileScreen extends StatefulWidget {
 
 class _BarberProfileScreenState extends State<BarberProfileScreen> {
   int selectedTab = 0;
+  num myShowPrice = 0;
 
   @override
   void initState() {
@@ -52,160 +53,227 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
             barberProvider.clearSelectedServiceCategories();
             return true;
           },
-          child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: Stack(
-              children: <Widget>[
-                ReusableWidgets.appScreenCommonBackground(),
-                CustomScrollView(
-                  physics: BouncingScrollPhysics(),
-                  slivers: [
-                    ReusableWidgets.transparentFlexibleSpace(),
-                    SliverAppBar(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(3.h),
-                          topRight: Radius.circular(3.h),
-                        ),
-                      ),
-                      backgroundColor: Colors.white,
-                      pinned: true,
-                      floating: true,
-                      leadingWidth: 0,
-                      title: Container(
-                        padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
-                        child: Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                barberProvider.clearSearchController();
-                                barberProvider.clearSelectedGendersFilter();
-                                barberProvider.clearSelectedServiceCategories();
-                                barberProvider.clearfilteredServiceList();
-                                Navigator.pop(context);
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(1.h),
-                                child: SvgPicture.asset(
-                                  ImagePathConstant.leftArrowIcon,
-                                  color: ColorsConstant.textDark,
-                                  height: 2.h,
-                                ),
-                              ),
+          child:
+            Consumer<SalonDetailsProvider>(builder: (context, provider, child) {
+              if (provider.selectedSalonData.discountPercentage == 0 ||
+                  provider.selectedSalonData.discountPercentage == null) {
+                myShowPrice = provider.totalPrice;
+              }
+              else {
+                provider.setShowPrice(provider.totalPrice,
+                    provider.selectedSalonData.discountPercentage!);
+                myShowPrice = provider.showPrice;
+              }
+              return Scaffold(
+                resizeToAvoidBottomInset: true,
+                body: Stack(
+                  children: <Widget>[
+                    ReusableWidgets.appScreenCommonBackground(),
+                    CustomScrollView(
+                      physics: BouncingScrollPhysics(),
+                      slivers: [
+                        ReusableWidgets.transparentFlexibleSpace(),
+                        SliverAppBar(
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(3.h),
+                              topRight: Radius.circular(3.h),
                             ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              StringConstant.barberProfile,
-                              style: StyleConstant.headingTextStyle,
-                            ),
-                          ],
-                        ),
-                      ),
-                      centerTitle: false,
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          Container(
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                          backgroundColor: Colors.white,
+                          pinned: true,
+                          floating: true,
+                          leadingWidth: 0,
+                          title: Container(
+                            padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
+                            child: Row(
                               children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      top: 1.h, right: 4.w, left: 4.w),
-                                  padding: EdgeInsets.all(1.h),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(2.h),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    barberProvider.clearSearchController();
+                                    barberProvider.clearSelectedGendersFilter();
+                                    barberProvider
+                                        .clearSelectedServiceCategories();
+                                    barberProvider.clearfilteredServiceList();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(1.h),
+                                    child: SvgPicture.asset(
+                                      ImagePathConstant.leftArrowIcon,
+                                      color: ColorsConstant.textDark,
+                                      height: 2.h,
+                                    ),
                                   ),
-                                  child: barberOverview(),
                                 ),
-                                SizedBox(height: 2.h),
-                                Divider(
-                                  thickness: 2,
-                                  height: 0,
-                                  color: ColorsConstant.graphicFillDark,
+                                SizedBox(width: 4.w),
+                                Text(
+                                  StringConstant.barberProfile,
+                                  style: StyleConstant.headingTextStyle,
                                 ),
-                                servicesAndReviewTabBar(),
-                                selectedTab == 0
-                                    ? servicesTab()
-                                    : reviewColumn(),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            bottomNavigationBar: Visibility(
-              visible: Provider.of<SalonDetailsProvider>(context, listen: true)
-                      .totalPrice >
-                  0,
-              child: Container(
-                margin: EdgeInsets.only(
-                  bottom: 2.h,
-                  right: 5.w,
-                  left: 5.w,
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 1.h,
-                  horizontal: 3.w,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(1.h),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      offset: Offset(0, 2.0),
-                      color: Colors.grey,
-                      spreadRadius: 0.2,
-                      blurRadius: 15,
-                    ),
-                  ],
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          StringConstant.total,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10.sp,
-                            color: ColorsConstant.textDark,
+                          centerTitle: false,
+                        ),
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              Container(
+                                color: Colors.white,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          top: 1.h, right: 4.w, left: 4.w),
+                                      padding: EdgeInsets.all(1.h),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            2.h),
+                                      ),
+                                      child: barberOverview(),
+                                    ),
+                                    SizedBox(height: 2.h),
+                                    Divider(
+                                      thickness: 2,
+                                      height: 0,
+                                      color: ColorsConstant.graphicFillDark,
+                                    ),
+                                    servicesAndReviewTabBar(),
+                                    selectedTab == 0
+                                        ? servicesTab()
+                                        : reviewColumn(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                            'Rs. ${context.read<SalonDetailsProvider>().totalPrice}',
-                            style: StyleConstant.textDark15sp600Style),
                       ],
                     ),
-                    VariableWidthCta(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateBookingScreen2(
-                            artistName: barberProvider.artist.name ??
-                                '', // Pass the name here
-                          ),
-                        ),
-                      ),
-                      isActive: true,
-                      buttonText: StringConstant.confirmBooking,
-                    )
                   ],
                 ),
-              ),
+                bottomNavigationBar: Visibility(
+                  visible: Provider
+                      .of<SalonDetailsProvider>(context, listen: true)
+                      .totalPrice >
+                      0,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      bottom: 2.h,
+                      right: 5.w,
+                      left: 5.w,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 1.h,
+                      horizontal: 3.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(1.h),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          offset: Offset(0, 2.0),
+                          color: Colors.grey,
+                          spreadRadius: 0.2,
+                          blurRadius: 15,
+                        ),
+                      ],
+                      color: Colors.white,
+                    ),
+                    /*
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              StringConstant.total,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10.sp,
+                                color: ColorsConstant.textDark,
+                              ),
+                            ),
+                            Text(
+                                'Rs. ${context
+                                    .read<SalonDetailsProvider>()
+                                    .totalPrice}',
+                                style: StyleConstant.textDark15sp600Style),
+                          ],
+                        ),
+                        VariableWidthCta(
+                          onTap: () =>
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateBookingScreen2(
+                                        artistName: barberProvider.artist
+                                            .name ??
+                                            '', // Pass the name here
+                                      ),
+                                ),
+                              ),
+                          isActive: true,
+                          buttonText: StringConstant.confirmBooking,
+                        )
+                      ],
+                    ),
+                    */
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              StringConstant.total,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10.sp,
+                                color: ColorsConstant.textDark,
+                              ),
+                            ),
+                            Text('Rs.${myShowPrice}',
+                                style: StyleConstant.textDark15sp600Style),
+                          ],
+                        ),
+                        provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 2.5.h,
+                            ),
+                            Text('${provider.totalPrice}',
+                                style: StyleConstant
+                                    .textDark12sp500StyleLineThrough),
+                          ],
+                        ),
+                        VariableWidthCta(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              NamedRoutes.createBookingRoute,
+                            );
+                          },
+                          isActive: true,
+                          buttonText: StringConstant.confirmBooking,
+                        )
+                      ],
+                    ),
+                  )
+                     //   : SizedBox()
+                  ),
+              );
+            }
             ),
-          ),
         );
       },
     );

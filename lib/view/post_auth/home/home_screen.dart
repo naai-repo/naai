@@ -545,7 +545,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           artistId: artist.id ?? '',
                           imagePath: artist.imagePath!,
                           color: ColorsConstant.artistListColors[index % 6],
+                         /* onTap: () {
+                            context
+                                .read<BarberProvider>()
+                                .setArtistDataFromHome(artist);
+
+                            Navigator.pushNamed(
+                              context,
+                              NamedRoutes.barberProfileRoute,
+                            );
+                          },
+                          */
                           onTap: () {
+                            int indexOfArtistOnList = context
+                                .read<HomeProvider>()
+                                .artistList
+                                .indexOf(artist);
                             context
                                 .read<BarberProvider>()
                                 .setArtistDataFromHome(artist);
