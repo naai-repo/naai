@@ -53,6 +53,8 @@ class HomeProvider with ChangeNotifier {
   late MapboxMapController _controller;
 
   String _addressText = StringConstant.loading;
+  List<ServiceDetail> get filteredServiceList => _filteredServiceList;
+  List<ServiceDetail> _filteredServiceList = [];
 
   TextEditingController _mapSearchController = TextEditingController();
 

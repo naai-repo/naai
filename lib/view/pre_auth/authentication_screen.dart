@@ -65,7 +65,6 @@ class AuthenticationScreen extends StatelessWidget {
                             },
                             isActive: provider.isGetOtpButtonActive,
                           ),
-
                           SizedBox(height: 4.h),
                           if(Platform.isIOS)
                           authenticationOptionsDivider(),

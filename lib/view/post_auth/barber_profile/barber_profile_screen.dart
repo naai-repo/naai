@@ -257,12 +257,18 @@ class _BarberProfileScreenState extends State<BarberProfileScreen> {
                           ],
                         ),
                         VariableWidthCta(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              NamedRoutes.createBookingRoute,
-                            );
-                          },
+                          onTap: () =>
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateBookingScreen2(
+                                        artistName: barberProvider.artist
+                                            .name ??
+                                            '', // Pass the name here
+                                      ),
+                                ),
+                              ),
                           isActive: true,
                           buttonText: StringConstant.confirmBooking,
                         )

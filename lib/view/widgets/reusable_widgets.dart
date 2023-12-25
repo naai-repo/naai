@@ -359,8 +359,12 @@ class ReusableWidgets {
       return Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+            onTap: () {
+             // provider.filteredServiceList.length == 0;
+              FocusManager.instance.primaryFocus!.unfocus();
+              },
             child: Container(
+
               padding: EdgeInsets.all(2.h),
               decoration: BoxDecoration(
                 color: ColorsConstant.graphicFillDark,

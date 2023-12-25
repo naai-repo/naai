@@ -1285,7 +1285,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                     .where((artist) => artist.salonId == provider.selectedSalonData.id)
                                   // .where((artist) => artist.category == provider.selectedServiceCategories) // Filter by selected category
                                     .toList()[index];*/
-                              itemCount: provider.serviceList.length,
+                              itemCount: provider.artistList.length,
                               itemBuilder: (context, index) {
                                 Artist artist =
                                 provider.artistList[index];
