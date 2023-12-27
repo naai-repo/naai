@@ -182,6 +182,7 @@ class HomeProvider with ChangeNotifier {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
       await showModalBottomSheet(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(35),
