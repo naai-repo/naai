@@ -170,6 +170,14 @@ class SalonDetailsProvider with ChangeNotifier {
             .name ??
         '';
   }
+  String getSelectedMultipleArtistName(String artistId, BuildContext context) {
+    return context
+        .read<HomeProvider>()
+        .artistList
+        .firstWhere((element) => element.id == artistId)
+        .name ??
+        '';
+  }
 
   /// Set values of booking related data
   void setBookingData(

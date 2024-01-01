@@ -364,7 +364,6 @@ class ReusableWidgets {
               FocusManager.instance.primaryFocus!.unfocus();
               },
             child: Container(
-
               padding: EdgeInsets.all(2.h),
               decoration: BoxDecoration(
                 color: ColorsConstant.graphicFillDark,

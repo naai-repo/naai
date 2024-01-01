@@ -66,11 +66,11 @@ class AuthenticationScreen extends StatelessWidget {
                             isActive: provider.isGetOtpButtonActive,
                           ),
                           SizedBox(height: 4.h),
-                          if(Platform.isIOS)
+                         // if(Platform.isIOS)
                           authenticationOptionsDivider(),
-                         if(Platform.isIOS)
+                        // if(Platform.isIOS)
                           SizedBox(height: 4.h),
-                         if(Platform.isIOS)
+                        // if(Platform.isIOS)
                           ElevatedButton(
                             onPressed: () => {
                             Navigator.pushReplacementNamed(

@@ -116,6 +116,7 @@ class StringConstant {
   // Schedule appointment strings
   static const String yourAppointment = 'Your appointment';
   static const String chooseAStaff = 'CHOOSE A STAFF';
+  static const String Staff = 'Use This To Save Time';
   static const String selectData = 'Select date';
   static const String datePlaceholder = 'DD/MM/YYYY';
   static const String selectTimeSlot = 'Select time slot';

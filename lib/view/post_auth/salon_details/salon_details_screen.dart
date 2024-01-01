@@ -85,7 +85,7 @@ class _SalonDetailsScreenState extends State<SalonDetailsScreen> {
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
-
+                              provider.resetCurrentBooking();
                               Navigator.pop(context);
                             },
                             child: Padding(

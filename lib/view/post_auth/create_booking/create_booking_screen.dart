@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,6 +25,7 @@ import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../models/service_detail.dart';
 import 'booking_confirmed_screen.dart';
 
 class CreateBookingScreen extends StatefulWidget {
@@ -36,6 +38,9 @@ class CreateBookingScreen extends StatefulWidget {
 class _CreateBookingScreenState extends State<CreateBookingScreen> {
   bool singleStaffListExpanded = false;
   bool showArtistSlotDialogue = false;
+  bool multipleStaffListExpanded = false;
+  bool InsideMultipleStaffExpanded = false;
+  int selectedRadio = 0; // Assuming 0 as the default value
  // Razorpay _razorpay = Razorpay();
 
 
@@ -85,7 +90,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
             children: <Widget>[
               ReusableWidgets.appScreenCommonBackground(),
               CustomScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 slivers: [
                   ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
@@ -133,7 +138,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     delegate: SliverChildListDelegate(
                       <Widget>[
                         Container(
-                          height: 100.h,
+                          height:MediaQuery.of(context).size.height,
                           padding: EdgeInsets.symmetric(
                             horizontal: 4.w,
                           ),
@@ -142,17 +147,48 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             children: <Widget>[
                               salonOverviewCard(),
                               SizedBox(height: 2.h),
-                              provider.isOnPaymentPage
-                                  ? paymentComponent()
-                                  : Column(
+                              if (provider.isOnPaymentPage) paymentComponent() else Column(
                                       children: <Widget>[
                                         schedulingStatus(),
                                         SizedBox(height: 2.h),
                                         if (provider.isOnSelectStaffType)
                                           Padding(
-                                            padding: EdgeInsets.all(2.h),
+                                            padding: EdgeInsets.symmetric(horizontal:2.h),
                                             child: selectSingleStaffCard(),
                                           ),
+                                        if (provider.isOnSelectStaffType  && !singleStaffListExpanded  )
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 2.h),
+                                              child: Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius
+                                                      .circular(2.w),
+                                                  color: const Color(
+                                                      0xffFFB6C1),
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    StringConstant.Staff,
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .w500,
+                                                      //     fontSize: 10.sp,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        if (provider.isOnSelectStaffType)
+                                        SizedBox(height: 2.h),
+                                        if (provider.isOnSelectStaffType)
+                                        authenticationOptionsDivider(),
+                                        if (provider.isOnSelectStaffType)
+                                        Padding(
+                                          padding: EdgeInsets.all(2.h),
+                                          child: selectMingleStaffCard(),
+                                        ),
                                         if (provider.isOnSelectSlot)
                                           slotSelectionWidget(),
                                       ],
@@ -179,7 +215,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(1.h),
                           boxShadow: <BoxShadow>[
-                            BoxShadow(
+                            const BoxShadow(
                               offset: Offset(0, 2.0),
                               color: Colors.grey,
                               spreadRadius: 0.2,
@@ -251,13 +287,42 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                 alignment: Alignment.center,
                 child: showArtistSlotDialogue
                     ? artistSlotPickerDialogueBox()
-                    : SizedBox(),
+                    : const SizedBox(),
               ),
             ],
           ),
         ),
       );
     });
+  }
+
+  Widget authenticationOptionsDivider() {
+    return Row(
+      children: <Widget>[
+        SizedBox(width: 5.w),
+        const Expanded(
+          child: Divider(
+            thickness: 2.0,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          child: Text(
+            StringConstant.or,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const Expanded(
+          child: Divider(
+            thickness: 2.0,
+          ),
+        ),
+        SizedBox(width: 5.w),
+      ],
+    );
   }
 
   Widget paymentComponent() {
@@ -281,7 +346,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       value: context.read<HomeProvider>().userData.name ?? '',
                     ),
                     VerticalDivider(
-                      color: Color(0xFFDBDBDB),
+                      color: const Color(0xFFDBDBDB),
                       thickness: 0.5.w,
                     ),
                     BookingOverviewPart(
@@ -289,7 +354,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       value: provider.currentBooking.selectedDate ?? '',
                     ),
                     VerticalDivider(
-                      color: Color(0xFFDBDBDB),
+                      color: const Color(0xFFDBDBDB),
                       thickness: 0.5.w,
                     ),
                     BookingOverviewPart(
@@ -397,7 +462,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                             ImagePathConstant.deleteIcon,
                                             height: 2.5.h,
                                           ),
-                                        ):SizedBox(),
+                                        ):const SizedBox(),
                                       ],
                                     ),
 
@@ -408,7 +473,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                           ),
                         ) ??
                         []),
-                    provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Row(
+                    provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?const SizedBox():Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Row(
@@ -450,7 +515,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
 
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1,
                       color: Color(0xFFD3D3D3),
                     ),
@@ -769,7 +834,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
           borderRadius: BorderRadius.circular(2.h),
           border: Border.all(
             width: 1,
-            color: Color.fromARGB(255, 214, 214, 214),
+            color: const Color.fromARGB(255, 214, 214, 214),
           ),
           color: provider.artistAvailabilityToDisplay.contains(element)
               ? element == (provider.currentBooking.startTime)  // Previous in bracket provider.currentBooking.startTime ?? 0
@@ -825,7 +890,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                               view: DateRangePickerView.month,
                               selectionColor: ColorsConstant.appColor,
                               backgroundColor: Colors.white,
-                              headerStyle: DateRangePickerHeaderStyle(
+                              headerStyle: const DateRangePickerHeaderStyle(
                                 textAlign: TextAlign.center,
                               ),
                               initialSelectedDate: provider.currentBooking
@@ -1249,6 +1314,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        if(singleStaffListExpanded)
                         Text(
                           provider.currentBooking.artistId != null
                               ? provider.getSelectedArtistName(
@@ -1259,13 +1325,42 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             fontWeight: FontWeight.w500,
                             fontSize: 12.sp,
                           ),
+
                         ),
-                        SvgPicture.asset(
-                          ImagePathConstant.downArrow,
-                          width: 3.w,
-                          color: Colors.black,
-                          fit: BoxFit.fitWidth,
+                        if(!singleStaffListExpanded)
+                          Text(
+                            StringConstant.chooseAStaff,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        Radio(
+                          activeColor:  const Color(0xFFAA2F4C),
+                          value: 1,
+                          groupValue: selectedRadio,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedRadio = value! as int;
+                              // Handle logic for single staff selection
+                              singleStaffListExpanded = true;
+                              multipleStaffListExpanded = false;
+                              provider.currentBooking.artistId = null;
+                            });
+                          },
                         ),
+                        /*
+                        Radio(
+                          value:  singleStaffListExpanded, // Unique value for this radio button
+                          groupValue: singleStaffListExpanded,
+                          onChanged: (value) {
+                            setState(() {
+                              singleStaffListExpanded =  singleStaffListExpanded;
+                              // Handle the logic when this radio button is selected
+                            });
+                          },
+                        ),
+                        */
                       ],
                     ),
                     singleStaffListExpanded
@@ -1344,7 +1439,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 10.sp,
-                                                  color: Color(0xFF727272),
+                                                  color: const Color(0xFF727272),
                                                 ),
                                               ),
                                             ],
@@ -1360,10 +1455,10 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                   ),
                                 );
                               },
-                              separatorBuilder: (context, index) => Divider(),
+                              separatorBuilder: (context, index) => const Divider(),
                             ),
                           )
-                        : SizedBox()
+                        : const SizedBox(),
                   ],
                 ),
               ),
@@ -1434,6 +1529,251 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
       },
     );
   }
+
+
+  Widget selectMingleStaffCard() {
+    return Consumer<SalonDetailsProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          children: <Widget>[
+            CurvedBorderedCard(
+              onTap: () => setState(() {
+              //  singleStaffListExpanded = !singleStaffListExpanded;
+                multipleStaffListExpanded = !multipleStaffListExpanded;
+              }),
+              child: Container(
+                padding: EdgeInsets.all(1.5.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1.h),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                          IconTextSelectorComponent(
+                            text: StringConstant.multipleStaffText,
+                            iconPath: ImagePathConstant.multipleStaffIcon,
+                            isSelected: false,
+                          ),
+                        Radio(
+                          activeColor:  const Color(0xFFAA2F4C),
+                          value: 2,
+                          groupValue: selectedRadio,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedRadio = value! as int;
+                               singleStaffListExpanded = false;
+                              multipleStaffListExpanded = true;
+                              provider.currentBooking.artistId = null;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    if(multipleStaffListExpanded)
+                             ...(provider.currentBooking.serviceIds?.map(
+                                       (element) => Container(
+                                         constraints: BoxConstraints(maxHeight: 20.h),
+                                    // margin: EdgeInsets.symmetric(vertical: 2.w),
+                                     child: Column(
+                                       children: [
+                                         Row(
+                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                           children: <Widget>[
+                                             Column(
+                                               crossAxisAlignment: CrossAxisAlignment.start,
+                                               children: <Widget>[
+                                                 Row(
+                                                   children: <Widget>[
+                                                     SvgPicture.asset(
+                                                       provider.getServiceDetails(
+                                                         serviceId: element,
+                                                         getGender: true,
+                                                       ) ==
+                                                           Gender.MEN
+                                                           ? ImagePathConstant.manIcon
+                                                           : ImagePathConstant.womanIcon,
+                                                       height: 3.h,
+                                                     ),
+                                                     SizedBox(width: 2.w),
+                                                     Text(
+                                                       provider.getServiceDetails(
+                                                         serviceId: element,
+                                                         getServiceName: true,
+                                                       ),
+                                                       style: TextStyle(
+                                                         fontSize: 12.sp,
+                                                         color: ColorsConstant.textDark,
+                                                       ),
+                                                     ),
+                                                   ],
+                                                 ),
+                                                 SizedBox(height: 1.w),
+                                                 Text('  Rs. ${provider.showPrice==null||provider.showPrice==0 ? provider.totalPrice:provider.showPrice}'
+                                                   ,style:(TextStyle(
+                                                   fontSize: 10.sp,
+                                               color: ColorsConstant.lightGreyText,
+                                                   ))
+                                                   ,
+                                                 ),
+                                               ],
+                                             ),
+                                           ],
+                                         ),
+                                         selectSingleStaffCard2()
+                                       ],
+                                     ),
+                                   ),
+                             ) ??
+                                     []),
+                  ],
+        ),
+            ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget selectSingleStaffCard2() {
+    return Consumer<SalonDetailsProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          children: <Widget>[
+            SizedBox(height: 1.5.h),
+            CurvedBorderedCard(
+              onTap: () => setState(() {
+              InsideMultipleStaffExpanded = !InsideMultipleStaffExpanded;
+              }),
+              child: Container(
+                padding: EdgeInsets.all(1.5.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1.h),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          provider.currentBooking.artistId != null
+                              ? provider.getSelectedArtistName(
+                              provider.currentBooking.artistId ?? '',
+                              context)
+                              : StringConstant.chooseAStaff,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          ImagePathConstant.downArrow,
+                          width: 3.w,
+                          color: Colors.black,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ],
+                    ),
+                  //  singleStaffListExpanded
+                   InsideMultipleStaffExpanded
+                        ? Container(
+                      constraints: BoxConstraints(maxHeight: 20.h),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: provider.artistList.length,
+                        itemBuilder: (context, index) {
+                          Artist artist =
+                          provider.artistList[index];
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              if (provider.currentBooking.artistId ==
+                                  artist.id )
+                              {
+                                provider.setBookingData(
+                                  context,
+                                  setArtistId: true,
+                                  artistId: null,
+                                );
+                              } else {
+                                provider.setBookingData(
+                                  context,
+                                  setArtistId: true,
+                                  artistId: artist.id,
+                                );
+                              }
+                              provider.updateIsNextButtonActive();
+                              provider.resetSlotInfo();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 2.w,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text.rich(
+                                    TextSpan(
+                                      children: <InlineSpan>[
+                                        WidgetSpan(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 2.w),
+                                            child: SvgPicture.asset(
+                                              artist.id ==
+                                                  provider
+                                                      .currentBooking
+                                                      .artistId
+                                                  ? ImagePathConstant
+                                                  .selectedOption
+                                                  : ImagePathConstant
+                                                  .unselectedOption,
+                                              width: 5.w,
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: artist.name ?? '',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10.sp,
+                                            color: const Color(0xFF727272),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RatingBox(
+                                    rating: artist.rating ?? 0.0,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => const Divider(),
+                      ),
+                    )
+                        : const SizedBox()
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
 
 
@@ -1533,7 +1873,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
             children: <Widget>[
               ReusableWidgets.appScreenCommonBackground(),
               CustomScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 slivers: [
                   ReusableWidgets.transparentFlexibleSpace(),
                   SliverAppBar(
@@ -1627,7 +1967,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(1.h),
                     boxShadow: <BoxShadow>[
-                      BoxShadow(
+                      const BoxShadow(
                         offset: Offset(0, 2.0),
                         color: Colors.grey,
                         spreadRadius: 0.2,
@@ -1699,7 +2039,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                 alignment: Alignment.center,
                 child: showArtistSlotDialogue
                     ? artistSlotPickerDialogueBox()
-                    : SizedBox(),
+                    : const SizedBox(),
               ),
             ],
           ),
@@ -1729,7 +2069,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                       value: context.read<HomeProvider>().userData.name ?? '',
                     ),
                     VerticalDivider(
-                      color: Color(0xFFDBDBDB),
+                      color: const Color(0xFFDBDBDB),
                       thickness: 0.5.w,
                     ),
                     BookingOverviewPart(
@@ -1737,7 +2077,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                       value: provider.currentBooking.selectedDate ?? '',
                     ),
                     VerticalDivider(
-                      color: Color(0xFFDBDBDB),
+                      color: const Color(0xFFDBDBDB),
                       thickness: 0.5.w,
                     ),
                     BookingOverviewPart(
@@ -1845,7 +2185,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                                         ImagePathConstant.deleteIcon,
                                         height: 2.5.h,
                                       ),
-                                    ):SizedBox(),
+                                    ):const SizedBox(),
                                   ],
                                 ),
 
@@ -1856,7 +2196,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                       ),
                     ) ??
                         []),
-                    provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?SizedBox():Row(
+                    provider.selectedSalonData.discountPercentage==0||provider.selectedSalonData.discountPercentage==null?const SizedBox():Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Row(
@@ -1898,7 +2238,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
 
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1,
                       color: Color(0xFFD3D3D3),
                     ),
@@ -2217,7 +2557,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
           borderRadius: BorderRadius.circular(2.h),
           border: Border.all(
             width: 1,
-            color: Color.fromARGB(255, 214, 214, 214),
+            color: const Color.fromARGB(255, 214, 214, 214),
           ),
           color: provider.artistAvailabilityToDisplay.contains(element)
               ? element == (provider.currentBooking.startTime)  // Previous in bracket provider.currentBooking.startTime ?? 0
@@ -2273,7 +2613,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                               view: DateRangePickerView.month,
                               selectionColor: ColorsConstant.appColor,
                               backgroundColor: Colors.white,
-                              headerStyle: DateRangePickerHeaderStyle(
+                              headerStyle: const DateRangePickerHeaderStyle(
                                 textAlign: TextAlign.center,
                               ),
                               initialSelectedDate: provider.currentBooking
@@ -2789,7 +3129,7 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 10.sp,
-                                            color: Color(0xFF727272),
+                                            color: const Color(0xFF727272),
                                           ),
                                         ),
                                       ],
@@ -2805,10 +3145,10 @@ class _CreateBookingScreen2State extends State<CreateBookingScreen2> {
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) => Divider(),
+                        separatorBuilder: (context, index) => const Divider(),
                       ),
                     )
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                 ),
               ),

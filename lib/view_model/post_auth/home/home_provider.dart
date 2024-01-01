@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -94,14 +95,13 @@ class HomeProvider with ChangeNotifier {
   void initializeSymbol() {
     _symbol = Symbol(
       'marker',
-      SymbolOptions(),
+      const SymbolOptions(),
     );
   }
 
   /// Method to trigger all the API functions of home screen
 
   Future<void> initHome(BuildContext context) async {
-
     var _serviceEnabled = await _mapLocation.serviceEnabled();
     await locationPopUp(context);
     if (!_serviceEnabled) {
@@ -137,6 +137,7 @@ class HomeProvider with ChangeNotifier {
     _salonList = [...context.read<ExploreProvider>().salonData];
     changeRatings(context);
 
+
     if (_userData.homeLocation?.geoLocation == null) {
       Loader.hideLoader(context);
       Navigator.pushNamed(
@@ -153,8 +154,28 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
-
+  void showWeakInternetPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Weak Internet Connection'),
+          content: const Text('Your internet connection is weak or off. Please try again.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Try Again'),
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  NamedRoutes.bottomNavigationRoute,
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   Future<void> requestLocationPermission(BuildContext context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
@@ -162,11 +183,20 @@ class HomeProvider with ChangeNotifier {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Location Permission Required'),
-              content: Text('This app requires access to your location for nearby salon. Please grant the permission.'),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+              ),
+              title: const Text('Location Permission Required'),
+              content: const Text('This app requires access to your location for nearby salon. Please grant the permission.'),
               actions: [
                 ElevatedButton(
-                  child: Text('OK'),
+                  child: const Text('Okay'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorsConstant.appColor, // Change the button's background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the pop-up.
                     // Request location permission again.
@@ -183,7 +213,7 @@ class HomeProvider with ChangeNotifier {
     if (_permissionGranted == location.PermissionStatus.denied) {
       await showModalBottomSheet(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(35),
             topRight: Radius.circular(35),
@@ -192,7 +222,7 @@ class HomeProvider with ChangeNotifier {
         context: context,
         builder: (BuildContext context) {
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Container(
               color: Colors.white,
               child: Column(
@@ -206,8 +236,8 @@ class HomeProvider with ChangeNotifier {
                       width: 80,
                     ),
                   ),
-                  SizedBox(height: 8.0),
-                  Align(
+                  const SizedBox(height: 8.0),
+                  const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Your location is used to find nearby salons and their add address and track your order",
@@ -215,16 +245,22 @@ class HomeProvider with ChangeNotifier {
                           fontSize: 16.0),
                     ),
                   ),
-                  SizedBox(height:20),
+                  const SizedBox(height:20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          child: Text("Continue", style: TextStyle(
+                          child: const Text("Continue", style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           )),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorsConstant.appColor, // Change the button's background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(context);
                             Geolocator.requestPermission();
@@ -261,7 +297,6 @@ class HomeProvider with ChangeNotifier {
 
     _userCurrentLatLng =
         LatLng(_locationData.latitude!, _locationData.longitude!);
-
     await Future.wait(
       [
         getUserDetails(context).whenComplete(
@@ -628,7 +663,7 @@ class HomeProvider with ChangeNotifier {
                 MaterialStateProperty.all(ColorsConstant.appColor),
               ),
               onPressed: () => updateUserLocation(context, coordinates),
-              child: Text(StringConstant.confirmLocation),
+              child: const Text(StringConstant.confirmLocation),
             ),
           ],
         ),
