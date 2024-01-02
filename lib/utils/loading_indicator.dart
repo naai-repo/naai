@@ -36,9 +36,44 @@ class Loader {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
           ),
-          title: const Text('Weak Internet Connection'),
-          content: const Text( 'Your internet connection seems to be weak or experiencing issues, '
-              'which may cause delays in loading. Please wait a moment and try again.',
+        contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Icon(
+                    Icons.signal_wifi_statusbar_connected_no_internet_4,
+                    size: 100,
+                    color: Color(0xFFAA2F4C), // Change the color to your preference
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Weak Internet Connection',
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                // const SizedBox(height: 10),
+                SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text('Your internet connection seems to be weak or experiencing issues,'
+                      'which may cause delays in loading. Please wait a moment and try again.', style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                //  const SizedBox(height: 20),
+                SizedBox(height: 20),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -60,3 +95,7 @@ class Loader {
     );
   }
 }
+//Weak Internet Connection
+//Your internet connection seems to be weak or experiencing issues, '
+//               'which may cause delays in loading. Please wait a moment and try again.',
+//

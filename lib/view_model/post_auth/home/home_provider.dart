@@ -208,6 +208,7 @@ class HomeProvider with ChangeNotifier {
           });
     }
   }
+
   Future locationPopUp(context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
