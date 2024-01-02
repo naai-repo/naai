@@ -278,6 +278,7 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
+
   Future<void> initHome2(BuildContext context) async {
 
     var _serviceEnabled = await _mapLocation.serviceEnabled();
