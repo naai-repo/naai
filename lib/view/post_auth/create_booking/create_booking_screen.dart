@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/models/artist.dart';
@@ -147,6 +146,8 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                             children: <Widget>[
                               salonOverviewCard(),
                               SizedBox(height: 2.h),
+                              //Code for MultiService
+                              /*
                               if (provider.isOnPaymentPage) paymentComponent() else Column(
                                       children: <Widget>[
                                         schedulingStatus(),
@@ -193,6 +194,31 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                           slotSelectionWidget(),
                                       ],
                                     ),
+                              SizedBox(height: 35.h),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              */
+                              provider.isOnPaymentPage
+                                  ? paymentComponent()
+                                  : Column(
+                                children: <Widget>[
+                                  schedulingStatus(),
+                                  SizedBox(height: 2.h),
+                                  if (provider.isOnSelectStaffType)
+                                    Padding(
+                                      padding: EdgeInsets.all(2.h),
+                                      child: selectSingleStaffCard(),
+                                    ),
+                                  if (provider.isOnSelectSlot)
+                                    slotSelectionWidget(),
+                                ],
+                              ),
                               SizedBox(height: 35.h),
                             ],
                           ),
@@ -1623,7 +1649,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                              ),
                                            ],
                                          ),
-                                         selectSingleStaffCard2()
+                                         selectInsideStaffCard()
                                        ],
                                      ),
                                    ),
@@ -1639,7 +1665,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
     );
   }
 
-  Widget selectSingleStaffCard2() {
+  Widget selectInsideStaffCard() {
     return Consumer<SalonDetailsProvider>(
       builder: (context, provider, child) {
         return Column(
@@ -1764,6 +1790,160 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                       ),
                     )
                         : const SizedBox()
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget ForNowselectSingleStaffCard() {
+    return Consumer<SalonDetailsProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: IconTextSelectorComponent(
+                text: StringConstant.singleStaffText,
+                iconPath: ImagePathConstant.singleStaffIcon,
+                isSelected: false,
+              ),
+            ),
+            SizedBox(height: 1.5.h),
+            CurvedBorderedCard(
+              onTap: () => setState(() {
+                singleStaffListExpanded = !singleStaffListExpanded;
+              }),
+              child: Container(
+                padding: EdgeInsets.all(1.5.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(1.h),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          provider.currentBooking.artistId != null
+                              ? provider.getSelectedArtistName(
+                              provider.currentBooking.artistId ?? '',
+                              context)
+                              : StringConstant.chooseAStaff,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          ImagePathConstant.downArrow,
+                          width: 3.w,
+                          color: Colors.black,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ],
+                    ),
+                    singleStaffListExpanded
+                        ? Container(
+                      constraints: BoxConstraints(maxHeight: 20.h),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        /* itemCount: context
+                                  .read<HomeProvider>()
+                                  .artistList
+                                  .where((artist) => artist.salonId == provider.selectedSalonData.id)
+                                  .length,
+                              itemBuilder: (context, index) {
+                                Artist artist = context
+                                    .read<HomeProvider>()
+                                    .artistList
+                                    .where((artist) => artist.salonId == provider.selectedSalonData.id)
+                                  // .where((artist) => artist.category == provider.selectedServiceCategories) // Filter by selected category
+                                    .toList()[index];*/
+                        itemCount: provider.serviceList.length,
+                        itemBuilder: (context, index) {
+                          Artist artist =
+                          provider.artistList[index];
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              if (provider.currentBooking.artistId ==
+                                  artist.id )
+                              {
+                                provider.setBookingData(
+                                  context,
+                                  setArtistId: true,
+                                  artistId: null,
+                                );
+                              } else {
+                                provider.setBookingData(
+                                  context,
+                                  setArtistId: true,
+                                  artistId: artist.id,
+                                );
+                              }
+                              provider.updateIsNextButtonActive();
+                              provider.resetSlotInfo();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 2.w,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text.rich(
+                                    TextSpan(
+                                      children: <InlineSpan>[
+                                        WidgetSpan(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 2.w),
+                                            child: SvgPicture.asset(
+                                              artist.id ==
+                                                  provider
+                                                      .currentBooking
+                                                      .artistId
+                                                  ? ImagePathConstant
+                                                  .selectedOption
+                                                  : ImagePathConstant
+                                                  .unselectedOption,
+                                              width: 5.w,
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: artist.name ?? '',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10.sp,
+                                            color: Color(0xFF727272),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RatingBox(
+                                    rating: artist.rating ?? 0.0,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => Divider(),
+                      ),
+                    )
+                        : SizedBox()
                   ],
                 ),
               ),
