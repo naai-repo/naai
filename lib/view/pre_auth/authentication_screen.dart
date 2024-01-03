@@ -73,6 +73,7 @@ class AuthenticationScreen extends StatelessWidget {
                               await  checkConnectivity(context);
                               FocusManager.instance.primaryFocus!.unfocus();
                               provider.phoneNumberLogin(context);
+
                             },
                             isActive: provider.isGetOtpButtonActive,
                           ),

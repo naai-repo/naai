@@ -4,10 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:naai/utils/colors_constant.dart';
 import 'package:naai/utils/image_path_constant.dart';
 import 'package:naai/utils/string_constant.dart';
+import 'package:naai/view/pre_auth/authentication_screen.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/pre_auth/authentication_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../utils/routing/named_routes.dart';
 
 class VerifyOtpScreen extends StatelessWidget {
   const VerifyOtpScreen({Key? key}) : super(key: key);
@@ -25,8 +28,9 @@ class VerifyOtpScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           title: IconButton(
             onPressed: () {
-              provider.resetOtpControllers();
-              Navigator.pop(context);
+             provider.resetOtpControllers();
+             provider.resetMobielNumberController();
+             Navigator.pop(context);
             },
             splashRadius: 0.1,
             splashColor: Colors.transparent,

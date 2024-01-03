@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -160,7 +161,11 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
     try {
       _phoneNumber = "+91${_mobileNumberController.text}";
-
+      Timer(Duration(seconds: 10), () {
+        _isOtpLoaderActive = false;
+        notifyListeners();
+        ReusableWidgets.showFlutterToast(context, 'Weak Internet Try Again');
+      });
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: _phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) {
@@ -173,6 +178,8 @@ class AuthenticationProvider with ChangeNotifier {
           if (e.message!
               .contains('format of the phone number provided is incorrect')) {
             ReusableWidgets.showFlutterToast(context, 'Invalid phone number!');
+          }else if (e.message!.contains('Timed out waiting for SMS')) {
+            ReusableWidgets.showFlutterToast(context, 'Timed out waiting for SMS.');
           }
           throw ExceptionHandling(message: e.message ?? "");
         },
