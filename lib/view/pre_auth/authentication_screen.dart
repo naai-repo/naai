@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,12 +12,21 @@ import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/pre_auth/authentication_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
+import '../../utils/no_internet.dart';
 import '../../utils/routing/named_routes.dart';
 
 class AuthenticationScreen extends StatelessWidget {
-  const AuthenticationScreen({Key? key}) : super(key: key);
+   AuthenticationScreen({Key? key}) : super(key: key);
+  final Connectivity _connectivity = Connectivity();
 
+   Future<void> checkConnectivity(BuildContext context) async {
+     ConnectivityResult result = await _connectivity.checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      // Show "Oops" screen
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => ConnectionLostScreen()));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -59,14 +69,15 @@ class AuthenticationScreen extends StatelessWidget {
                           SizedBox(height: 4.h),
                           ReusableWidgets.redFullWidthButton(
                             buttonText: StringConstant.getOtp,
-                            onTap: () {
+                            onTap: () async{
+                              await  checkConnectivity(context);
                               FocusManager.instance.primaryFocus!.unfocus();
                               provider.phoneNumberLogin(context);
                             },
                             isActive: provider.isGetOtpButtonActive,
                           ),
                           SizedBox(height: 4.h),
-                          if(Platform.isIOS)
+                         if(Platform.isIOS)
                           authenticationOptionsDivider(),
                          if(Platform.isIOS)
                           SizedBox(height: 4.h),

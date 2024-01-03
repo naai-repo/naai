@@ -12,7 +12,7 @@ class Loader {
         context: context,
         barrierColor: Colors.white.withOpacity(0.3),
         builder: (BuildContext context) {
-          _timer = Timer(const Duration(seconds: 15), () {
+          _timer = Timer(const Duration(seconds: 12), () {
             hideLoader(context);
             showWeakInternetPopup(context);
           });
@@ -30,6 +30,7 @@ class Loader {
   }
   static void showWeakInternetPopup(BuildContext context) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -66,7 +67,7 @@ class Loader {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text('Your internet connection seems to be weak or experiencing issues,'
-                      'which may cause delays in loading. Please wait a moment and try again.', style: TextStyle(fontSize: 16),
+                      'which may cause delays in loading. Please make sure you have a stable internet connection and try again.', style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
                 ),

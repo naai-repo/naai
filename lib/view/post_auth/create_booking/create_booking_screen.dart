@@ -213,7 +213,7 @@ class _CreateBookingScreenState extends State<CreateBookingScreen> {
                                   if (provider.isOnSelectStaffType)
                                     Padding(
                                       padding: EdgeInsets.all(2.h),
-                                      child: selectSingleStaffCard(),
+                                      child: ForNowselectSingleStaffCard(),
                                     ),
                                   if (provider.isOnSelectSlot)
                                     slotSelectionWidget(),

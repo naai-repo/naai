@@ -154,28 +154,6 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
-  void showWeakInternetPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Weak Internet Connection'),
-          content: const Text('Your internet connection is weak or off. Please try again.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Try Again'),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  NamedRoutes.bottomNavigationRoute,
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
   Future<void> requestLocationPermission(BuildContext context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
