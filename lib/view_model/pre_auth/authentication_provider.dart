@@ -161,7 +161,7 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
     try {
       _phoneNumber = "+91${_mobileNumberController.text}";
-      Timer(Duration(seconds: 10), () {
+      Timer(Duration(seconds: 15), () {
         _isOtpLoaderActive = false;
         notifyListeners();
         ReusableWidgets.showFlutterToast(context, 'Weak Internet Try Again');
