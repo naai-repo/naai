@@ -100,7 +100,7 @@ class HomeProvider with ChangeNotifier {
   }
 
   /// Method to trigger all the API functions of home screen
-
+/*
   Future<void> initHome(BuildContext context) async {
     var _serviceEnabled = await _mapLocation.serviceEnabled();
     await locationPopUp(context);
@@ -154,39 +154,95 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
+  */
+  Future<void> initHome(BuildContext context) async {
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+    await locationPopUp(context);
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _mapLocation.requestService();
+      if (!_serviceEnabled) return;
+    }
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      // Show the location permission pop-up only if permission is denied.
+      await requestLocationPermission(context);
+      _permissionGranted = await _mapLocation.requestPermission();
+      if (_permissionGranted != location.PermissionStatus.granted) return;
+    }
+       Loader.showLoader(context);
+
+    try {
+      var _locationData = await _mapLocation.getLocation();
+      _userCurrentLatLng = LatLng(_locationData.latitude!, _locationData.longitude!);
+
+      await Future.wait([
+        getUserDetails(context).whenComplete(() async {
+          await context.read<ExploreProvider>().getSalonList(context);
+        }),
+        getAllArtists(context),
+        getAllReviews(context),
+      ]);
+
+      _salonList = [...context.read<ExploreProvider>().salonData];
+      changeRatings(context);
+
+      if (_userData.homeLocation?.geoLocation == null) {
+        Loader.hideLoader(context);
+        Navigator.pushNamed(context, NamedRoutes.setHomeLocationRoute);
+      } else {
+        await getUserBookings(context);
+        await getServicesNamesAndPrice(context);
+        Loader.hideLoader(context);
+      }
+    } catch (error) {
+      Loader.hideLoader(context);
+      ReusableWidgets.showFlutterToast(context, '$error');
+    }
+
+    notifyListeners();
+  }
+
   Future<void> requestLocationPermission(BuildContext context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
       await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+            ),
+            title: const Text('Discover Salons Near You 📍✨'),
+            content: SingleChildScrollView( // Ensures the dialog is scrollable if the content is too long
+              child: ListBody(
+                children: const <Widget>[
+                  Text('To provide you with a personalized experience and show you the best salons nearby, we kindly request access to your location. Your privacy is important to us, and your location data will be used solely to enhance your service.'),
+                  SizedBox(height:10),
+                  Text('Please tap \'Allow\' to grant location access and start exploring your local beauty destinations!'),
+                  SizedBox(height:10),
+                  Text('Thank you for helping us tailor your salon discovery journey. 💇‍♀️💇‍♂️'),
+                ],
               ),
-              title: const Text('Location Permission Required'),
-              content: const Text('This app requires access to your location for nearby salon. Please grant the permission.'),
-              actions: [
-                ElevatedButton(
-                  child: const Text('Okay'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorsConstant.appColor, // Change the button's background color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
-                    ),
+            ),
+            actions: [
+              ElevatedButton(
+                child: const Text('Allow'),
+                style: ElevatedButton.styleFrom(
+                  primary: ColorsConstant.appColor, // Change the button's background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the pop-up.
-                    // Request location permission again.
-                    _mapLocation.requestPermission();
-                  },
                 ),
-              ],
-            );
-          });
-
-
-
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the pop-up.
+                  // Request location permission again.
+                  _mapLocation.requestPermission();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -222,7 +278,7 @@ class HomeProvider with ChangeNotifier {
                   const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Your location is used to find nearby salons and their add address and track your order",
+                      "Allow us to access your location to find nearby salons and offer personalized recommendations just for you.",
                       style: TextStyle(
                           fontSize: 16.0),
                     ),
