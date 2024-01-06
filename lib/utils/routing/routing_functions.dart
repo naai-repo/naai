@@ -81,6 +81,9 @@ class RoutingFunctions {
       case NamedRoutes.setHomeLocationRoute:
         target = SetHomeLocationScreen();
         break;
+      case NamedRoutes.setHomeLocationRoute2:
+        target = SetHomeLocationScreen2();
+        break;
       case NamedRoutes.mapRoute:
         target = MapScreen();
         break;

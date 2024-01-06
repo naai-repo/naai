@@ -78,11 +78,11 @@ class AuthenticationScreen extends StatelessWidget {
                             isActive: provider.isGetOtpButtonActive,
                           ),
                           SizedBox(height: 4.h),
-                         if(Platform.isIOS)
+                       //  if(Platform.isIOS)
                           authenticationOptionsDivider(),
-                         if(Platform.isIOS)
+                       //  if(Platform.isIOS)
                           SizedBox(height: 4.h),
-                         if(Platform.isIOS)
+                       //  if(Platform.isIOS)
                           ElevatedButton(
                             onPressed: () => {
                             Navigator.pushReplacementNamed(
@@ -100,10 +100,7 @@ class AuthenticationScreen extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                 horizontal: MediaQuery.of(context).size.width * 0.1,
                               ),
-                            child:Text(
-                              "Continue as a Guest",
-                              style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white
-                              ),
+                            child:Text(StringConstant.Continueguest,
                             ),
                           ),
                           ),

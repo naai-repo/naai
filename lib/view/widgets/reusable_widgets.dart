@@ -105,7 +105,7 @@ class ReusableWidgets {
     FToast fToast = FToast();
     fToast.init(context);
     fToast.showToast(
-      toastDuration: const Duration(seconds: 5),
+      toastDuration: const Duration(seconds: 6),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         decoration: BoxDecoration(
@@ -334,7 +334,7 @@ class ReusableWidgets {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () async {
-          Loader.showLoader(context);
+         Loader.showLoader(context);
           LatLng latLng = await provider.fetchCurrentLocation(context);
           await provider.animateToPosition(latLng);
           Loader.hideLoader(context);

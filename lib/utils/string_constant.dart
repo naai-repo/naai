@@ -11,6 +11,7 @@ class StringConstant {
   // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';
   static const String getOtp = 'Get OTP';
+  static const String Continueguest = 'Continue as a guest';
   static const String or = 'OR';
   static const String signInWithGoogle = 'Sign in with Google';
   static const String signInWithApple = 'Sign in with Apple';
@@ -51,6 +52,7 @@ class StringConstant {
   static const String salonsNearMe = 'Salons near me';
   static const String ourStylist = 'Our stylist';
   static const String confirmLocation = 'Confirm Location';
+  static const String confirmLocation2 = 'Confirm Location';
   static const String previousBooking = 'Previous Booking';
   static const String bookAgain = 'Book Again';
   static const String seeDetails = 'See Details';

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -13,10 +14,6 @@ class Loader {
         context: context,
         barrierColor: Colors.white.withOpacity(0.3),
         builder: (BuildContext context) {
-          _timer = Timer(const Duration(seconds: 12), () {
-            hideLoader(context);
-            showWeakInternetPopup(context);
-          });
           return WillPopScope(
             onWillPop: () async => false,
             child: const Center(
@@ -118,3 +115,5 @@ class Loader {
 //Your internet connection seems to be weak or experiencing issues, '
 //               'which may cause delays in loading. Please wait a moment and try again.',
 //
+
+

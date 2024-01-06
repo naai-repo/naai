@@ -25,10 +25,12 @@ import 'package:naai/utils/utility_functions.dart';
 import 'package:naai/view/widgets/reusable_widgets.dart';
 import 'package:naai/view_model/post_auth/explore/explore_provider.dart';
 import 'package:naai/view_model/post_auth/salon_details/salon_details_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/review.dart';
 import '../../../models/service_detail.dart';
@@ -164,11 +166,12 @@ class HomeProvider with ChangeNotifier {
     }
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
-      // Show the location permission pop-up only if permission is denied.
-      await requestLocationPermission(context);
-      _permissionGranted = await _mapLocation.requestPermission();
-      if (_permissionGranted != location.PermissionStatus.granted) return;
+      Navigator.pushNamed(context, NamedRoutes.setHomeLocationRoute);
+      return; // Stop further execution
     }
+
+   // _permissionGranted = await _mapLocation.requestPermission();
+      if (_permissionGranted != location.PermissionStatus.granted) return;
        Loader.showLoader(context);
 
     try {
@@ -246,10 +249,11 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  Future locationPopUp(context) async {
+  Future locationPopUp(BuildContext context) async {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
       await showModalBottomSheet(
+        isDismissible: false,
         backgroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -278,30 +282,36 @@ class HomeProvider with ChangeNotifier {
                   const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Allow us to access your location to find nearby salons and offer personalized recommendations just for you.",
-                      style: TextStyle(
-                          fontSize: 16.0),
+                      "To provide you with a personalized experience and show you the best salons nearby,"
+                          "Allow us to access your location to find nearby salons and offer personalized recommendations just for you.",
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
-                  const SizedBox(height:20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          child: const Text("Continue", style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          )),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorsConstant.appColor, // Change the button's background color
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
+                          child: const Text(
+                            "Continue",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Geolocator.requestPermission();
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorsConstant.appColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () async {
+                            await Geolocator.requestPermission();
+                          //  _mapLocation.requestService();
+                       //    await _mapLocation.requestPermission();
+                              Navigator.pop(context);
+
                           },
                         ),
                       ),
@@ -328,7 +338,8 @@ class HomeProvider with ChangeNotifier {
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
       // _permissionGranted = await _mapLocation.requestPermission();
-      await requestLocationPermission(context);
+      Navigator.pushNamed(context, NamedRoutes.setHomeLocationRoute2);
+      return; // Stop further execution
     }
     await Loader.showLoader(context);
 
@@ -488,17 +499,30 @@ class HomeProvider with ChangeNotifier {
       BuildContext context,
       ) async {
     this._controller = mapController;
-
+/*
     var _serviceEnabled = await _mapLocation.serviceEnabled();
 
     if (!_serviceEnabled) {
       _serviceEnabled = await _mapLocation.requestService();
     }
+    */
     var _permissionGranted = await _mapLocation.hasPermission();
     if (_permissionGranted == location.PermissionStatus.denied) {
-      _permissionGranted = await _mapLocation.requestPermission();
+      ReusableWidgets.showFlutterToast(
+        context,
+        'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
+      );
+      LatLng dummyLocation = LatLng(28.7383,77.0822); // Set your desired dummy location
+      await mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: dummyLocation,
+            zoom: 10,
+          ),
+        ),
+      );
+      return; // Exit the method
     }
-
     Loader.showLoader(context);
     var _locationData = await _mapLocation.getLocation();
 
@@ -522,6 +546,63 @@ class HomeProvider with ChangeNotifier {
     Loader.hideLoader(context);
 
     await getFormattedAddressConfirmation(
+      context: context,
+      coordinates: currentLatLng,
+    );
+  }
+
+  Future<void> onMapCreated2(
+      MapboxMapController mapController,
+      BuildContext context,
+      ) async {
+    this._controller = mapController;
+/*
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _mapLocation.requestService();
+    }
+    */
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      ReusableWidgets.showFlutterToast(
+        context,
+        'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊2',
+      );
+      LatLng dummyLocation = LatLng(28.7383,77.0822); // Set your desired dummy location
+      await mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: dummyLocation,
+            zoom: 10,
+          ),
+        ),
+      );
+      return; // Exit the method
+    }
+    Loader.showLoader(context);
+    var _locationData = await _mapLocation.getLocation();
+
+    LatLng currentLatLng =
+    LatLng(_locationData.latitude!, _locationData.longitude!);
+
+    await mapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: currentLatLng,
+          zoom: 16,
+        ),
+      ),
+    );
+
+    _symbol = await this._controller.addSymbol(
+      UtilityFunctions.getCurrentLocationSymbolOptions(
+          latLng: currentLatLng),
+    );
+
+    Loader.hideLoader(context);
+
+    await getFormattedAddressConfirmation2(
       context: context,
       coordinates: currentLatLng,
     );
@@ -616,12 +697,51 @@ class HomeProvider with ChangeNotifier {
 
     notifyListeners();
   }
+  Future<void> onMapClick2({
+    required BuildContext context,
+    required LatLng coordinates,
+  }) async {
+    _mapSearchController.clear();
+    print("Coordinates ===> $coordinates");
+    await _controller.removeSymbol(_symbol);
+
+    _symbol = await _controller.addSymbol(
+      UtilityFunctions.getCurrentLocationSymbolOptions(latLng: coordinates),
+    );
+
+    this._controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: coordinates, zoom: 16),
+      ),
+    );
+
+    await getFormattedAddressConfirmation2(
+      context: context,
+      coordinates: coordinates,
+    );
+
+    notifyListeners();
+  }
 
   /// Update the user's location related data in [FirebaseFirestore]
   void updateUserLocation(
       BuildContext context,
       LatLng latLng,
       ) async {
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _mapLocation.requestService();
+    }
+
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+    ReusableWidgets.showFlutterToast(
+    context,
+    'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
+    );
+    return ;
+    }
     UserModel user = UserModel.fromMap(_userData.toMap());
 
     user.homeLocation = HomeLocation();
@@ -652,6 +772,55 @@ class HomeProvider with ChangeNotifier {
       context,
       MaterialPageRoute(
         builder: (context) => BottomNavigationScreen3(), // Replace NextScreen with your desired screen
+      ),
+    );
+
+  }
+
+  void updateUserLocation2(
+      BuildContext context,
+      LatLng latLng,
+      ) async {
+    var _serviceEnabled = await _mapLocation.serviceEnabled();
+
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _mapLocation.requestService();
+    }
+
+    var _permissionGranted = await _mapLocation.hasPermission();
+    if (_permissionGranted == location.PermissionStatus.denied) {
+      ReusableWidgets.showFlutterToast(
+        context,
+        'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
+      );
+      return ;
+    }
+    UserModel user = UserModel.fromMap(_userData.toMap());
+
+    user.homeLocation = HomeLocation();
+
+    user.homeLocation?.addressString = _addressText;
+    user.homeLocation?.geoLocation =
+        GeoPoint(latLng.latitude, latLng.longitude);
+
+    Map<String, dynamic> data = user.toMap();
+    Loader.showLoader(context);
+    try {
+      await DatabaseService().updateUserData(data: data).onError(
+              (FirebaseException error, stackTrace) =>
+          throw ExceptionHandling(message: error.message ?? ""));
+      _changedLocation = true;
+      await getUserDetails(context);
+      context.read<ExploreProvider>().getSalonList(context, justDistance: true);
+      Loader.hideLoader(context);
+    } catch (e) {
+      Loader.hideLoader(context);
+    }
+    notifyListeners();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BottomNavigationScreen2(), // Replace NextScreen with your desired screen
       ),
     );
 
@@ -701,7 +870,20 @@ class HomeProvider with ChangeNotifier {
                 backgroundColor:
                 MaterialStateProperty.all(ColorsConstant.appColor),
               ),
-              onPressed: () => updateUserLocation(context, coordinates),
+              onPressed: () async {
+                  PermissionStatus status = await Permission.location.request();
+                  if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+                    Geolocator.checkPermission();
+                      ReusableWidgets.showFlutterToast(
+                        context,
+                        'Location permission is required to proceed.to find nearby salons and offer personalized recommendations just for you.😊',
+                      );
+                    openAppSettings();
+                    }
+                  else {
+                    updateUserLocation(context, coordinates);
+                  }
+                },
               child: const Text(StringConstant.confirmLocation),
             ),
           ],
@@ -713,6 +895,73 @@ class HomeProvider with ChangeNotifier {
       _changedLocation = false;
     }
   }
+
+  Future<void> getFormattedAddressConfirmation2({
+    required BuildContext context,
+    required LatLng coordinates,
+  }) async {
+    Loader.showLoader(context);
+
+    _addressText = await UtilityFunctions.getAddressCoordinateAndFormatAddress(
+      context: context,
+      latLng: coordinates,
+    );
+
+    Loader.hideLoader(context);
+
+    await showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(2.h),
+          ),
+        ),
+        height: 20.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              _addressText,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 1.h),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all(ColorsConstant.appColor),
+              ),
+              onPressed: () async {
+                PermissionStatus status = await Permission.location.request();
+                if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+                  Geolocator.checkPermission();
+                  ReusableWidgets.showFlutterToast(
+                    context,
+                    'Location permission is required to proceed.to find nearby salons and offer personalized recommendations just for you.😊',
+                  );
+                  openAppSettings();
+                }
+                else {
+                  updateUserLocation2(context, coordinates);
+                }
+              },
+              child: const Text(StringConstant.confirmLocation2),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (_changedLocation) {
+      Navigator.pop(context);
+      _changedLocation = false;
+    }
+  }
+
 
   /// Method to fetch the current location of the user using [location] package
   Future<LatLng> fetchCurrentLocation(BuildContext context) async {

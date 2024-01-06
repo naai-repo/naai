@@ -19,6 +19,7 @@ class NamedRoutes {
   static const String salonDetailsRoute = '/salon-details';
   static const String salonDetailsRoute2 = '/salon-details2';
   static const String setHomeLocationRoute = '/set-home-location';
+  static const String setHomeLocationRoute2 = '/set-home-location2';
   static const String mapRoute = '/maps';
   static const String barberProfileRoute = '/barber-profile';
   static const String barberProfileRoute2 = '/barber-profile2';
