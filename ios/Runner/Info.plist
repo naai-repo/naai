@@ -15,6 +15,10 @@
         <string>Older devices need location.</string>
         <key>NSLocationAlwaysUsageDescription</key>
         <string>Can I have location always?</string>
+        <key>UIRequiredDeviceCapabilities</key>
+        <string>location-services</string>
+            <!-- You may or may not include "gps" based on your app's requirements -->
+            <!-- <string>gps</string> -->
         <!-- Permissions lists ends here -->
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to enable you to set and update your profile picture. Your profile picture is used exclusively for personalizing your account, and it will not be shared with other users.</string>

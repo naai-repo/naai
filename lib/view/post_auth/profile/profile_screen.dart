@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naai/utils/colors_constant.dart';
@@ -12,8 +13,8 @@ import 'package:naai/view_model/post_auth/profile/profile_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
+import '../../../models/user.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -180,6 +181,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   optionTitle: StringConstant.more,
                                 ),
                                 profileOptions(
+                                  onTap: () {
+                                    showDeleteDialog(context,provider);
+                                    },
+                                  imagePath: ImagePathConstant.deleteIcon,
+                                  optionTitle: StringConstant.deleteAccount,
+                                ),
+                                profileOptions(
                                   onTap: () =>
                                       provider.handleLogoutClick(context),
                                   imagePath: ImagePathConstant.logoutIcon,
@@ -199,6 +207,129 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  void showDeleteDialog(context, provider) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Align(
+            alignment: Alignment.topLeft,
+            child: Image.asset(
+              "assets/images/app_logo.png",
+              height: 80,
+              width: 80,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Delete your Account?',
+                  style: TextStyle(fontWeight: FontWeight.bold,
+                  fontSize: 20
+                  ),
+                ),
+                SizedBox(height: 0.8.h),
+                Text(
+                  "If you select Delete, we will delete your account on our server. Your app data will also be deleted, and you won't be able to retrieve it.",
+
+                ),
+                SizedBox(height: 1.5.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+               //   crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the pop-up.
+                      },
+                    ),
+                    SizedBox(width: 1.5.h),
+                    ElevatedButton(
+                      child: const Text('Delete'),
+                      style: ElevatedButton.styleFrom(
+                        primary: ColorsConstant.appColor, // Change the button's background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        provider.handleLogoutClick(context);
+                       deleteAccountAndUserData(context);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteUserAccount() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if(user != null){
+        await user.delete();
+      }
+    } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: $e');
+
+    } catch (e) {
+      print('General exception: $e');
+      // Handle general exception
+    }
+  }
+
+
+  Future<void> deleteAccount() async {
+    try {
+      // Get the current user from Firebase Authentication
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Delete the user document from 'userData' collection using the UID
+        await FirebaseFirestore.instance
+            .collection('users') // Replace with your collection name
+            .doc(user.uid) // Use the UID as the document ID
+            .delete();
+
+        // Delete the user account from Firebase Authentication
+        await user.delete();
+
+        print('Account deleted successfully!');
+      }
+    } catch (e) {
+      print('Error deleting account: $e');
+      // Handle any errors that might occur during the deletion process
+    }
+  }
+
+  void deleteAccountAndUserData(BuildContext context) async {
+    try {
+      // Delete user data from Firestore
+      await deleteAccount();
+
+      // Delete the user account from Firebase Authentication
+      await deleteUserAccount();
+
+      print('Account and user data deleted successfully!');
+    } catch (e) {
+      print('Error deleting account and user data: $e');
+      // Handle any errors that might occur during the deletion process
+    }
   }
 
   Widget profileOptions({

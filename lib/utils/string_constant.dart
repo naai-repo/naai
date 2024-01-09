@@ -10,6 +10,7 @@ class StringConstant {
 
   // Auth screen strings
   static const String enterMobileNumber = 'Enter Mobile No.';
+  static const String deleteAccount = 'Delete Account';
   static const String getOtp = 'Get OTP';
   static const String Continueguest = 'Continue as a guest';
   static const String or = 'OR';

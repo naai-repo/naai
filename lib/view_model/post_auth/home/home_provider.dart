@@ -52,10 +52,10 @@ class HomeProvider with ChangeNotifier {
 
   late Symbol _symbol;
   Position ? position;
-
+String ?  _addressText;
   late MapboxMapController _controller;
 
-  String _addressText = StringConstant.loading;
+ // String _addressText = StringConstant.loading;
   List<ServiceDetail> get filteredServiceList => _filteredServiceList;
   List<ServiceDetail> _filteredServiceList = [];
 
@@ -72,7 +72,7 @@ class HomeProvider with ChangeNotifier {
   List<Review> get reviewList => _allReviewList;
   List<ServiceDetail> get service => _services;
 
-  String get addressText => _addressText;
+  String? get addressText => _addressText;
 
   TextEditingController get mapSearchController => _mapSearchController;
 
@@ -728,29 +728,22 @@ class HomeProvider with ChangeNotifier {
       BuildContext context,
       LatLng latLng,
       ) async {
-    var _serviceEnabled = await _mapLocation.serviceEnabled();
-
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _mapLocation.requestService();
-    }
-
-    var _permissionGranted = await _mapLocation.hasPermission();
-    if (_permissionGranted == location.PermissionStatus.denied) {
-    ReusableWidgets.showFlutterToast(
-    context,
-    'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
-    );
-    return ;
-    }
     UserModel user = UserModel.fromMap(_userData.toMap());
 
-    user.homeLocation = HomeLocation();
+  //  user.homeLocation = HomeLocation();
+    HomeLocation updatedHomeLocation = HomeLocation();
+   // user.homeLocation?.addressString = _addressText;
+  //  user.homeLocation?.geoLocation =
+  //      GeoPoint(latLng.latitude, latLng.longitude);
+    updatedHomeLocation.addressString = _addressText;
+    updatedHomeLocation.geoLocation = GeoPoint(latLng.latitude, latLng.longitude);
+    user.homeLocation = updatedHomeLocation;
 
-    user.homeLocation?.addressString = _addressText;
-    user.homeLocation?.geoLocation =
-        GeoPoint(latLng.latitude, latLng.longitude);
+  //  Map<String, dynamic> data = user.toMap();
+    Map<String, dynamic> data = {
+      'homeLocation': user.homeLocation?.toMap(), // Update only the home location
+    };
 
-    Map<String, dynamic> data = user.toMap();
     Loader.showLoader(context);
     try {
       await DatabaseService().updateUserData(data: data).onError(
@@ -858,7 +851,7 @@ class HomeProvider with ChangeNotifier {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              _addressText,
+              _addressText!,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -879,9 +872,14 @@ class HomeProvider with ChangeNotifier {
                         'Location permission is required to proceed.to find nearby salons and offer personalized recommendations just for you.😊',
                       );
                     openAppSettings();
+                  //  updateUserLocation(context, coordinates);
                     }
                   else {
-                    updateUserLocation(context, coordinates);
+                    // Recheck permission status after returning from settings
+                    PermissionStatus updatedStatus = await Permission.location.status;
+                    if (updatedStatus.isGranted) {
+                      updateUserLocation(context, coordinates);
+                    }
                   }
                 },
               child: const Text(StringConstant.confirmLocation),
@@ -924,7 +922,7 @@ class HomeProvider with ChangeNotifier {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              _addressText,
+              _addressText!,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -947,7 +945,11 @@ class HomeProvider with ChangeNotifier {
                   openAppSettings();
                 }
                 else {
-                  updateUserLocation2(context, coordinates);
+                  // Recheck permission status after returning from settings
+                  PermissionStatus updatedStatus = await Permission.location.status;
+                  if (updatedStatus.isGranted) {
+                    updateUserLocation(context, coordinates);
+                  }
                 }
               },
               child: const Text(StringConstant.confirmLocation2),

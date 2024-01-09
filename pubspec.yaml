@@ -63,15 +63,16 @@ dependencies:
   syncfusion_flutter_pdf: 23.2.7
   path_provider: ^2.0.1
   open_file: ^3.1.0
+  mapbox_gl: ^0.16.0
   # Git dependencies
   flutter_launcher_icons:
     git:
       url: https://github.com/Davenchy/flutter_launcher_icons.git
       ref: fixMinSdkParseFlutter2.8
-  mapbox_gl:
-    git:
-      url: https://github.com/Sipioteo/maps_3_0_0
-      ref: master
+ # mapbox_gl:
+   # git:
+    #  url: https://github.com/Sipioteo/maps_3_0_0
+     # ref: master
   salomon_bottom_bar:
     git:
       url: https://github.com/lukepighetti/salomon_bottom_bar
