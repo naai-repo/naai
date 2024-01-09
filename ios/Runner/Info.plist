@@ -7,16 +7,16 @@
         <key>UIBackgroundModes</key>
         <string>location</string>
         <!-- Permission options for the `location` group -->
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string>Need location when in use</string>
-        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-        <string>Always and when in use!</string>
-        <key>NSLocationUsageDescription</key>
-        <string>Older devices need location.</string>
-        <key>NSLocationAlwaysUsageDescription</key>
-        <string>Can I have location always?</string>
-        <key>UIRequiredDeviceCapabilities</key>
-        <string>location-services</string>
+       <key>NSLocationWhenInUseUsageDescription</key>
+       <string>Your location is used to find nearby salons when the app is in use.</string>
+       <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+       <string>Your location is used to find nearby salons even when the app is not in use.</string>
+       <key>NSLocationUsageDescription</key>
+       <string>Your location is used to find nearby salons.</string>
+       <key>NSLocationAlwaysUsageDescription</key>
+       <string>Your location is used to find nearby salons even when the app is not in use.</string>
+       <key>UIRequiredDeviceCapabilities</key>
+       <string>location-services</string>
             <!-- You may or may not include "gps" based on your app's requirements -->
             <!-- <string>gps</string> -->
         <!-- Permissions lists ends here -->
