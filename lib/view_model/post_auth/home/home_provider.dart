@@ -950,6 +950,7 @@ String ?  _addressText;
                         context,
                         'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
                       );
+
                     }
                   }
                 }
