@@ -936,22 +936,25 @@ String ?  _addressText;
               ),
               onPressed: () async {
                 PermissionStatus status = await Permission.location.request();
-                if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
-                  Geolocator.checkPermission();
-                  ReusableWidgets.showFlutterToast(
-                    context,
-                    'Location permission is required to proceed.to find nearby salons and offer personalized recommendations just for you.😊',
-                  );
-                  openAppSettings();
-                }
-                else {
-                  // Recheck permission status after returning from settings
-                  PermissionStatus updatedStatus = await Permission.location.status;
-                  if (updatedStatus.isGranted) {
-                    updateUserLocation(context, coordinates);
+                if (status.isGranted) {
+                  updateUserLocation(context, coordinates);
+                } else if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+                  bool isOpened = await openAppSettings();
+                  if (isOpened) {
+                    // Check the permission status again after opening app settings
+                    PermissionStatus updatedStatus = await Permission.location.status;
+                    if (updatedStatus.isGranted) {
+                      updateUserLocation(context, coordinates);
+                    } else {
+                      ReusableWidgets.showFlutterToast(
+                        context,
+                        'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
+                      );
+                    }
                   }
                 }
               },
+
               /*
               onPressed: () async {
   PermissionStatus status = await Permission.location.request();
