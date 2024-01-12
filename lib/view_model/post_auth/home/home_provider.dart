@@ -952,6 +952,23 @@ String ?  _addressText;
                   }
                 }
               },
+              /*
+              onPressed: () async {
+  PermissionStatus status = await Permission.location.request();
+  if (status.isGranted) {
+    updateUserLocation(context, coordinates);
+  } else if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+    bool isOpened = await openAppSettings();
+    if (isOpened) {
+      ReusableWidgets.showFlutterToast(
+        context,
+        'Location permission is required to proceed to find nearby salons and offer personalized recommendations just for you.😊',
+      );
+    }
+  }
+},
+
+              */
               child: const Text(StringConstant.confirmLocation2),
             ),
           ],
